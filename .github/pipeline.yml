@@ -28,6 +28,10 @@ jobs:
       - name: Check Prettier formatting
         run: npm run format:check
 
+      - name: Run Jest tests
+        run: npx jest --coverage
+        env:
+
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
         with:
