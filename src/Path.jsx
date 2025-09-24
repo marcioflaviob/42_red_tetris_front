@@ -1,7 +1,7 @@
-import HomePage from "./base/HomePage";
-import ErrorPage from "./pages/ErrorPage";
+import HomePage from './base/HomePage';
+import ErrorPage from './pages/ErrorPage';
 
 export const PATHS = [
-	{path: '', component: <HomePage/>},
-	{path: '*', component: <ErrorPage /> }
+  { path: '', component: <HomePage /> },
+  { path: '*', component: <ErrorPage /> },
 ];
