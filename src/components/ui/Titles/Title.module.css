@@ -1,0 +1,11 @@
+.title {
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #64ffda 0%, #ff64ff 50%, #64ff64 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 20px rgba(100, 255, 218, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}

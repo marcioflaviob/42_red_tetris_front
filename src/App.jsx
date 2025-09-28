@@ -1,5 +1,4 @@
 import { Route, Routes } from 'react-router-dom';
-import './App.css';
 import { PATHS } from './Path';
 import ProtectedRoutes from './ProtectedRoutes';
 import Layout from './Layout';

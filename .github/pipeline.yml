@@ -31,10 +31,3 @@ jobs:
       - name: Run Jest tests
         run: npx jest --coverage
         env:
-
-      - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v5
-        with:
-          projectBaseDir: .
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

@@ -1,7 +1,8 @@
 .header {
   height: var(--header-height);
   padding: 0 var(--spacing-md);
-  background: #ffffff;
+  background: #262629;
+  color: aliceblue;
   border-bottom: 1px solid #e0e0e0;
   display: flex;
   align-items: center;
