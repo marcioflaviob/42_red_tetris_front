@@ -1,79 +1,79 @@
 .profileSection {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  height: 100%;
 }
 
 .cardHeader {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
 }
 
 .usernameSection {
-    flex: 1;
+  flex: 1;
 }
 
 .usernameDisplay {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: aliceblue;
-    cursor: pointer;
-    padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
-    transition: all 0.2s ease-in-out;
-    border: 2px solid transparent;
-    min-height: 2.5rem;
-    display: flex;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: aliceblue;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  transition: all 0.2s ease-in-out;
+  border: 2px solid transparent;
+  min-height: 2.5rem;
+  display: flex;
 }
 
 .usernameDisplay:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .usernameInput {
-    width: 100% !important;
-    text-align: left;
-    font-size: 1.25rem;
-    font-weight: 600;
+  width: 100% !important;
+  text-align: left;
+  font-size: 1.25rem;
+  font-weight: 600;
 }
 
 .statsSection {
-    width: 100%;
-    flex: 1;
-    display: flex;
-    align-items: center;
+  width: 100%;
+  flex: 1;
+  display: flex;
+  align-items: center;
 }
 
 .statsGrid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  width: 100%;
 }
 
 .statItem {
-    flex-direction: column !important;
-    padding: 0.5rem !important;
+  flex-direction: column !important;
+  padding: 0.5rem !important;
 }
 
 .statValue {
-    font-size: 1.5rem !important;
-    font-weight: 700;
-    line-height: 1;
+  font-size: 1.5rem !important;
+  font-weight: 700;
+  line-height: 1;
 }
 
 .statLabel {
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: rgba(240, 248, 255, 0.7);
-    margin-top: 0.25rem;
-    text-transform: uppercase;
-    letter-spacing: 0.025em;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(240, 248, 255, 0.7);
+  margin-top: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
 }

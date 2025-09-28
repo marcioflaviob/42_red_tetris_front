@@ -8,7 +8,7 @@ const userSlice = createSlice({
   initialState: {
     username: service.getUsername(),
     avatar: service.getAvatar(),
-    matches: service.getMatches()
+    matches: service.getMatches(),
   },
   reducers: {
     setUsername: (state, action) => {
@@ -18,7 +18,7 @@ const userSlice = createSlice({
     setAvatar: (state, action) => {
       state.avatar = action.payload;
       service.saveAvatar(action.payload);
-    }
+    },
   },
 });
 

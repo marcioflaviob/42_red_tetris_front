@@ -8,7 +8,7 @@ function App() {
     <Routes>
       <Route element={<ProtectedRoutes />}>
         <Route path="/" element={<Layout />}>
-          {PATHS.map(item => (
+          {PATHS.map((item) => (
             <Route key={item.path} path={item.path} element={item.component} />
           ))}
         </Route>

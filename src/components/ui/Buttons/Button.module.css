@@ -1,171 +1,199 @@
 .button {
-    border: none !important;
-    border-radius: 8px !important;
-    font-weight: 600 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.5px !important;
-    transition: all 0.3s ease !important;
-    position: relative !important;
-    overflow: hidden !important;
-    box-shadow: 
-        0 4px 8px rgba(0, 0, 0, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.2) !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  transition: all 0.3s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2) !important;
 }
 
 .button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, 
-        transparent, 
-        rgba(255, 255, 255, 0.3), 
-        transparent
-    );
-    transition: left 0.5s ease;
-    z-index: 1;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: left 0.5s ease;
+  z-index: 1;
 }
 
 .button:hover::before {
-    left: 100%;
+  left: 100%;
 }
 
 .button:hover {
-    transform: translateY(-1px) !important;
-    box-shadow: 
-        0 6px 12px rgba(0, 0, 0, 0.5),
-        inset 0 1px 0 rgba(255, 255, 255, 0.15),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.3) !important;
+  transform: translateY(-1px) !important;
+  box-shadow:
+    0 6px 12px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3) !important;
 }
 
 .button:active {
-    transform: translateY(0) !important;
-    box-shadow: 
-        0 2px 4px rgba(0, 0, 0, 0.3),
-        inset 0 1px 0 rgba(0, 0, 0, 0.1),
-        inset 0 -1px 0 rgba(255, 255, 255, 0.1) !important;
+  transform: translateY(0) !important;
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(0, 0, 0, 0.1),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1) !important;
 }
 
 .small {
-    padding: 0.5rem 1rem !important;
-    font-size: 0.875rem !important;
+  padding: 0.5rem 1rem !important;
+  font-size: 0.875rem !important;
 }
 
 .normal {
-    padding: 0.75rem 1.5rem !important;
-    font-size: 1rem !important;
+  padding: 0.75rem 1.5rem !important;
+  font-size: 1rem !important;
 }
 
 .large {
-    padding: 1.25rem 2.5rem !important;
-    font-size: 1.25rem !important;
-    min-height: 4rem !important;
+  padding: 1.25rem 2.5rem !important;
+  font-size: 1.25rem !important;
+  min-height: 4rem !important;
 }
 
 .primary {
-    background: linear-gradient(135deg, #4a5568 0%, #2d3748 50%, #1a202c 100%) !important;
-    color: #e2e8f0 !important;
-    border: 1px solid #4a5568 !important;
+  background: linear-gradient(
+    135deg,
+    #4a5568 0%,
+    #2d3748 50%,
+    #1a202c 100%
+  ) !important;
+  color: #e2e8f0 !important;
+  border: 1px solid #4a5568 !important;
 }
 
 .primary:hover {
-    background: linear-gradient(135deg, #5a6578 0%, #3d4758 50%, #2a303c 100%) !important;
-    border-color: #5a6578 !important;
+  background: linear-gradient(
+    135deg,
+    #5a6578 0%,
+    #3d4758 50%,
+    #2a303c 100%
+  ) !important;
+  border-color: #5a6578 !important;
 }
 
 .secondary {
-    background: linear-gradient(135deg, #6b46c1 0%, #553c9a 50%, #4c1d95 100%) !important;
-    color: #e2e8f0 !important;
-    border: 1px solid #6b46c1 !important;
+  background: linear-gradient(
+    135deg,
+    #6b46c1 0%,
+    #553c9a 50%,
+    #4c1d95 100%
+  ) !important;
+  color: #e2e8f0 !important;
+  border: 1px solid #6b46c1 !important;
 }
 
 .secondary:hover {
-    background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 50%, #5b21b6 100%) !important;
-    border-color: #7c3aed !important;
+  background: linear-gradient(
+    135deg,
+    #7c3aed 0%,
+    #6d28d9 50%,
+    #5b21b6 100%
+  ) !important;
+  border-color: #7c3aed !important;
 }
 
 .play {
-    background: linear-gradient(135deg, 
-        #10b981 0%, 
-        #059669 25%, 
-        #047857 50%, 
-        #059669 75%, 
-        #10b981 100%) !important;
-    color: #ffffff !important;
-    border: 2px solid #10b981 !important;
-    box-shadow: 
-        0 6px 16px rgba(16, 185, 129, 0.3),
-        inset 0 2px 0 rgba(255, 255, 255, 0.2),
-        inset 0 -2px 0 rgba(0, 0, 0, 0.2),
-        0 0 0 0 rgba(16, 185, 129, 0.4) !important;
-    animation: playButtonGlow 3s ease-in-out infinite;
+  background: linear-gradient(
+    135deg,
+    #10b981 0%,
+    #059669 25%,
+    #047857 50%,
+    #059669 75%,
+    #10b981 100%
+  ) !important;
+  color: #ffffff !important;
+  border: 2px solid #10b981 !important;
+  box-shadow:
+    0 6px 16px rgba(16, 185, 129, 0.3),
+    inset 0 2px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.2),
+    0 0 0 0 rgba(16, 185, 129, 0.4) !important;
+  animation: playButtonGlow 3s ease-in-out infinite;
 }
 
 .play:hover {
-    background: linear-gradient(135deg, 
-        #34d399 0%, 
-        #10b981 25%, 
-        #059669 50%, 
-        #10b981 75%, 
-        #34d399 100%) !important;
-    border-color: #34d399 !important;
-    box-shadow: 
-        0 8px 20px rgba(16, 185, 129, 0.4),
-        inset 0 2px 0 rgba(255, 255, 255, 0.3),
-        inset 0 -2px 0 rgba(0, 0, 0, 0.2),
-        0 0 30px rgba(16, 185, 129, 0.6) !important;
+  background: linear-gradient(
+    135deg,
+    #34d399 0%,
+    #10b981 25%,
+    #059669 50%,
+    #10b981 75%,
+    #34d399 100%
+  ) !important;
+  border-color: #34d399 !important;
+  box-shadow:
+    0 8px 20px rgba(16, 185, 129, 0.4),
+    inset 0 2px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.2),
+    0 0 30px rgba(16, 185, 129, 0.6) !important;
 }
 
 .play::after {
-    content: '';
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    right: 2px;
-    bottom: 2px;
-    background: linear-gradient(135deg, 
-        rgba(255, 255, 255, 0.1) 0%,
-        transparent 25%,
-        transparent 75%,
-        rgba(255, 255, 255, 0.05) 100%);
-    border-radius: 6px;
-    pointer-events: none;
-    z-index: 0;
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 25%,
+    transparent 75%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  border-radius: 6px;
+  pointer-events: none;
+  z-index: 0;
 }
 
 @keyframes playButtonGlow {
-    0%, 100% {
-        box-shadow: 
-            0 6px 16px rgba(16, 185, 129, 0.3),
-            inset 0 2px 0 rgba(255, 255, 255, 0.2),
-            inset 0 -2px 0 rgba(0, 0, 0, 0.2),
-            0 0 20px rgba(16, 185, 129, 0.4) !important;
-    }
-    50% {
-        box-shadow: 
-            0 6px 16px rgba(16, 185, 129, 0.4),
-            inset 0 2px 0 rgba(255, 255, 255, 0.2),
-            inset 0 -2px 0 rgba(0, 0, 0, 0.2),
-            0 0 30px rgba(16, 185, 129, 0.6) !important;
-    }
+  0%,
+  100% {
+    box-shadow:
+      0 6px 16px rgba(16, 185, 129, 0.3),
+      inset 0 2px 0 rgba(255, 255, 255, 0.2),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.2),
+      0 0 20px rgba(16, 185, 129, 0.4) !important;
+  }
+  50% {
+    box-shadow:
+      0 6px 16px rgba(16, 185, 129, 0.4),
+      inset 0 2px 0 rgba(255, 255, 255, 0.2),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.2),
+      0 0 30px rgba(16, 185, 129, 0.6) !important;
+  }
 }
 
 .button:disabled {
-    opacity: 0.6 !important;
-    cursor: not-allowed !important;
-    transform: none !important;
-    box-shadow: 
-        0 2px 4px rgba(0, 0, 0, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
 }
 
 .button:disabled::before {
-    display: none;
+  display: none;
 }
 
 .button:disabled:hover {
-    transform: none !important;
+  transform: none !important;
 }

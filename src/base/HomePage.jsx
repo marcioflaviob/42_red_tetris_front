@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './HomePage.module.css'
+import styles from './HomePage.module.css';
 import Card from '../components/ui/Card/Card';
 import UserCard from '../components/cards/UserCard';
 import OfflineCard from '../components/cards/OfflineCard';
@@ -11,29 +11,24 @@ const HomePage = () => {
 
   return (
     <div className={`${styles.content} flex flex-col h-full`}>
-      {
-        !username && // TODO: Design a card to welcome new users
-        <div className='container mx-auto flex-none h-1/6 p-8 pb-0' >
-          <Card className=''>
+      {!username && ( // TODO: Design a card to welcome new users
+        <div className="container mx-auto flex-none h-1/6 p-8 pb-0">
+          <Card className="">
             Welcome, set a username and invite others to play
           </Card>
         </div>
-      }
-      <div className='container mx-auto grid grid-cols-3 row-span-10 gap-8 flex-1 p-8'>
-        <div className='grid grid-rows-7 gap-4' >
-          <Card className='row-span-2'>
+      )}
+      <div className="container mx-auto grid grid-cols-3 row-span-10 gap-8 flex-1 p-8">
+        <div className="grid grid-rows-7 gap-4">
+          <Card className="row-span-2">
             <UserCard />
           </Card>
-          <Card className='row-span-5' >
-            History of matches here
-          </Card>
+          <Card className="row-span-5">History of matches here</Card>
         </div>
         <Card isUsernameRequired={true}>
           <OfflineCard />
         </Card>
-        <Card isUsernameRequired={true}>
-          Play online
-        </Card>
+        <Card isUsernameRequired={true}>Play online</Card>
       </div>
     </div>
   );

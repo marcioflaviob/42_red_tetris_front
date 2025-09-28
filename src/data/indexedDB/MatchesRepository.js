@@ -1,7 +1,6 @@
 import { openDB } from 'idb';
 
 const createMatchesRepository = () => {
-
   const DB_NAME = 'MatchesDB';
   const STORE_NAME = 'matches';
 
@@ -10,7 +9,10 @@ const createMatchesRepository = () => {
       return openDB(DB_NAME, 1, {
         upgrade(db) {
           if (!db.objectStoreNames.contains(STORE_NAME)) {
-            db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
+            db.createObjectStore(STORE_NAME, {
+              keyPath: 'id',
+              autoIncrement: true,
+            });
           }
         },
       });
@@ -53,7 +55,7 @@ const createMatchesRepository = () => {
   return {
     addMatch,
     getMatches,
-    updateMatch
+    updateMatch,
   };
 };
 

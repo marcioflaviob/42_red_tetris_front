@@ -11,7 +11,9 @@
   justify-content: center;
   cursor: pointer;
   transition-duration: 200ms;
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  box-shadow:
+    0 10px 15px -3px rgb(0 0 0 / 0.1),
+    0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
 
 .pencilButton:hover {
@@ -19,19 +21,19 @@
 }
 
 .avatar {
-    background-color: white;
-    padding: 0.1rem;
-    border: 2px solid transparent;
-    border-radius: 50%;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  background-color: white;
+  padding: 0.1rem;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .avatarEditable {
-    background-color: white;
-    cursor: pointer;
+  background-color: white;
+  cursor: pointer;
 }
 
 .avatarSelector {

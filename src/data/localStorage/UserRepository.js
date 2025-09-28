@@ -1,5 +1,4 @@
 const createUserRepository = () => {
-
   const DEFAULT_AVATAR = 'assets/avatars/default.webp';
 
   const loadUsernameFromStorage = () => {
@@ -23,7 +22,7 @@ const createUserRepository = () => {
       console.error('Error saving username to localStorage:', error);
     }
   };
-  
+
   const loadAvatarFromStorage = () => {
     try {
       const avatar = localStorage.getItem('avatar');
@@ -32,7 +31,7 @@ const createUserRepository = () => {
       console.error('Error loading avatar from localStorage:', error);
       return DEFAULT_AVATAR;
     }
-  }
+  };
 
   const saveAvatarToStorage = (avatar) => {
     try {
@@ -45,12 +44,12 @@ const createUserRepository = () => {
       console.error('Error saving avatar to localStorage:', error);
     }
   };
-  
+
   return {
     loadUsernameFromStorage,
     saveUsernameToStorage,
     loadAvatarFromStorage,
-    saveAvatarToStorage
+    saveAvatarToStorage,
   };
 };
 
