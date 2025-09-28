@@ -30,4 +30,3 @@ jobs:
 
       - name: Run Jest tests
         run: npx jest --coverage
-        env:
