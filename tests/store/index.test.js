@@ -1,5 +1,4 @@
 import { store } from '../../src/store/index';
-import userSlice from '../../src/store/slices/userSlice';
 
 // Mock the UserService
 jest.mock('../../src/services/UserService', () => ({

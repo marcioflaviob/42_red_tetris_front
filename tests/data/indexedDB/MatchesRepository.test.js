@@ -1,4 +1,5 @@
 import { createMatchesRepository } from '../../../src/data/indexedDB/MatchesRepository';
+import { openDB } from 'idb';
 
 jest.mock('idb', () => ({
   openDB: jest.fn(),
@@ -13,7 +14,6 @@ describe('MatchesRepository', () => {
   let mockDB;
 
   beforeEach(() => {
-    const { openDB } = require('idb');
     mockOpenDB = openDB;
     
     mockDB = {

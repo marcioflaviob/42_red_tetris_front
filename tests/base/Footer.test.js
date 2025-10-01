@@ -7,12 +7,12 @@ jest.mock('../../src/base/Footer.module.css', () => ({
   footer: 'footer',
 }));
 const mockDate = new Date('2023-12-01');
-global.Date = jest.fn(() => mockDate);
-global.Date.getFullYear = jest.fn(() => 2023);
+globalThis.Date = jest.fn(() => mockDate);
+globalThis.Date.getFullYear = jest.fn(() => 2023);
 
 describe('Footer Component', () => {
   beforeEach(() => {
-    jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
+    jest.spyOn(globalThis, 'Date').mockImplementation(() => mockDate);
     Date.prototype.getFullYear = jest.fn(() => 2023);
   });
 
@@ -61,7 +61,6 @@ describe('Footer Component', () => {
   });
 
   test('displays current year dynamically', () => {
-    const newMockDate = new Date('2024-01-01');
     Date.prototype.getFullYear = jest.fn(() => 2024);
     
     render(<Footer />);

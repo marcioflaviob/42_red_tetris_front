@@ -55,7 +55,7 @@ describe('UserService', () => {
   test('saveUsername should call userRepo.saveUsernameToStorage', () => {
     const username = 'newuser';
 
-    const result = userService.saveUsername(username);
+    userService.saveUsername(username);
 
     expect(mockUserRepo.saveUsernameToStorage).toHaveBeenCalledTimes(1);
     expect(mockUserRepo.saveUsernameToStorage).toHaveBeenCalledWith(username);
@@ -74,7 +74,7 @@ describe('UserService', () => {
   test('saveAvatar should call userRepo.saveAvatarToStorage', () => {
     const avatar = 'new-avatar.webp';
 
-    const result = userService.saveAvatar(avatar);
+    userService.saveAvatar(avatar);
 
     expect(mockUserRepo.saveAvatarToStorage).toHaveBeenCalledTimes(1);
     expect(mockUserRepo.saveAvatarToStorage).toHaveBeenCalledWith(avatar);
