@@ -8,7 +8,7 @@ const Layout = () => {
   return (
     <div className={styles.layout}>
       <Header className={styles.header} />
-      <main className={`${styles.main} container mx-auto`}>
+      <main className={styles.main}>
         <Outlet />
       </main>
       <Footer className={styles.footer} />
