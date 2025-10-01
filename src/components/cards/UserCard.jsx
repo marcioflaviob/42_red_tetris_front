@@ -55,10 +55,6 @@ const UserCard = () => {
     }
   };
 
-  const handleUsernameBlur = () => {
-    handleUsernameSubmit();
-  };
-
   return (
     <div className={styles.profileSection}>
       <div className={styles.cardHeader}>
@@ -73,7 +69,7 @@ const UserCard = () => {
               value={tempUsername}
               onChange={handleUsernameChange}
               onKeyDown={handleUsernameKeyPress}
-              onBlur={handleUsernameBlur}
+              onBlur={handleUsernameSubmit}
               placeholder="Enter your username"
               className={styles.usernameInput}
             />
