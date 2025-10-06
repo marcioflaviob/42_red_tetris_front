@@ -5,12 +5,14 @@ import UserCard from '../components/cards/UserCard';
 import OfflineCard from '../components/cards/OfflineCard';
 import { useAppSelector } from '../store/hooks';
 import { selectUsername } from '../store/slices/userSlice';
+import HomePageBg from '../components/ui/Backgrounds/HomePageBg';
 
 const HomePage = () => {
   const username = useAppSelector(selectUsername);
 
   return (
     <div className={`${styles.content} flex flex-col h-full`}>
+      <HomePageBg />
       {!username && ( // TODO: Design a card to welcome new users
         <div className="container mx-auto flex-none h-1/6 p-8 pb-0">
           <Card className="">

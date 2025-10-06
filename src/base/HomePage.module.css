@@ -1,4 +1,6 @@
 .content {
   background: #383841;
   color: aliceblue;
+  z-index: -3;
+  position: relative;
 }
