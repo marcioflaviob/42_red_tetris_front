@@ -1,7 +1,11 @@
 import HomePage from './base/HomePage';
 import ErrorPage from './pages/ErrorPage';
+import MatchRoom from './pages/MatchRoom';
 
 export const PATHS = [
   { path: '', component: <HomePage /> },
+  { path: ':roomId', component: <MatchRoom /> },
+  { path: ':roomId/:host', component: <MatchRoom /> },
   { path: '*', component: <ErrorPage /> },
+  { path: 'error', component: <ErrorPage /> },
 ];

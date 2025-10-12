@@ -1,0 +1,28 @@
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+
+export const api = createApi({
+  reducerPath: 'api',
+  baseQuery: fetchBaseQuery({
+    baseUrl: 'http://localhost:3000', // TODO: replace with a env variable
+    prepareHeaders: (headers, { getState }) => {
+      const sessionId = getState().user.sessionId;
+      headers.set('x-session-id', sessionId);
+      headers.set('content-type', 'application/json');
+      return headers;
+    },
+  }),
+  endpoints: (builder) => ({
+    createRoom: builder.mutation({
+      query: (userData) => ({
+        url: '/room',
+        method: 'POST',
+        body: userData,
+      })
+    }),
+    getRoom: builder.query({
+      query: (roomId) => `/room/${roomId}`
+    }),
+  }),
+});
+
+export const { useCreateRoomMutation, useGetRoomQuery } = api;

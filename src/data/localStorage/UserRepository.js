@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 const createUserRepository = () => {
   const DEFAULT_AVATAR = 'assets/avatars/default.webp';
 
@@ -45,11 +47,21 @@ const createUserRepository = () => {
     }
   };
 
+  const loadSessionIdFromStorage = (avatar) => {
+    let sessionId = localStorage.getItem('tetris-session-id');
+    if (!sessionId) {
+      sessionId = uuidv4();
+      localStorage.setItem('tetris-session-id', sessionId);
+    }
+    return sessionId;
+  };
+
   return {
     loadUsernameFromStorage,
     saveUsernameToStorage,
     loadAvatarFromStorage,
     saveAvatarToStorage,
+    loadSessionIdFromStorage
   };
 };
 

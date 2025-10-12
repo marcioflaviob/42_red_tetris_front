@@ -1,23 +1,40 @@
-import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import useDifficultySelector from "../../hooks/useDifficultySelector";
+import { useAppSelector } from "../../store/hooks";
+import { useCreateRoomMutation } from "../../store/slices/apiSlice";
+import Button from "../ui/Buttons/Button";
+import InfoCard from "../ui/Card/InfoCard";
+import InputSwitch from "../ui/Inputs/InputSwitch";
+import Title from "../ui/Titles/Title";
 import styles from './PlayCards.module.css';
-import InputSwitch from '../ui/Inputs/InputSwitch';
-import Button from '../ui/Buttons/Button';
-import Title from '../ui/Titles/Title';
-import InfoCard from '../ui/Card/InfoCard';
-import useDifficultySelector from '../../hooks/useDifficultySelector'
 
-const OfflineCard = () => {
-  const {difficulty, invisiblePieces, setInvisiblePieces, increasedGravity, setIncreasedGravity} = useDifficultySelector();
+const OnlineCard = () => {
+	const {difficulty, invisiblePieces, setInvisiblePieces, increasedGravity, setIncreasedGravity} = useDifficultySelector();
+	const [createRoom, { isLoading }] = useCreateRoomMutation();
+	const user = useAppSelector(state => state.user);
+	const navigate = useNavigate();
 
-  const handlePlayClick = () => {
-    console.log('Starting offline game...');
+  const handleRoomCreation = async () => {
+		try {
+			console.log(user);
+			const room = await createRoom({
+				user,
+				room: {
+					invisiblePieces,
+					increasedGravity
+				}
+			}).unwrap();
+			navigate(`/${room.id}/${room.players[0].username}`);
+		} catch (error) {
+			console.error('Error creating room', error);
+		}
   };
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <Title>Solo Play</Title>
-        <p className={styles.subtitle}>Challenge yourself in offline mode</p>
+        <Title>Multiplayer</Title>
+        <p className={styles.subtitle}>Challenge your friends</p>
       </div>
 
       <div className={styles.options}>
@@ -71,15 +88,16 @@ const OfflineCard = () => {
         <Button
           variant="play"
           size="large"
-          onClick={handlePlayClick}
+          onClick={handleRoomCreation}
           className={styles.playButton}
+					loading={isLoading}
         >
           <span className={styles.playIcon}>▶</span>
-          Start Game
+          Create room
         </Button>
       </div>
     </div>
   );
 };
 
-export default OfflineCard;
+export default OnlineCard;

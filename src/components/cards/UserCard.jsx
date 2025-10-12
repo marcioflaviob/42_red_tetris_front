@@ -12,7 +12,6 @@ const UserCard = () => {
   const dispatch = useAppDispatch();
   const [isEditingUsername, setIsEditingUsername] = useState(false);
   const [tempUsername, setTempUsername] = useState(username || '');
-  const inputRef = useRef(null);
 
   const userStats = {
     gamesPlayed: 42,
@@ -21,17 +20,12 @@ const UserCard = () => {
     level: 7,
   };
 
-  useEffect(() => {
-    setTempUsername(username || '');
-  }, [username]);
-
-  useEffect(() => {
-    if (isEditingUsername && inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [isEditingUsername]);
+  const inputCallbackRef = (element) => {
+    if (element) element.focus();
+  };
 
   const handleUsernameClick = () => {
+    setTempUsername(username);
     setIsEditingUsername(true);
   };
 
@@ -62,7 +56,7 @@ const UserCard = () => {
         <div className={styles.usernameSection}>
           {isEditingUsername ? (
             <InputText
-              ref={inputRef}
+              ref={inputCallbackRef}
               id="username"
               name="username"
               type="text"
