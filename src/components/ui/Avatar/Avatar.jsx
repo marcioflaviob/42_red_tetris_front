@@ -97,7 +97,7 @@ const Avatar = ({
                 {avatarOptions.map((avatarPath, index) => (
                   <div
                     key={index}
-                    className={`${styles.avatar} cursor-pointer ${avatar === avatarPath ? styles.selectedAvatar : ''}`}
+                    className={`${styles.avatar} ${editable ? 'cursor-pointer' : ''} ${avatar === avatarPath ? styles.selectedAvatar : ''}`}
                     onClick={() => handleAvatarSelect(avatarPath)}
                   >
                     <AvatarMedia

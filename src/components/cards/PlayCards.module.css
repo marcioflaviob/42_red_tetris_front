@@ -13,6 +13,7 @@
 }
 
 .subtitle {
+  text-align: center;
   font-size: 0.9rem;
   color: #a0aec0;
   margin: 0;
@@ -217,10 +218,10 @@
 
 .playSection {
   display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
   justify-content: center;
   align-items: center;
-  margin-top: 0.5rem;
-  padding-top: 0.5rem;
 }
 
 .playButton {

@@ -42,6 +42,7 @@ export const selectUsername = (state) => state.user.username;
 export const selectAvatar = (state) => state.user.avatar;
 export const selectUser = (state) => ({
   username: state.user.username,
-  avatar: state.user.avatar
+  avatar: state.user.avatar,
+  sessionId: state.user.sessionId
 });
 export default userSlice.reducer;

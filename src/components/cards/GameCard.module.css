@@ -1,0 +1,28 @@
+
+.gameGrid {
+    background-color: #30363d;
+}
+
+.tetrisBoard {
+    display: grid;
+    gap: 1px;
+    grid-template-columns: repeat(10, 24px);
+    grid-template-rows: repeat(20, 24px);
+}
+    
+.tetrisBoard div {
+    width: 24px;
+    height: 24px;
+}
+
+.cell {
+    border: solid 1px gray;
+}
+
+.bufferZoneCell {
+    border: solid 1px rgb(69, 0, 0);
+}
+
+.filled {
+    background-color: yellow;
+}

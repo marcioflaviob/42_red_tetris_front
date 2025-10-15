@@ -7,12 +7,18 @@ import InfoCard from "../ui/Card/InfoCard";
 import InputSwitch from "../ui/Inputs/InputSwitch";
 import Title from "../ui/Titles/Title";
 import styles from './PlayCards.module.css';
+import { selectUser } from "../../store/slices/userSlice";
+import InputText from "../ui/Inputs/InputText";
+import { useState } from "react";
 
 const OnlineCard = () => {
 	const {difficulty, invisiblePieces, setInvisiblePieces, increasedGravity, setIncreasedGravity} = useDifficultySelector();
 	const [createRoom, { isLoading }] = useCreateRoomMutation();
-	const user = useAppSelector(state => state.user);
+	const [roomIdInput, setRoomIdInput] = useState('');
+	const [isRoomIdValid, setIsRoomIdValid] = useState(false);
+	const user = useAppSelector(selectUser);
 	const navigate = useNavigate();
+	const roomIdPattern = /^[a-z]+-[a-z]+$/;
 
   const handleRoomCreation = async () => {
 		try {
@@ -29,6 +35,16 @@ const OnlineCard = () => {
 			console.error('Error creating room', error);
 		}
   };
+
+	const handleRoomIdChange = (e) => {
+		console.log(isRoomIdValid)
+		setRoomIdInput(e.target.value);
+		setIsRoomIdValid(roomIdPattern.test(e.target.value))
+	}
+	
+	const handleJoinRoom = () => {
+		navigate(`/${roomIdInput}`);
+	};
 
   return (
     <div className={styles.container}>
@@ -96,6 +112,29 @@ const OnlineCard = () => {
           Create room
         </Button>
       </div>
+			<div className="flex items-center w-full my-4">
+				<hr className="flex-1 border-t border-white/10" />
+				<span className="mx-4 text-gray-400 font-medium select-none">or</span>
+				<hr className="flex-1 border-t border-white/10" />
+			</div>
+			<p className={styles.subtitle}>Join a friend's game</p>
+			<div className={styles.playSection}>
+				<InputText
+					value={roomIdInput}
+					onChange={handleRoomIdChange}
+					placeholder="Type the room ID"
+				/>
+				<Button
+					tooltip="Room ID is invalid"
+					tooltipBool={!isRoomIdValid}
+					variant="play"
+					className={styles.playButton}
+					onClick={handleJoinRoom}
+					disabled={!isRoomIdValid}
+				>
+					Join Room
+				</Button>
+			</div>
     </div>
   );
 };

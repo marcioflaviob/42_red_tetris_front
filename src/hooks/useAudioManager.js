@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 
 const AUDIO_PATHS = {
   LOBBY: '/music/lobby_loop.ogg',
-  GAME: '/music/begin_game.ogg',
+  GAME: '/music/begin_game_alt.ogg',
   INTRO: '/music/intro.ogg'
 };
 

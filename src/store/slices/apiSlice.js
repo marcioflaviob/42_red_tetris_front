@@ -19,10 +19,14 @@ export const api = createApi({
         body: userData,
       })
     }),
-    getRoom: builder.query({
-      query: (roomId) => `/room/${roomId}`
+    joinRoom: builder.mutation({
+      query: ({ user, roomId }) => ({
+        url: `/room/${roomId}/join`,
+        method: 'POST',
+        body: { user },
+      })
     }),
   }),
 });
 
-export const { useCreateRoomMutation, useGetRoomQuery } = api;
+export const { useCreateRoomMutation, useJoinRoomMutation } = api;
