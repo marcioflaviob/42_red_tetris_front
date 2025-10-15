@@ -39,15 +39,12 @@ function rotateMatrix(matrix, times = 1) {
 }
 
 function lightenColor(hex, percent) {
-  // Remove # if present
   hex = hex.replace(/^#/, '');
 
-  // Handle 8-character hex (RGBA) by removing alpha channel
   if (hex.length === 8) {
     hex = hex.substring(0, 6);
   }
 
-  // Expand shorthand hex (e.g. "03F") to full form ("0033FF")
   if (hex.length === 3) {
     hex = hex
       .split('')
@@ -56,37 +53,32 @@ function lightenColor(hex, percent) {
   }
   if (hex.length !== 6) return '#000000';
 
-  // Parse the hex values
   let r = parseInt(hex.substring(0, 2), 16);
   let g = parseInt(hex.substring(2, 4), 16);
   let b = parseInt(hex.substring(4, 6), 16);
 
   if (percent > 0) {
-    // Lighten by moving towards white (255)
     r = Math.round(r + (255 - r) * (percent / 100));
     g = Math.round(g + (255 - g) * (percent / 100));
     b = Math.round(b + (255 - b) * (percent / 100));
   } else {
-    // Darken by reducing the color value
     const factor = 1 + percent / 100;
     r = Math.round(r * factor);
     g = Math.round(g * factor);
     b = Math.round(b * factor);
   }
 
-  // Clamp values between 0 and 255
   r = Math.max(0, Math.min(255, r));
   g = Math.max(0, Math.min(255, g));
   b = Math.max(0, Math.min(255, b));
 
-  // Convert back to hex
   return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
 }
 
 const LegoPiece = ({
   shape = 'I',
   color = '#FFD700',
-  angle = 0, // 0, 90, 180, 270
+  angle = 0,
   size = 32,
   ...props
 }) => {
@@ -106,38 +98,34 @@ const LegoPiece = ({
       {...props}
     >
       {rotated.map((row, y) =>
-        row.map((cell, x) =>
-          cell ? (
-            <div
-              key={`${y}-${x}`}
-              className={styles.legoBlock}
-              style={{
-                background: color,
-                width: size,
-                height: size,
-                boxShadow: `0px 8px 0px 0px ${lightenColor(color, -20)}`,
-              }}
-            >
+        row.map(
+          (cell, x) =>
+            cell && (
               <div
-                className={styles.legoStud}
+                key={`${y}-${x}`}
+                className={styles.legoBlock}
                 style={{
-                  width: size * 0.5,
-                  height: size * 0.5,
                   background: color,
-                  border: `2px solid ${color}`,
-                  fontSize: size * 0.13,
-                  color: lightenColor(color, 20),
+                  width: size,
+                  height: size,
+                  boxShadow: `0px 8px 0px 0px ${lightenColor(color, -20)}`,
                 }}
               >
-                LEGO
+                <div
+                  className={styles.legoStud}
+                  style={{
+                    width: size * 0.5,
+                    height: size * 0.5,
+                    background: color,
+                    border: `2px solid ${color}`,
+                    fontSize: size * 0.13,
+                    color: lightenColor(color, -10),
+                  }}
+                >
+                  LEGO
+                </div>
               </div>
-            </div>
-          ) : (
-            <div
-              key={`${y}-${x}`}
-              style={{ width: size, height: size, background: 'transparent' }}
-            />
-          )
+            )
         )
       )}
     </div>

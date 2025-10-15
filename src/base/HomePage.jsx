@@ -5,6 +5,7 @@ import OfflineCard from '../components/cards/OfflineCard';
 import { useAppSelector } from '../store/hooks';
 import { selectUsername } from '../store/slices/userSlice';
 import HomePageBg from '../components/ui/Backgrounds/HomePageBg';
+import LegoPiece from '../components/ui/Backgrounds/LegoPiece';
 
 const HomePage = () => {
   const username = useAppSelector(selectUsername);
@@ -31,6 +32,7 @@ const HomePage = () => {
           </Card>
         </div>
         <Card isUsernameRequired={true}>
+          <LegoPiece shape="Z" color="#FFD700" angle={180} size={20} />
           <OfflineCard />
         </Card>
         <Card isUsernameRequired={true}>Play online</Card>

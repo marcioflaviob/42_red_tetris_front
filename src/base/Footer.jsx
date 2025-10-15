@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './Footer.module.css';
+import LegoPiece from '../components/ui/Backgrounds/LegoPiece';
 
 const Footer = () => {
   return (
