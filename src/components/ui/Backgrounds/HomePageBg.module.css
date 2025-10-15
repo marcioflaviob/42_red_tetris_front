@@ -2,38 +2,38 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw; /* Should be 100vw to define the viewport */
+  width: 100vw;
   height: 100%;
-  z-index: -2; /* Move it behind other content */
+  z-index: -2;
   overflow: hidden;
   background-color: #383841;
   display: flex;
   flex-direction: column;
-  justify-content: space-around; /* Distribute rows evenly */
+  justify-content: space-around;
 }
 
 .overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.472);
-    z-index: -1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.472);
+  z-index: -1;
 }
 
 .row {
-    display: flex;
-    flex-shrink: 0; /* Prevent the row from shrinking */
-    width: max-content; /* Let the width be determined by its content */
-    overflow: visible;
+  display: flex;
+  flex-shrink: 0;
+  width: max-content;
+  overflow: visible;
 }
 
 .block {
-    width: 8%;
-    flex-shrink: 0; /* Prevent blocks from shrinking */
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 8%;
+  flex-shrink: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
