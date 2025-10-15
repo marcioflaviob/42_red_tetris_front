@@ -4,3 +4,16 @@
   z-index: -3;
   position: relative;
 }
+
+@media (max-width: 874px) {
+  .grid {
+    display: flex;
+    flex-direction: column;
+  }
+  .historyCard {
+    display: none;
+  }
+  .userCardContainer {
+    grid-template-rows: none;
+  }
+}

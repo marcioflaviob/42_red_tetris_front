@@ -11,6 +11,10 @@
   border-radius: 8px;
   padding: 1.5rem;
   height: 100%;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   box-shadow:
     0 4px 12px rgba(0, 0, 0, 0.4),
     inset 0 1px 0 rgba(100, 200, 150, 0.1),
@@ -115,4 +119,28 @@
   border: 1px solid #888;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(2px);
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  .card {
+    padding: 1rem;
+    border-radius: 6px;
+  }
+
+  .usernamePromptMessage {
+    font-size: 0.9rem;
+    padding: 0.75rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 0.75rem;
+  }
+
+  .usernamePromptMessage {
+    font-size: 0.85rem;
+    padding: 0.5rem 0.75rem;
+  }
 }

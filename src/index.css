@@ -12,4 +12,6 @@
 
   --header-height: 64px;
   --footer-height: 48px;
+  --z-header: 10;
+  --z-footer: 10;
 }

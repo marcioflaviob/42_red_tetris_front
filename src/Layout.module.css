@@ -11,6 +11,8 @@
 .main {
   grid-row: 2;
   overflow-y: auto;
+  /* position: relative; */
+  z-index: 1;
 }
 
 .footer {

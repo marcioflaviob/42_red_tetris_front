@@ -20,12 +20,12 @@ const HomePage = () => {
           </Card>
         </div>
       )}
-      <div className="container mx-auto grid grid-cols-3 row-span-10 gap-8 flex-1 p-8">
-        <div className="grid grid-rows-7 gap-4">
+      <div className={`${styles.grid} container grid mx-auto grid-cols-3 row-span-10 gap-8 flex-1 p-8 w-full`}>
+        <div className={`${styles.userCardContainer} grid grid-rows-7 gap-4`}>
           <Card className="row-span-2">
             <UserCard />
           </Card>
-          <Card className="row-span-5">History of matches here</Card>
+          <Card className={`${styles.historyCard} row-span-5`}>History of matches here</Card>
         </div>
         <Card isUsernameRequired={true}>
           <OfflineCard />

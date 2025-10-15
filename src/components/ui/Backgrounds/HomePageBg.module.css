@@ -30,7 +30,7 @@
 }
 
 .block {
-    width: 20vw;
+    width: 8%;
     flex-shrink: 0; /* Prevent blocks from shrinking */
     height: 100%;
     display: flex;
