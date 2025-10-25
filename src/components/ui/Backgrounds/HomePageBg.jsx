@@ -2,7 +2,7 @@ import styles from './HomePageBg.module.css';
 import LegoPiece from './LegoPiece';
 import { useEffect, useRef } from 'react';
 
-const SHAPES = ['O', 'T', 'S', 'Z', 'J', 'L'];
+const SHAPES = ['O', 'T', 'S', 'Z', 'J', 'L', 'I'];
 const PIECE_COUNT = 10;
 const ROW_COUNT = 3;
 

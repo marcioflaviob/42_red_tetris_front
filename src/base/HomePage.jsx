@@ -32,7 +32,6 @@ const HomePage = () => {
           </Card>
         </div>
         <Card isUsernameRequired={true}>
-          <LegoPiece shape="Z" color="#FFD700" angle={180} size={20} />
           <OfflineCard />
         </Card>
         <Card isUsernameRequired={true}>Play online</Card>

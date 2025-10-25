@@ -1,13 +1,7 @@
 .card {
-  background: linear-gradient(
-    135deg,
-    #1a1a1f 0%,
-    #252530 25%,
-    #2a2535 50%,
-    #252530 75%,
-    #1a1a1f 100%
-  );
-  border: 1px solid #4a4a5a;
+  background: rgba(22, 22, 28, 0.609);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
   border-radius: 8px;
   padding: 1.5rem;
   height: 100%;
@@ -121,7 +115,6 @@
   backdrop-filter: blur(2px);
 }
 
-/* Responsive adjustments for smaller screens */
 @media (max-width: 768px) {
   .card {
     padding: 1rem;

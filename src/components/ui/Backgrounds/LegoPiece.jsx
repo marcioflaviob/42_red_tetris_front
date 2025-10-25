@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import styles from './LegoPiece.module.css';
+import { useState, useRef } from 'react';
 
-// Define Tetris shapes as 2D arrays
 const SHAPES = {
   I: [[1, 1, 1, 1]],
   O: [
@@ -82,50 +82,85 @@ const LegoPiece = ({
   size = 32,
   ...props
 }) => {
+  const [animatedAngle, setAnimatedAngle] = useState(angle);
   const shapeMatrix = SHAPES[shape] || SHAPES.I;
   const isRightAngle = angle % 90 === 0;
   const rotationSteps = isRightAngle ? ((angle % 360) / 90) % 4 : 0;
   const rotated = rotateMatrix(shapeMatrix, rotationSteps);
+  const timeoutRef = useRef(null);
+  const pieceRef = useRef(null);
+
+  const animateToTargetAngle = (targetAngle) => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
+      setAnimatedAngle((prev) => {
+        if (prev === targetAngle) {
+          clearTimeout(timeoutRef.current);
+          return prev;
+        }
+        const step = prev < targetAngle ? 1 : -1;
+        return prev + step;
+      });
+      if (animatedAngle !== targetAngle) {
+        animateToTargetAngle(targetAngle);
+      }
+    }, 5);
+  };
+
+  const handleMouseMove = () => {
+    if (!pieceRef.current) return;
+    animateToTargetAngle(angle + 90);
+  };
+
+  const handleMouseLeave = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    animateToTargetAngle(angle - 90);
+  };
 
   return (
     <div
+      ref={pieceRef}
+      className={styles.legoPiece}
       style={{
         display: 'inline-grid',
         gridTemplateRows: `repeat(${rotated.length}, ${size}px)`,
         gridTemplateColumns: `repeat(${rotated[0].length}, ${size}px)`,
-        transform: isRightAngle ? undefined : `rotate(${angle}deg)`,
+        transform: isRightAngle ? undefined : `rotate(${animatedAngle}deg)`,
       }}
+      onMouseEnter={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       {...props}
     >
       {rotated.map((row, y) =>
-        row.map(
-          (cell, x) =>
-            cell && (
+        row.map((cell, x) =>
+          cell ? (
+            <div
+              key={`${y}-${x}`}
+              className={styles.legoBlock}
+              style={{
+                background: color,
+                width: size,
+                height: size,
+                boxShadow: `0px 8px 0px 0px ${lightenColor(color, -20)}`,
+              }}
+            >
               <div
-                key={`${y}-${x}`}
-                className={styles.legoBlock}
+                className={styles.legoStud}
                 style={{
+                  width: size * 0.5,
+                  height: size * 0.5,
                   background: color,
-                  width: size,
-                  height: size,
-                  boxShadow: `0px 8px 0px 0px ${lightenColor(color, -20)}`,
+                  border: `2px solid ${color}`,
+                  fontSize: size * 0.13,
+                  color: lightenColor(color, -10),
                 }}
               >
-                <div
-                  className={styles.legoStud}
-                  style={{
-                    width: size * 0.5,
-                    height: size * 0.5,
-                    background: color,
-                    border: `2px solid ${color}`,
-                    fontSize: size * 0.13,
-                    color: lightenColor(color, -10),
-                  }}
-                >
-                  LEGO
-                </div>
+                LEGO
               </div>
-            )
+            </div>
+          ) : (
+            <div key={`${y}-${x}`}></div>
+          )
         )
       )}
     </div>
