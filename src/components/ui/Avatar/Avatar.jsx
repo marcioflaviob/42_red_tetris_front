@@ -6,6 +6,44 @@ import { selectAvatar, setAvatar } from '../../../store/slices/userSlice';
 import styles from './Avatar.module.css';
 import { useAppSelector } from '../../../store/hooks';
 
+const isVideo = (src) => {
+  return (
+    src &&
+    (src.endsWith('.mp4') || src.endsWith('.mov') || src.endsWith('.webm'))
+  );
+};
+
+const AvatarMedia = ({ src, size, shape, className, onClick }) => {
+  if (isVideo(src)) {
+    return (
+      <video
+        src={src}
+        autoPlay
+        loop
+        muted
+        playsInline
+        className={className}
+        onClick={onClick}
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          borderRadius: shape === 'circle' ? '50%' : '8px',
+        }}
+      />
+    );
+  }
+  return (
+    <PrimeReactAvatar
+      image={src}
+      size={size}
+      shape={shape}
+      className={className}
+      onClick={onClick}
+    />
+  );
+};
+
 const Avatar = ({
   size,
   shape = 'circle',
@@ -24,6 +62,7 @@ const Avatar = ({
       { length: 13 },
       (_, i) => `/assets/avatars/avatar${i + 1}.webp`
     ),
+    '/assets/anakin/idle/anakin-idle-animation.mov',
   ];
 
   const handleEditClick = (event) => {
@@ -39,8 +78,8 @@ const Avatar = ({
 
   return (
     <div className="relative inline-block">
-      <PrimeReactAvatar
-        image={avatar}
+      <AvatarMedia
+        src={avatar}
         size={size}
         shape={shape}
         className={`${editable ? styles.avatarEditable : styles.avatar} ${className}`}
@@ -61,8 +100,8 @@ const Avatar = ({
                     className={`${styles.avatar} cursor-pointer ${avatar === avatarPath ? styles.selectedAvatar : ''}`}
                     onClick={() => handleAvatarSelect(avatarPath)}
                   >
-                    <PrimeReactAvatar
-                      image={avatarPath}
+                    <AvatarMedia
+                      src={avatarPath}
                       size="xlarge"
                       shape="circle"
                     />
