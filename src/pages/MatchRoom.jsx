@@ -12,7 +12,7 @@ import { useJoinRoomMutation } from "../store/slices/apiSlice";
 import useSocket from "../hooks/useSocket";
 import { socketService } from '../services/SocketService';
 import { selectUser } from "../store/slices/userSlice";
-import GameCard from "../components/cards/GameCard";
+import GameCard from "../components/cards/OnlineGameCard";
 
 const MatchRoom = () => {
     const dispatch = useDispatch();
@@ -32,7 +32,7 @@ const MatchRoom = () => {
     }
 
     const onRoomUpdate = (data) => {
-        console.log("Message received", data);
+        // console.log("Message received", data);
         switch (data.type) {
             case 'player_joined':
                 addPlayerIfNotExists(data.player);
@@ -44,17 +44,17 @@ const MatchRoom = () => {
 
     useEffect(() => {
         if (roomId && isConnected) {
-            console.log(roomId);
+            // console.log(roomId);
             socketService.on('room_update', onRoomUpdate);
-            console.log("Sending user", user);
+            // console.log("Sending user", user);
             joinRoom({user, roomId});
         }
     }, [roomId, joinRoom, isConnected]);
 
     useEffect(() => {
-        console.log("hereeeee", isSuccess, roomData);
+        // console.log("hereeeee", isSuccess, roomData);
         if (isSuccess && roomData) {
-            console.log("Setting players here with", roomData);
+            // console.log("Setting players here with", roomData);
             setPlayers(roomData.players);
         }
     }, [roomData, isSuccess])
@@ -70,7 +70,7 @@ const MatchRoom = () => {
     };
 
     useEffect(() => {
-        console.log("players", players);
+        // console.log("players", players);
     }, [players])
 
     const increasePlayers = (add) => {
@@ -124,7 +124,7 @@ const MatchRoom = () => {
                     <Card className="row-span-4">
                         List of players
                         {players.map((player) => {
-                            console.log("rendering player", player)
+                            // console.log("rendering player", player)
                             return (
                             <div key={player.sessionId}>
                                 <Avatar avatar={player.avatar} />

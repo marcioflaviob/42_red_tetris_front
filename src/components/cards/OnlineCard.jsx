@@ -22,7 +22,6 @@ const OnlineCard = () => {
 
   const handleRoomCreation = async () => {
 		try {
-			console.log(user);
 			const room = await createRoom({
 				user,
 				room: {
@@ -37,7 +36,6 @@ const OnlineCard = () => {
   };
 
 	const handleRoomIdChange = (e) => {
-		console.log(isRoomIdValid)
 		setRoomIdInput(e.target.value);
 		setIsRoomIdValid(roomIdPattern.test(e.target.value))
 	}

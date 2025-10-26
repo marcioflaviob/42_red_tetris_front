@@ -21,7 +21,7 @@ const HomePage = () => {
         </div>
       )}
       <div
-        className={`${styles.grid} container grid mx-auto grid-cols-3 row-span-10 gap-8 flex-1 p-8 w-full`}
+        className={`${styles.grid} container grid mx-auto grid-cols-3 row-span-10 gap-8 flex-1 pt-8 pb-1 w-full`}
       >
         <div className={`${styles.userCardContainer} grid grid-rows-7 gap-4`}>
           <Card className="row-span-2">

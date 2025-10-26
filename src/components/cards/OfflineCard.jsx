@@ -5,12 +5,14 @@ import Button from '../ui/Buttons/Button';
 import Title from '../ui/Titles/Title';
 import InfoCard from '../ui/Card/InfoCard';
 import useDifficultySelector from '../../hooks/useDifficultySelector'
+import { useNavigate } from 'react-router-dom';
 
 const OfflineCard = () => {
+  const navigate = useNavigate();
   const {difficulty, invisiblePieces, setInvisiblePieces, increasedGravity, setIncreasedGravity} = useDifficultySelector();
 
   const handlePlayClick = () => {
-    console.log('Starting offline game...');
+    navigate(`/offline`);
   };
 
   return (
