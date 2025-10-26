@@ -26,3 +26,7 @@
 .filled {
     background-color: yellow;
 }
+
+.predict {
+    border: solid 2px white;
+}

@@ -27,12 +27,12 @@ export const SHAPES = {
 };
 
 export class Tetromino {
-  constructor(shape, color, coords, pivot = null, rotation = 0) {
+  constructor(shape, color, coords, predictCoords, pivot = null, rotation = 0) {
     this.shape = shape;
     this.color = color;
     this.coords = coords;
+    this.predictCoords = predictCoords;
     this.pivot = pivot || this.calculatePivot();
-    // Rotation state (0,1,2,3) corresponding to the current orientation
     this.rotation = rotation;
   }
 
@@ -40,18 +40,11 @@ export class Tetromino {
     const rows = this.shape.length;
     const cols = this.shape[0].length;
 
-    // Use SRS-friendly pivot approximations for I piece to improve wall kicks.
-    // Reference (Guideline SRS): I piece rotates around a point that is offset
-    // from the geometric center. With our minimal bounding boxes, the closest
-    // integer pivots that align with kick tables are:
-    // - Horizontal I (1x4): pivot at the second block -> [0,1]
-    // - Vertical I (4x1): pivot at the third block from top -> [2,0]
     if ((rows === 1 && cols === 4) || (rows === 4 && cols === 1)) {
       if (rows === 1) return [0, 1];
       if (cols === 1) return [2, 0];
     }
 
-    // Default: center of the shape matrix
     const centerRow = Math.floor(rows / 2);
     const centerCol = Math.floor(cols / 2);
     return [centerRow, centerCol];
@@ -61,6 +54,5 @@ export class Tetromino {
   moveLeft() {}
   moveRight() {}
   rotate() {
-    /* rotation logic */
   }
 }

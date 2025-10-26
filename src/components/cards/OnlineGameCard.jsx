@@ -26,9 +26,7 @@ const GameCard = ({ player }) => {
 
     const spawnTetromino = (shape) => {
         shape.forEach((row, rowIdx) => {
-            console.log('idx', SPAWN_CELL, 'row', row, 'rowIdx', rowIdx)
             row.forEach((cell, cellIdx) => {
-                console.log('rowIdx', rowIdx, 'sum', SPAWN_CELL+cellIdx, 'cell', cell);
                 updateCell(rowIdx, SPAWN_CELL + cellIdx, cell);
             })
         })

@@ -10,6 +10,8 @@ import { selectUser } from "../store/slices/userSlice";
 
 const OfflineMatchRoom = () => {
     const [showCountdown, setShowCountdown] = useState(false);
+    const [score, setScore] = useState(0);
+    const [level, setLevel] = useState(1);
     const { isPlaying, play, pause, startGameTransition } = useAudioManager(true);
     const user = useAppSelector(selectUser);
 
@@ -30,9 +32,11 @@ const OfflineMatchRoom = () => {
                         <Button onClick={isPlaying ? pause : play} icon={isPlaying ? 'pi pi-volume-up' : 'pi pi-volume-off'}></Button>
                     </Card>
                     <Card className="row-span-4">
+                        <p>Score: {score}</p>
+                        <p>Level: {level}</p>
                     </Card>
                 </div>
-                <GameCard player={user} key={user.sessionId} />
+                <GameCard player={user} key={user.sessionId} score={score} setScore={setScore} level={level} setLevel={setLevel} />
             </div>
         </div>
     )

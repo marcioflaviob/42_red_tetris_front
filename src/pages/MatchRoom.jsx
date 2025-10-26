@@ -69,10 +69,6 @@ const MatchRoom = () => {
         setGameStarted(true);
     };
 
-    useEffect(() => {
-        // console.log("players", players);
-    }, [players])
-
     const increasePlayers = (add) => {
         if (add) {
             const num = Math.floor(Math.random() * 1000);
