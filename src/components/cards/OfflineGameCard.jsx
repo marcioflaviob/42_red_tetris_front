@@ -62,13 +62,14 @@ const GameCard = ({ player, setScore, level, setLevel }) => {
                 proposed = rotatePiece(piece);
                 if (!proposed) return COLLISION.CONTINUE;
                 setActivePiece(
-                new Tetromino(
-                    proposed.shape,
-                    piece.color,
-                    proposed.coords,
-                    proposed.pivot,
-                    proposed.rotation
-                )
+                    new Tetromino(
+                        proposed.shape,
+                        piece.color,
+                        proposed.coords,
+                        getPredictCoords(proposed.coords),
+                        proposed.pivot,
+                        proposed.rotation
+                    )
                 );
                 return COLLISION.NO;
             default:
@@ -81,7 +82,7 @@ const GameCard = ({ player, setScore, level, setLevel }) => {
             proposed.shape,
             piece.color,
             proposed.coords,
-            getPredictCoords(coords),
+            getPredictCoords(proposed.coords),
             proposed.pivot,
             proposed.rotation
             )
@@ -106,11 +107,45 @@ const GameCard = ({ player, setScore, level, setLevel }) => {
     }, movePiece, lockPiece, level);
     const rowsCleared = useScoreManager({ setScore, level, setLevel, board, setBoard, lastDrop });
 
-  const getCell = useCallback((coords) => {
-    const board = boardRef.current;
-    const idx = getIndex(coords);
-    return board[idx];
-  }, [boardRef]);
+    const getCell = useCallback((coords) => {
+        const board = boardRef.current;
+        const idx = getIndex(coords);
+        return board[idx];
+    }, [boardRef]);
+
+    const hasCollided = useCallback((move, coords) => {
+    if (!coords) return COLLISION.NO;
+
+    for (const [r, c] of coords) {
+      if (c < 0 || c >= BOARD_COLS) return COLLISION.CONTINUE;
+
+      if (move === MOVES.DOWN) {
+        // Bottom collision
+        if (r >= BUFFER_ZONE_ROWS + BOARD_ROWS) return COLLISION.LOCK;
+
+        // Cell collision
+        if (getCell([r, c])) return COLLISION.LOCK;
+      } else {
+        if (r >= BUFFER_ZONE_ROWS + BOARD_ROWS || getCell([r, c]))
+          return COLLISION.CONTINUE;
+      }
+    }
+    return COLLISION.NO;
+  }, [getCell]);
+
+      const getPredictCoords = useCallback((coords) => {
+        if (!coords) return [];
+        let prediction = coords.map(([r, c]) => [r, c]);
+        while (true) {
+            const next = prediction.map(([r, c]) => [r + 1, c]);
+            const collision = hasCollided(MOVES.DOWN, next);
+
+            if (collision === COLLISION.LOCK || collision === COLLISION.CONTINUE) break;
+
+            prediction = next;
+        }
+        return prediction;
+    }, [hasCollided]);
 
     const spawnTetromino = useCallback((shape) => {
         let coords = [];
@@ -137,40 +172,6 @@ const GameCard = ({ player, setScore, level, setLevel }) => {
             return newBoard;
         });
     }
-
-    const getPredictCoords = useCallback((coords) => {
-        if (!coords) return [];
-        let prediction = coords.map(([r, c]) => [r, c]);
-        while (true) {
-            const next = prediction.map(([r, c]) => [r + 1, c]);
-            const collision = hasCollided(MOVES.DOWN, next);
-
-            if (collision === COLLISION.LOCK || collision === COLLISION.CONTINUE) break;
-
-            prediction = next;
-        }
-        return prediction;
-    }, [hasCollided]);
-
-  const hasCollided = useCallback((move, coords) => {
-    if (!coords) return COLLISION.NO;
-
-    for (const [r, c] of coords) {
-      if (c < 0 || c >= BOARD_COLS) return COLLISION.CONTINUE;
-
-      if (move === MOVES.DOWN) {
-        // Bottom collision
-        if (r >= BUFFER_ZONE_ROWS + BOARD_ROWS) return COLLISION.LOCK;
-
-        // Cell collision
-        if (getCell([r, c])) return COLLISION.LOCK;
-      } else {
-        if (r >= BUFFER_ZONE_ROWS + BOARD_ROWS || getCell([r, c]))
-          return COLLISION.CONTINUE;
-      }
-    }
-    return COLLISION.NO;
-  }, [getCell]);
 
     const rotatePiece = useRotation({ hasCollided });
 
