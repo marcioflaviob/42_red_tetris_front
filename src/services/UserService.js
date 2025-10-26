@@ -21,8 +21,12 @@ const createUserService = (
     return userRepo.saveAvatarToStorage(avatar);
   };
 
-  const getMatches = () => {
-    return matchesRepo.getMatches();
+  const getMatches = async () => {
+    return await matchesRepo.getMatches();
+  };
+
+  const getSessionId = () => {
+    return userRepo.loadSessionIdFromStorage();
   };
 
   return {
@@ -31,6 +35,7 @@ const createUserService = (
     getAvatar,
     saveAvatar,
     getMatches,
+    getSessionId,
   };
 };
 

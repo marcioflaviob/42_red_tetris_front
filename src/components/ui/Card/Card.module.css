@@ -64,6 +64,23 @@
     0 0 20px rgba(100, 255, 200, 0.1);
 }
 
+.greyScale {
+  filter: grayscale(1);
+  transform: translateY(-1px);
+  border-color: #5a5a6a;
+  box-shadow:
+    0 6px 16px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(100, 100, 100, 0.15),
+    inset 0 -1px 0 rgba(150, 150, 150, 0.08),
+    0 0 20px rgba(150, 150, 150, 0.1);
+}
+
+.greyScale * {
+  filter: grayscale(1);
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
 .usernameRequired:hover {
   filter: grayscale(1);
   transform: translateY(-1px);

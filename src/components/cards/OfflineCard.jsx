@@ -1,35 +1,23 @@
-import React, { useState } from 'react';
-import styles from './OfflineCard.module.css';
+import styles from './PlayCards.module.css';
 import InputSwitch from '../ui/Inputs/InputSwitch';
 import Button from '../ui/Buttons/Button';
 import Title from '../ui/Titles/Title';
 import InfoCard from '../ui/Card/InfoCard';
+import useDifficultySelector from '../../hooks/useDifficultySelector';
+import { useNavigate } from 'react-router-dom';
 
 const OfflineCard = () => {
-  const [invisiblePieces, setInvisiblePieces] = useState(false);
-  const [increasedGravity, setIncreasedGravity] = useState(false);
-
-  const getDifficulty = () => {
-    const activeOptions = [invisiblePieces, increasedGravity].filter(
-      Boolean
-    ).length;
-
-    switch (activeOptions) {
-      case 0:
-        return { level: 'Normal', progress: 33, color: 'normal' };
-      case 1:
-        return { level: 'Medium', progress: 66, color: 'medium' };
-      case 2:
-        return { level: 'Hard', progress: 100, color: 'hard' };
-      default:
-        return { level: 'Normal', progress: 33, color: 'normal' };
-    }
-  };
-
-  const difficulty = getDifficulty();
+  const navigate = useNavigate();
+  const {
+    difficulty,
+    invisiblePieces,
+    setInvisiblePieces,
+    increasedGravity,
+    setIncreasedGravity,
+  } = useDifficultySelector();
 
   const handlePlayClick = () => {
-    console.log('Starting offline game...');
+    navigate(`/offline`);
   };
 
   return (

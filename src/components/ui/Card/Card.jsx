@@ -3,12 +3,17 @@ import styles from './Card.module.css';
 import { useAppSelector } from '../../../store/hooks';
 import { selectUsername } from '../../../store/slices/userSlice';
 
-const Card = ({ children, className = '', isUsernameRequired = false }) => {
+const Card = ({
+  children,
+  className = '',
+  isUsernameRequired = false,
+  greyScale = false,
+}) => {
   const username = useAppSelector(selectUsername);
 
   const isUsernameEmpty =
     isUsernameRequired && (!username || username.trim() === '');
-  const cardClassName = `${styles.card} ${className} ${isUsernameEmpty ? styles.usernameRequired : ''}`;
+  const cardClassName = `${styles.card} ${className} ${isUsernameEmpty ? styles.usernameRequired : ''} ${greyScale ? styles.greyScale : ''}`;
 
   return (
     <div className={cardClassName}>

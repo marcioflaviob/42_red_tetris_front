@@ -1,34 +1,7 @@
 import PropTypes from 'prop-types';
 import styles from './LegoPiece.module.css';
 import { useState, useRef } from 'react';
-
-const SHAPES = {
-  I: [[1, 1, 1, 1]],
-  O: [
-    [1, 1],
-    [1, 1],
-  ],
-  T: [
-    [0, 1, 0],
-    [1, 1, 1],
-  ],
-  S: [
-    [0, 1, 1],
-    [1, 1, 0],
-  ],
-  Z: [
-    [1, 1, 0],
-    [0, 1, 1],
-  ],
-  J: [
-    [1, 0, 0],
-    [1, 1, 1],
-  ],
-  L: [
-    [0, 0, 1],
-    [1, 1, 1],
-  ],
-};
+import { SHAPES } from '../../../utils/tetromino';
 
 function rotateMatrix(matrix, times = 1) {
   let result = matrix;

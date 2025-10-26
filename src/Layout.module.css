@@ -1,13 +1,11 @@
 .layout {
   display: grid;
   grid-template-rows: 1fr var(--footer-height);
-  min-height: calc(100vh + var(--footer-height));
+  min-height: calc(100vh);
 }
 
 .main {
   grid-row: 1;
-  overflow-y: auto;
-  /* position: relative; */
   z-index: 1;
 }
 

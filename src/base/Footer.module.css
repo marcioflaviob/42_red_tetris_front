@@ -1,12 +1,84 @@
 .footer {
-  height: var(--footer-height);
-  padding: 1rem;
-  text-align: center;
-  background: #262629;
+  background: #6969ce00;
   color: aliceblue;
+  font-size: 0.85rem;
+  padding: 0.25rem;
+  height: var(--footer-height);
+  z-index: var(--z-footer);
+}
+
+.footerContent {
   display: flex;
   align-items: center;
-  justify-content: center;
-  border-top: 1px solid #e0e0e0;
-  z-index: var(--z-footer);
+  justify-content: space-between;
+  margin: 0 auto;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.schoolLink {
+  display: flex;
+  align-items: center;
+}
+
+.schoolLogo {
+  height: 28px;
+  width: auto;
+  transition: transform 0.2s ease;
+}
+
+.schoolLogo:hover {
+  transform: scale(1.1);
+}
+
+.footerLinks {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.footerLinks a {
+  color: #ffffff;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footerLinks a:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.separator {
+  color: #ccc;
+  margin: 0 0.25rem;
+}
+
+.copyright {
+  margin: 0;
+  color: #ffffff;
+}
+
+.copyright a {
+  font-weight: bold;
+  text-decoration: none;
+  color: inherit;
+}
+
+.copyright a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .footerContent {
+    text-align: center;
+  }
+
+  .footerLinks {
+    font-size: 0.8rem;
+  }
+
+  .copyright {
+    font-size: 0.7rem;
+  }
 }

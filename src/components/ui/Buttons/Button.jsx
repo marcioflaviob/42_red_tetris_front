@@ -9,6 +9,8 @@ const Button = ({
   size = 'normal',
   variant = 'primary',
   className = '',
+  tooltip = '',
+  tooltipBool = false,
   ...props
 }) => {
   const getSizeClass = () => {
@@ -38,6 +40,11 @@ const Button = ({
       className={`${styles.button} ${getSizeClass()} ${getVariantClass()} ${className}`}
       onClick={onClick}
       disabled={disabled}
+      tooltip={tooltipBool ? tooltip : undefined}
+      tooltipOptions={{
+        position: 'top',
+        showOnDisabled: true,
+      }}
       {...props}
     >
       {children}
