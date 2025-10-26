@@ -17,11 +17,11 @@ const Countdown = ({ onComplete, isVisible = false }) => {
     const timer = setInterval(() => {
       setCount((prevCount) => {
         if (prevCount > 1) {
-          setAnimationKey(prev => prev + 1);
+          setAnimationKey((prev) => prev + 1);
           return prevCount - 1;
         } else if (prevCount === 1) {
           setPhase('go');
-          setAnimationKey(prev => prev + 1);
+          setAnimationKey((prev) => prev + 1);
           setTimeout(() => {
             setPhase('complete');
             if (onComplete) onComplete();
@@ -44,7 +44,10 @@ const Countdown = ({ onComplete, isVisible = false }) => {
     <div className={styles.overlay}>
       <div className={styles.background}></div>
       <div className={styles.container}>
-        <div className={`${styles.countdown} ${countdownClass}`} key={animationKey}>
+        <div
+          className={`${styles.countdown} ${countdownClass}`}
+          key={animationKey}
+        >
           {displayText}
         </div>
         {phase === 'go' && (

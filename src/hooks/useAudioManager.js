@@ -1,16 +1,16 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback } from 'react';
 
 const AUDIO_PATHS = {
   LOBBY: '/music/lobby_loop.ogg',
   GAME: '/music/begin_game_alt.ogg',
-  INTRO: '/music/intro.ogg'
+  INTRO: '/music/intro.ogg',
 };
 
 const AUDIO_STATES = {
   IDLE: 'idle',
   LOADING: 'loading',
   PLAYING: 'playing',
-  PAUSED: 'paused'
+  PAUSED: 'paused',
 };
 
 const useAudioManager = (autoPlay = false) => {
@@ -32,26 +32,77 @@ const useAudioManager = (autoPlay = false) => {
     }
   }, []);
 
+  const stopCurrentSource = useCallback(() => {
+    if (sourceRef.current) {
+      sourceRef.current.onended = null;
+      try {
+        sourceRef.current.stop();
+      } catch {
+        // Ignore if already stopped
+      }
+      sourceRef.current = null;
+    }
+  }, []);
+
+  const playAudio = useCallback(
+    async (bufferKey, loop = false, onEnded = null) => {
+      const buffer = buffersRef.current[bufferKey];
+      if (!buffer || !audioContextRef.current) return;
+
+      try {
+        if (audioContextRef.current.state === 'suspended') {
+          await audioContextRef.current.resume();
+        }
+
+        stopCurrentSource();
+
+        sourceRef.current = audioContextRef.current.createBufferSource();
+        sourceRef.current.buffer = buffer;
+        sourceRef.current.loop = loop;
+        sourceRef.current.connect(audioContextRef.current.destination);
+
+        if (onEnded) {
+          sourceRef.current.onended = onEnded;
+        }
+
+        if (loop) {
+          loopStartTimeRef.current = audioContextRef.current.currentTime;
+        }
+
+        sourceRef.current.start();
+        setAudioState(AUDIO_STATES.PLAYING);
+      } catch (error) {
+        console.error('Error playing audio:', error);
+      }
+    },
+    [stopCurrentSource]
+  );
+
+  const playLobbyMusic = useCallback(() => {
+    playAudio('lobby', true);
+  }, [playAudio]);
+
   useEffect(() => {
     const initAudio = async () => {
       try {
         setIsLoading(true);
-        audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
-        
+        audioContextRef.current = new (window.AudioContext ||
+          window.webkitAudioContext)();
+
         const [lobbyBuffer, gameBuffer, introBuffer] = await Promise.all([
           loadAudioBuffer(AUDIO_PATHS.LOBBY),
           loadAudioBuffer(AUDIO_PATHS.GAME),
-          loadAudioBuffer(AUDIO_PATHS.INTRO)
+          loadAudioBuffer(AUDIO_PATHS.INTRO),
         ]);
 
         buffersRef.current = {
           lobby: lobbyBuffer,
           game: gameBuffer,
-          intro: introBuffer
+          intro: introBuffer,
         };
 
         setIsLoading(false);
-        
+
         if (autoPlay) {
           setTimeout(() => playLobbyMusic(), 100);
         }
@@ -69,62 +120,15 @@ const useAudioManager = (autoPlay = false) => {
         audioContextRef.current.close();
       }
     };
-  }, [autoPlay, loadAudioBuffer]);
-
-  const stopCurrentSource = useCallback(() => {
-    if (sourceRef.current) {
-      sourceRef.current.onended = null;
-      try {
-        sourceRef.current.stop();
-      } catch (error) {
-        // Ignore if already stopped
-      }
-      sourceRef.current = null;
-    }
-  }, []);
-
-  const playAudio = useCallback(async (bufferKey, loop = false, onEnded = null) => {
-    const buffer = buffersRef.current[bufferKey];
-    if (!buffer || !audioContextRef.current) return;
-
-    try {
-      if (audioContextRef.current.state === 'suspended') {
-        await audioContextRef.current.resume();
-      }
-
-      stopCurrentSource();
-
-      sourceRef.current = audioContextRef.current.createBufferSource();
-      sourceRef.current.buffer = buffer;
-      sourceRef.current.loop = loop;
-      sourceRef.current.connect(audioContextRef.current.destination);
-      
-      if (onEnded) {
-        sourceRef.current.onended = onEnded;
-      }
-      
-      if (loop) {
-        loopStartTimeRef.current = audioContextRef.current.currentTime;
-      }
-      
-      sourceRef.current.start();
-      setAudioState(AUDIO_STATES.PLAYING);
-    } catch (error) {
-      console.error('Error playing audio:', error);
-    }
-  }, [stopCurrentSource]);
-
-  const playLobbyMusic = useCallback(() => {
-    playAudio('lobby', true);
-  }, [playAudio]);
-
-  const playGameMusic = useCallback(() => {
-    playAudio('game', false, playIntroMusic);
-  }, [playAudio]);
+  }, [autoPlay, loadAudioBuffer, playLobbyMusic, stopCurrentSource]);
 
   const playIntroMusic = useCallback(() => {
     playAudio('intro', false, playLobbyMusic);
   }, [playAudio, playLobbyMusic]);
+
+  const playGameMusic = useCallback(() => {
+    playAudio('game', false, playIntroMusic);
+  }, [playAudio, playIntroMusic]);
 
   const scheduleGameMusicTransition = useCallback(() => {
     const lobbyBuffer = buffersRef.current.lobby;
@@ -136,9 +140,12 @@ const useAudioManager = (autoPlay = false) => {
     const timeInCurrentLoop = elapsedTime % lobbyDuration;
     const timeUntilLoopEnd = lobbyDuration - timeInCurrentLoop;
 
-    setTimeout(() => {
-      playGameMusic();
-    }, Math.max(0, timeUntilLoopEnd * 1000));
+    setTimeout(
+      () => {
+        playGameMusic();
+      },
+      Math.max(0, timeUntilLoopEnd * 1000)
+    );
   }, [playGameMusic]);
 
   const play = useCallback(async () => {
@@ -165,7 +172,7 @@ const useAudioManager = (autoPlay = false) => {
     audioState,
     play,
     pause,
-    startGameTransition
+    startGameTransition,
   };
 };
 

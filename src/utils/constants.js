@@ -1,8 +1,5 @@
-
-
 export const MOVE_DELAY = 100;
 export const FRAMES_PER_SECOND = 60;
-
 
 export const BUFFER_ZONE_ROWS = 2;
 export const BOARD_ROWS = 20;
@@ -14,26 +11,26 @@ export const MOVES = {
   LEFT: 2,
   RIGHT: 3,
   ROTATE: 4,
-}
+};
 
 export const COLLISION = {
   NO: 0,
   CONTINUE: 1,
   LOCK: 2,
-}
+};
 
 export const CLASS = {
   YELLOW: 1,
   PREDICT: 2,
-  EMPTY: 0
-}
+  EMPTY: 0,
+};
 
 export const SCORED_ACTION = {
   SOFT_DROP: 1,
   HARD_DROP: 2,
   TETRIS: 3,
-  TETRIS_B2B: 4
-} 
+  TETRIS_B2B: 4,
+};
 
 export const SCORE = {
   SOFT_DROP: 1,
@@ -41,9 +38,9 @@ export const SCORE = {
   SINGLE: 10,
   DOUBLE: 30,
   TRIPLE: 50,
-  TETRIS: 100, 
-  TETRIS_B2B: 120
-}
+  TETRIS: 100,
+  TETRIS_B2B: 120,
+};
 
 export const LEVEL = {
   1: 5, // Lines to be cleared to move to the next level
@@ -60,5 +57,5 @@ export const LEVEL = {
   12: 60,
   13: 65,
   14: 70,
-  15: 999
-}
+  15: 999,
+};

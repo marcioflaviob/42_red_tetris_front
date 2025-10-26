@@ -53,6 +53,5 @@ export class Tetromino {
   moveDown() {}
   moveLeft() {}
   moveRight() {}
-  rotate() {
-  }
+  rotate() {}
 }

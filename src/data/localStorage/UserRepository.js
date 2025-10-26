@@ -47,7 +47,7 @@ const createUserRepository = () => {
     }
   };
 
-  const loadSessionIdFromStorage = (avatar) => {
+  const loadSessionIdFromStorage = () => {
     let sessionId = localStorage.getItem('tetris-session-id');
     if (!sessionId) {
       sessionId = uuidv4();
@@ -61,7 +61,7 @@ const createUserRepository = () => {
     saveUsernameToStorage,
     loadAvatarFromStorage,
     saveAvatarToStorage,
-    loadSessionIdFromStorage
+    loadSessionIdFromStorage,
   };
 };
 

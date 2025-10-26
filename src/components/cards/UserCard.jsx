@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import InputText from '../ui/Inputs/InputText';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { selectUsername, setUsername } from '../../store/slices/userSlice';

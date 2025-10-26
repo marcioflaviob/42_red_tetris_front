@@ -17,7 +17,7 @@ const userSlice = createSlice({
     username: service.getUsername(),
     avatar: service.getAvatar(),
     matches: [],
-    sessionId: service.getSessionId()
+    sessionId: service.getSessionId(),
   },
   reducers: {
     setUsername: (state, action) => {
@@ -30,10 +30,9 @@ const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder
-      .addCase(loadMatchesFromStorage.fulfilled, (state, action) => {
-        state.matches = action.payload;
-      });
+    builder.addCase(loadMatchesFromStorage.fulfilled, (state, action) => {
+      state.matches = action.payload;
+    });
   },
 });
 
@@ -43,6 +42,6 @@ export const selectAvatar = (state) => state.user.avatar;
 export const selectUser = (state) => ({
   username: state.user.username,
   avatar: state.user.avatar,
-  sessionId: state.user.sessionId
+  sessionId: state.user.sessionId,
 });
 export default userSlice.reducer;

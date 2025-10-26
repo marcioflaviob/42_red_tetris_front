@@ -45,7 +45,7 @@
   user-select: none;
   position: relative;
   z-index: 10;
-  text-shadow: 
+  text-shadow:
     0 0 30px currentColor,
     0 0 60px currentColor,
     0 0 90px currentColor,
@@ -56,7 +56,7 @@
 /* Number styling (3, 2, 1) */
 .number {
   color: #e2e8f0;
-  animation: 
+  animation:
     numberPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1),
     numberGlow 1s ease-out,
     numberPulse 0.3s ease-in-out 0.5s 2;
@@ -71,17 +71,10 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   background-size: 200% 200%;
-  animation-name: 
-    numberPop,
-    numberGlow,
-    numberPulse,
-    gradientShift;
+  animation-name: numberPop, numberGlow, numberPulse, gradientShift;
   animation-duration: 0.8s, 1s, 0.3s, 1.5s;
-  animation-timing-function: 
-    cubic-bezier(0.34, 1.56, 0.64, 1),
-    ease-out,
-    ease-in-out,
-    ease-in-out;
+  animation-timing-function:
+    cubic-bezier(0.34, 1.56, 0.64, 1), ease-out, ease-in-out, ease-in-out;
   animation-delay: 0s, 0s, 0.5s, 0s;
   animation-iteration-count: 1, 1, 2, infinite;
 }
@@ -89,7 +82,7 @@
 /* "GO!" styling */
 .go {
   color: #10b981;
-  animation: 
+  animation:
     goPop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1),
     goGlow 0.8s ease-out,
     goExplosion 0.4s ease-out 0.4s;
@@ -106,17 +99,10 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   background-size: 300% 300%;
-  animation-name: 
-    goPop,
-    goGlow,
-    goExplosion,
-    gradientShift;
+  animation-name: goPop, goGlow, goExplosion, gradientShift;
   animation-duration: 0.7s, 0.8s, 0.4s, 1.5s;
-  animation-timing-function: 
-    cubic-bezier(0.34, 1.56, 0.64, 1),
-    ease-out,
-    ease-out,
-    linear;
+  animation-timing-function:
+    cubic-bezier(0.34, 1.56, 0.64, 1), ease-out, ease-out, linear;
   animation-delay: 0s, 0s, 0.4s, 0s;
   animation-iteration-count: 1, 1, 1, infinite;
 }
@@ -156,7 +142,8 @@
 }
 
 @keyframes backgroundPulse {
-  0%, 100% {
+  0%,
+  100% {
     background: linear-gradient(
       135deg,
       rgba(56, 56, 65, 0.95) 0%,
@@ -203,15 +190,16 @@
 }
 
 @keyframes numberGlow {
-  0%, 100% {
-    text-shadow: 
+  0%,
+  100% {
+    text-shadow:
       0 0 30px #e2e8f0,
       0 0 60px #cbd5e0,
       0 0 90px #a0aec0,
       0 10px 20px rgba(0, 0, 0, 0.5);
   }
   50% {
-    text-shadow: 
+    text-shadow:
       0 0 50px #f7fafc,
       0 0 80px #e2e8f0,
       0 0 120px #cbd5e0,
@@ -220,10 +208,11 @@
 }
 
 @keyframes numberPulse {
-  0%, 100% { 
+  0%,
+  100% {
     transform: scale(1);
   }
-  50% { 
+  50% {
     transform: scale(1.05);
   }
 }
@@ -262,15 +251,16 @@
 }
 
 @keyframes goGlow {
-  0%, 100% {
-    text-shadow: 
+  0%,
+  100% {
+    text-shadow:
       0 0 30px #10b981,
       0 0 60px #059669,
       0 0 90px #047857,
       0 10px 20px rgba(0, 0, 0, 0.5);
   }
   50% {
-    text-shadow: 
+    text-shadow:
       0 0 60px #34d399,
       0 0 100px #10b981,
       0 0 140px #059669,
@@ -279,59 +269,56 @@
 }
 
 @keyframes goExplosion {
-  0% { 
+  0% {
     transform: scale(1);
     filter: blur(0px) brightness(1);
   }
-  20% { 
+  20% {
     transform: scale(1.15);
     filter: blur(2px) brightness(1.3);
   }
-  40% { 
+  40% {
     transform: scale(0.95);
     filter: blur(0px) brightness(1.1);
   }
-  60% { 
+  60% {
     transform: scale(1.08);
     filter: blur(1px) brightness(1.2);
   }
-  80% { 
+  80% {
     transform: scale(0.98);
     filter: blur(0px) brightness(1.05);
   }
-  100% { 
+  100% {
     transform: scale(1);
     filter: blur(0px) brightness(1);
   }
 }
 
 @keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 @keyframes particleExplode {
   0% {
     opacity: 0;
-    transform: 
-      rotate(var(--angle)) 
-      translateX(0) 
-      scale(0);
+    transform: rotate(var(--angle)) translateX(0) scale(0);
   }
   15% {
     opacity: 1;
-    transform: 
-      rotate(var(--angle)) 
-      translateX(40px) 
-      scale(1.5);
+    transform: rotate(var(--angle)) translateX(40px) scale(1.5);
   }
   100% {
     opacity: 0;
-    transform: 
-      rotate(var(--angle)) 
-      translateX(250px) 
-      scale(0);
+    transform: rotate(var(--angle)) translateX(250px) scale(0);
   }
 }
 
@@ -355,7 +342,7 @@
   .particle {
     animation: none;
   }
-  
+
   .number,
   .go {
     animation: fadeIn 0.3s ease-out;

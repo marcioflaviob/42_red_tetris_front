@@ -15,9 +15,9 @@ class SocketService {
     this.socket = io('http://localhost:3000', {
       auth: {
         sessionId,
-        username
+        username,
       },
-      transports: ['websocket', 'polling']
+      transports: ['websocket', 'polling'],
     });
 
     this.socket.on('connect', () => {

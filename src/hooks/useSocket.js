@@ -3,7 +3,7 @@ import { useAppSelector } from '../store/hooks';
 import { socketService } from '../services/SocketService';
 
 const useSocket = () => {
-  const user = useAppSelector(state => state.user);
+  const user = useAppSelector((state) => state.user);
   const socketRef = useRef(null);
 
   useEffect(() => {
@@ -15,7 +15,7 @@ const useSocket = () => {
       // Keep connection alive
       // socketService.disconnect();
     };
-  }, [user.sessionId]);
+  }, [user.sessionId, user.username]);
 
   const emit = (event, data) => {
     socketService.emit(event, data);
@@ -34,7 +34,7 @@ const useSocket = () => {
     emit,
     on,
     off,
-    isConnected: socketService.isConnected
+    isConnected: socketService.isConnected,
   };
 };
 

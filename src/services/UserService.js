@@ -35,7 +35,7 @@ const createUserService = (
     getAvatar,
     saveAvatar,
     getMatches,
-    getSessionId
+    getSessionId,
   };
 };
 

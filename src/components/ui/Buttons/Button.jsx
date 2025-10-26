@@ -41,9 +41,9 @@ const Button = ({
       onClick={onClick}
       disabled={disabled}
       tooltip={tooltipBool ? tooltip : undefined}
-      tooltipOptions={{ 
+      tooltipOptions={{
         position: 'top',
-        showOnDisabled: true 
+        showOnDisabled: true,
       }}
       {...props}
     >

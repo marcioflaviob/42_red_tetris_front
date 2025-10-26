@@ -17,14 +17,14 @@ export const api = createApi({
         url: '/room',
         method: 'POST',
         body: userData,
-      })
+      }),
     }),
     joinRoom: builder.mutation({
       query: ({ user, roomId }) => ({
         url: `/room/${roomId}/join`,
         method: 'POST',
         body: { user },
-      })
+      }),
     }),
   }),
 });
