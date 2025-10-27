@@ -1,3 +1,6 @@
+import { COLOR } from './constants';
+import { getRandom } from './helper';
+
 export const SHAPES = {
   I: [[1, 1, 1, 1]],
   O: [
@@ -27,9 +30,16 @@ export const SHAPES = {
 };
 
 export class Tetromino {
-  constructor(shape, color, coords, predictCoords, pivot = null, rotation = 0) {
-    this.shape = shape;
-    this.color = color;
+  constructor({
+    shape = null,
+    color = null,
+    coords,
+    predictCoords,
+    pivot = null,
+    rotation = 0,
+  }) {
+    this.shape = shape || getRandom(SHAPES);
+    this.color = color || getRandom(COLOR);
     this.coords = coords;
     this.predictCoords = predictCoords;
     this.pivot = pivot || this.calculatePivot();
