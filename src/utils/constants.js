@@ -1,3 +1,5 @@
+export const USERNAME_REGEX = /^[a-zA-Z0-9]*$/;
+
 export const MOVE_DELAY = 100;
 export const FRAMES_PER_SECOND = 60;
 
