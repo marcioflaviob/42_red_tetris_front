@@ -17,6 +17,7 @@ import {
 } from '../../utils/constants';
 import useBoard from '../../hooks/useBoard';
 import useScoreManager from '../../hooks/useScoreManager';
+import { useLocation } from 'react-router-dom';
 
 const getCellClassName = (index, type) => {
   if (index < 20 && !type) return styles.bufferZoneCell;
@@ -42,6 +43,13 @@ const GameCard = ({ player, setScore, level, setLevel }) => {
   } = useBoard();
   // const [warningState, setWarningState] = useState(false);
   const [gameOver, setGameOver] = useState(false);
+
+  const location = useLocation();
+  const {
+    piecePrediction,
+    // invisiblePieces,
+    // increasedGravity
+  } = location.state || {};
 
   const movePiece = (move) => {
     const piece = activePieceRef.current;
@@ -227,7 +235,9 @@ const GameCard = ({ player, setScore, level, setLevel }) => {
     );
 
     const predictIndices = new Set(
-      activePiece?.predictCoords?.map((coords) => getIndex(coords))
+      piecePrediction
+        ? activePiece?.predictCoords?.map((coords) => getIndex(coords))
+        : []
     );
 
     return boardCells.map(({ idx, filled }) => (
@@ -243,7 +253,7 @@ const GameCard = ({ player, setScore, level, setLevel }) => {
         }
       />
     ));
-  }, [boardCells, activePiece]);
+  }, [boardCells, activePiece, piecePrediction]);
 
   const getRandomShape = useCallback(() => {
     const shapes = Object.values(SHAPES);

@@ -3,11 +3,14 @@ import { useState } from 'react';
 const useDifficultySelector = () => {
   const [invisiblePieces, setInvisiblePieces] = useState(false);
   const [increasedGravity, setIncreasedGravity] = useState(false);
+  const [piecePrediction, setPiecePrediction] = useState(true);
 
   const getDifficulty = () => {
-    const activeOptions = [invisiblePieces, increasedGravity].filter(
-      Boolean
-    ).length;
+    const activeOptions = [
+      invisiblePieces,
+      increasedGravity,
+      !piecePrediction,
+    ].filter(Boolean).length;
 
     switch (activeOptions) {
       case 0:
@@ -15,6 +18,8 @@ const useDifficultySelector = () => {
       case 1:
         return { level: 'Medium', progress: 66, color: 'medium' };
       case 2:
+        return { level: 'Medium', progress: 66, color: 'medium' };
+      case 3:
         return { level: 'Hard', progress: 100, color: 'hard' };
       default:
         return { level: 'Normal', progress: 33, color: 'normal' };
@@ -27,6 +32,8 @@ const useDifficultySelector = () => {
     setInvisiblePieces,
     increasedGravity,
     setIncreasedGravity,
+    piecePrediction,
+    setPiecePrediction,
   };
 };
 
