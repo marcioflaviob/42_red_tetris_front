@@ -70,6 +70,7 @@ const useScoreManager = ({
     }
   }, [rowsCleared, level, setLevel]);
 
+  // Clear rows
   useEffect(() => {
     const fullRows = [];
     const startRow = BUFFER_ZONE_ROWS;
@@ -78,7 +79,7 @@ const useScoreManager = ({
     for (let r = endRow; r >= startRow; r--) {
       let full = true;
       for (let c = 0; c < BOARD_COLS; c++) {
-        if (board[r * BOARD_COLS + c] !== 1) {
+        if (!board[r * BOARD_COLS + c]) {
           full = false;
           break;
         }
@@ -92,15 +93,20 @@ const useScoreManager = ({
     if (rowsClearedNow === 0) return;
 
     setBoard((prev) => {
-      const newBoard = [...prev];
-      fullRows
-        .sort((a, b) => b - a)
-        .forEach((row) => {
-          newBoard.splice(row * BOARD_COLS, BOARD_COLS);
-          const emptyRow = new Array(BOARD_COLS).fill(0);
-          newBoard.unshift(...emptyRow);
-        });
-      return newBoard;
+      const board2D = [];
+      for (let i = 0; i < prev.length; i += BOARD_COLS) {
+        board2D.push(prev.slice(i, i + BOARD_COLS));
+      }
+
+      const newBoard2D = board2D.filter(
+        (_, index) => !fullRows.includes(index)
+      );
+
+      for (let i = 0; i < rowsClearedNow; i++) {
+        newBoard2D.splice(BUFFER_ZONE_ROWS, 0, new Array(BOARD_COLS).fill(0));
+      }
+
+      return newBoard2D.flat();
     });
 
     setRowsCleared((prev) => prev + rowsClearedNow);
