@@ -70,6 +70,7 @@ const useScoreManager = ({
     }
   }, [rowsCleared, level, setLevel]);
 
+  // Clear rows
   useEffect(() => {
     const fullRows = [];
     const startRow = BUFFER_ZONE_ROWS;
@@ -78,7 +79,7 @@ const useScoreManager = ({
     for (let r = endRow; r >= startRow; r--) {
       let full = true;
       for (let c = 0; c < BOARD_COLS; c++) {
-        if (board[r * BOARD_COLS + c] !== 1) {
+        if (!board[r * BOARD_COLS + c]) {
           full = false;
           break;
         }
@@ -94,7 +95,7 @@ const useScoreManager = ({
     setBoard((prev) => {
       const newBoard = [...prev];
       fullRows
-        .sort((a, b) => b - a)
+        .sort((a, b) => a - b)
         .forEach((row) => {
           newBoard.splice(row * BOARD_COLS, BOARD_COLS);
           const emptyRow = new Array(BOARD_COLS).fill(0);
