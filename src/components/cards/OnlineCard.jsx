@@ -18,6 +18,8 @@ const OnlineCard = () => {
     setInvisiblePieces,
     increasedGravity,
     setIncreasedGravity,
+    piecePrediction,
+    setPiecePrediction,
   } = useDifficultySelector();
   const [createRoom, { isLoading }] = useCreateRoomMutation();
   const [roomIdInput, setRoomIdInput] = useState('');
@@ -58,6 +60,19 @@ const OnlineCard = () => {
       </div>
 
       <div className={styles.options}>
+        <InfoCard>
+          <div className={styles.optionInfo}>
+            <label className={styles.optionLabel}>Piece Preview</label>
+            <span className={styles.optionDescription}>
+              Shows a preview of where the piece will land
+            </span>
+          </div>
+          <InputSwitch
+            checked={piecePrediction}
+            onChange={() => setPiecePrediction(!piecePrediction)}
+            className={styles.switch}
+          />
+        </InfoCard>
         <InfoCard>
           <div className={styles.optionInfo}>
             <label className={styles.optionLabel}>Invisible Pieces</label>

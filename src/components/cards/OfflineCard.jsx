@@ -14,10 +14,18 @@ const OfflineCard = () => {
     setInvisiblePieces,
     increasedGravity,
     setIncreasedGravity,
+    piecePrediction,
+    setPiecePrediction,
   } = useDifficultySelector();
 
   const handlePlayClick = () => {
-    navigate(`/offline`);
+    navigate('/offline', {
+      state: {
+        piecePrediction,
+        invisiblePieces,
+        increasedGravity,
+      },
+    });
   };
 
   return (
@@ -28,6 +36,20 @@ const OfflineCard = () => {
       </div>
 
       <div className={styles.options}>
+        <InfoCard>
+          <div className={styles.optionInfo}>
+            <label className={styles.optionLabel}>Shadow Piece</label>
+            <span className={styles.optionDescription}>
+              Shows a preview of where the piece will land
+            </span>
+          </div>
+          <InputSwitch
+            checked={piecePrediction}
+            onChange={() => setPiecePrediction(!piecePrediction)}
+            className={styles.switch}
+          />
+        </InfoCard>
+
         <InfoCard>
           <div className={styles.optionInfo}>
             <label className={styles.optionLabel}>Invisible Pieces</label>

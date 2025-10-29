@@ -18,6 +18,7 @@ import {
 } from '../../utils/constants';
 import useBoard from '../../hooks/useBoard';
 import useScoreManager from '../../hooks/useScoreManager';
+import { useLocation } from 'react-router-dom';
 import { getCellClassName, getRandom } from '../../utils/helper';
 
 const Cell = React.memo(({ index, type, color }) => {
@@ -35,6 +36,13 @@ const GameCard = ({ player, setScore, level, setLevel }) => {
   } = useBoard();
   // const [warningState, setWarningState] = useState(false);
   const [gameOver, setGameOver] = useState(false);
+
+  const location = useLocation();
+  const {
+    piecePrediction,
+    // invisiblePieces,
+    // increasedGravity
+  } = location.state || {};
 
   const movePiece = (move) => {
     const piece = activePieceRef.current;
@@ -219,7 +227,9 @@ const GameCard = ({ player, setScore, level, setLevel }) => {
     );
 
     const predictIndices = new Set(
-      activePiece?.predictCoords?.map((coords) => getIndex(coords))
+      piecePrediction
+        ? activePiece?.predictCoords?.map((coords) => getIndex(coords))
+        : []
     );
 
     return boardCells.map(({ idx, filled }) => {
