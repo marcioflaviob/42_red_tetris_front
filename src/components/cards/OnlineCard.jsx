@@ -62,7 +62,7 @@ const OnlineCard = () => {
       <div className={styles.options}>
         <InfoCard>
           <div className={styles.optionInfo}>
-            <label className={styles.optionLabel}>Shadow Piece</label>
+            <label className={styles.optionLabel}>Piece Preview</label>
             <span className={styles.optionDescription}>
               Shows a preview of where the piece will land
             </span>
