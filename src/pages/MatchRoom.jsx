@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Button from '../components/ui/Buttons/Button';
 import useAudioManager from '../hooks/useAudioManager';
 import styles from './MatchRoom.module.css';
@@ -23,13 +23,25 @@ const MatchRoom = () => {
   const [players, setPlayers] = useState([user]);
   const [showCountdown, setShowCountdown] = useState(false);
   const { isPlaying, play, pause, startGameTransition } = useAudioManager(true);
-  const [joinRoom, { data: roomData, isSuccess }] = useJoinRoomMutation();
+  const navigate = useNavigate();
+  const [joinRoom, { data: roomData, isSuccess, error, isError }] =
+    useJoinRoomMutation();
   const {
     // emit,
     // on,
     // off,
     isConnected,
   } = useSocket();
+
+  useEffect(() => {
+    if (isError && error) {
+      navigate('/error', {
+        state: {
+          error,
+        },
+      });
+    }
+  }, [isError, error, navigate]);
 
   const addPlayerIfNotExists = useCallback(
     (player) => {

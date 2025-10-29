@@ -12,4 +12,13 @@
 
   --footer-height: 38px;
   --z-footer: 10;
+
+  /* Colors */
+  --purple: #7678ed;
+  --mustard: #f8c630;
+  --panther: #e54f6d;
+  --wine: #8d130a;
+  --grass: #1a936f;
+  --royal: #3772ff;
+  --turk: #16f4d0;
 }

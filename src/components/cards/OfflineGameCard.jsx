@@ -12,24 +12,17 @@ import {
   BUFFER_ZONE_ROWS,
   CLASS,
   COLLISION,
+  COLOR,
   MOVES,
   SPAWN_CELL_COL,
 } from '../../utils/constants';
 import useBoard from '../../hooks/useBoard';
 import useScoreManager from '../../hooks/useScoreManager';
 import { useLocation } from 'react-router-dom';
+import { getCellClassName, getRandom } from '../../utils/helper';
 
-const getCellClassName = (index, type) => {
-  if (index < 20 && !type) return styles.bufferZoneCell;
-  return type === CLASS.YELLOW
-    ? styles.filled
-    : type === CLASS.PREDICT
-      ? styles.predict
-      : styles.cell;
-};
-
-const Cell = React.memo(({ index, type }) => {
-  return <div className={getCellClassName(index, type)} />;
+const Cell = React.memo(({ index, type, color }) => {
+  return <div className={getCellClassName(index, type, color)} />;
 });
 
 const GameCard = ({ player, setScore, level, setLevel }) => {
@@ -89,14 +82,14 @@ const GameCard = ({ player, setScore, level, setLevel }) => {
         proposed = rotatePiece(piece);
         if (!proposed) return COLLISION.CONTINUE;
         setActivePiece(
-          new Tetromino(
-            proposed.shape,
-            piece.color,
-            proposed.coords,
-            getPredictCoords(proposed.coords),
-            proposed.pivot,
-            proposed.rotation
-          )
+          new Tetromino({
+            shape: proposed.shape,
+            color: piece.color,
+            coords: proposed.coords,
+            predictCoords: getPredictCoords(proposed.coords),
+            pivot: proposed.pivot,
+            rotation: proposed.rotation,
+          })
         );
         return COLLISION.NO;
       default:
@@ -105,14 +98,14 @@ const GameCard = ({ player, setScore, level, setLevel }) => {
     const collision = hasCollided(move, proposed.coords);
     if (!collision)
       setActivePiece(
-        new Tetromino(
-          proposed.shape,
-          piece.color,
-          proposed.coords,
-          getPredictCoords(proposed.coords),
-          proposed.pivot,
-          proposed.rotation
-        )
+        new Tetromino({
+          shape: proposed.shape,
+          color: piece.color,
+          coords: proposed.coords,
+          predictCoords: getPredictCoords(proposed.coords),
+          pivot: proposed.pivot,
+          rotation: proposed.rotation,
+        })
       );
     return collision;
   };
@@ -121,13 +114,13 @@ const GameCard = ({ player, setScore, level, setLevel }) => {
     const coords = activePieceRef?.current?.predictCoords;
     if (!coords) return;
     console.log(coords);
-    updateBoard(coords);
+    updateBoard(coords, activePieceRef?.current?.color);
     setActivePiece(null);
     if (coords.some(([r]) => r === 0)) {
       setGameOver(true);
       return;
     }
-    spawnTetromino(getRandomShape());
+    spawnTetromino(getRandom(SHAPES));
   };
 
   const lastDrop = useGameLoop(() => {}, movePiece, lockPiece, level);
@@ -198,22 +191,21 @@ const GameCard = ({ player, setScore, level, setLevel }) => {
           if (cell) coords.push([rowIdx, SPAWN_CELL_COL + cellIdx]);
         })
       );
-      const tetromino = new Tetromino(
+      const tetromino = new Tetromino({
         shape,
-        'red',
         coords,
-        getPredictCoords(coords)
-      );
+        predictCoords: getPredictCoords(coords),
+      });
       setActivePiece(tetromino);
     },
     [getPredictCoords, setActivePiece]
   );
 
-  const updateBoard = (coords) => {
+  const updateBoard = (coords, color) => {
     setBoard((prev) => {
       const newBoard = [...prev];
       coords.forEach(([row, col]) => {
-        newBoard[row * BOARD_COLS + col] = 1;
+        newBoard[row * BOARD_COLS + col] = color;
       });
       return newBoard;
     });
@@ -240,30 +232,28 @@ const GameCard = ({ player, setScore, level, setLevel }) => {
         : []
     );
 
-    return boardCells.map(({ idx, filled }) => (
-      <Cell
-        key={idx}
-        index={idx}
-        type={
-          activePieceIndices.has(idx) || filled
-            ? CLASS.YELLOW
-            : predictIndices.has(idx)
-              ? CLASS.PREDICT
-              : CLASS.EMPTY
-        }
-      />
-    ));
-  }, [boardCells, activePiece, piecePrediction]);
-
-  const getRandomShape = useCallback(() => {
-    const shapes = Object.values(SHAPES);
-    const randomIndex = Math.floor(Math.random() * shapes.length);
-    return shapes[randomIndex];
-  }, []);
+    return boardCells.map(({ idx, filled }) => {
+      const isActivePiece = activePieceIndices.has(idx);
+      const type =
+        isActivePiece || filled
+          ? CLASS.TILE
+          : predictIndices.has(idx)
+            ? CLASS.PREDICT
+            : CLASS.EMPTY;
+      return (
+        <Cell
+          key={idx}
+          index={idx}
+          color={isActivePiece ? activePiece?.color : filled}
+          type={type}
+        />
+      );
+    });
+  }, [boardCells, activePiece]);
 
   useEffect(() => {
-    spawnTetromino(getRandomShape());
-  }, [spawnTetromino, getRandomShape]);
+    spawnTetromino(getRandom(SHAPES));
+  }, [spawnTetromino]);
 
   return (
     <Card greyScale={gameOver}>

@@ -1,3 +1,5 @@
+export const USERNAME_REGEX = /^[a-zA-Z0-9]*$/;
+
 export const MOVE_DELAY = 100;
 export const FRAMES_PER_SECOND = 60;
 
@@ -20,7 +22,7 @@ export const COLLISION = {
 };
 
 export const CLASS = {
-  YELLOW: 1,
+  TILE: 1,
   PREDICT: 2,
   EMPTY: 0,
 };
@@ -40,6 +42,16 @@ export const SCORE = {
   TRIPLE: 50,
   TETRIS: 100,
   TETRIS_B2B: 120,
+};
+
+export const COLOR = {
+  PURPLE: 1,
+  MUSTARD: 2,
+  PANTHER: 3,
+  WINE: 4,
+  GRASS: 5,
+  ROYAL: 6,
+  TURK: 7,
 };
 
 export const LEVEL = {
