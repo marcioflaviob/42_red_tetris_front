@@ -1,26 +1,14 @@
+import { getRandom } from '../../../utils/helper';
+import { SHAPES } from '../../../utils/tetromino';
 import styles from './HomePageBg.module.css';
 import LegoPiece from './LegoPiece';
 import { useEffect, useRef } from 'react';
 
-const SHAPES = ['O', 'T', 'S', 'Z', 'J', 'L', 'I'];
 const PIECE_COUNT = 10;
 const ROW_COUNT = 3;
 
-function getRandomColor() {
-  return (
-    '#' +
-    Math.floor(Math.random() * 0xffffff)
-      .toString(16)
-      .padStart(6, '0')
-  );
-}
-
 function getRandomAngle() {
   return Math.floor(Math.random() * 360);
-}
-
-function getRandomShape() {
-  return SHAPES[Math.floor(Math.random() * SHAPES.length)];
 }
 
 const Row = ({ pieces, speed }) => {
@@ -74,9 +62,9 @@ const Row = ({ pieces, speed }) => {
 const HomePageBg = () => {
   const rows = Array.from({ length: ROW_COUNT }, () =>
     Array.from({ length: PIECE_COUNT }, (_, idx) => ({
-      color: getRandomColor(),
+      color: getRandom(['#b3851b']), //TODO replace with colors array from my other PR
       angle: getRandomAngle(),
-      shape: getRandomShape(),
+      shape: getRandom(SHAPES),
       size: 80,
       key: idx,
     }))
