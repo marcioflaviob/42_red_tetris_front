@@ -6,6 +6,7 @@ import styles from './UserCard.module.css';
 import Avatar from '../ui/Avatar/Avatar';
 import Title from '../ui/Titles/Title';
 import InfoCard from '../ui/Card/InfoCard';
+import { USERNAME_REGEX } from '../../utils/constants';
 
 const UserCard = () => {
   const username = useAppSelector(selectUsername);
@@ -30,7 +31,9 @@ const UserCard = () => {
   };
 
   const handleUsernameChange = (e) => {
-    setTempUsername(e.target.value);
+    const value = e.target.value;
+    if (USERNAME_REGEX.test(value) && value.length <= 30)
+      setTempUsername(value);
   };
 
   const handleUsernameSubmit = () => {
