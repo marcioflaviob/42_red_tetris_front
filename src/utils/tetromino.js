@@ -33,8 +33,8 @@ export class Tetromino {
   constructor({
     shape = null,
     color = null,
-    coords,
-    predictCoords,
+    coords, // Array of tuples ex: [[0, 2], [1, 9]]
+    predictCoords, // Array of tuples
     pivot = null,
     rotation = 0,
   }) {
