@@ -1,6 +1,6 @@
 import { COLLISION, MOVES } from '../utils/constants';
 
-const useRotation = ({ hasCollided }) => {
+const useRotation = ({ hasCollided, boardRef }) => {
   const rotateMatrixCW = (matrix) => {
     const rows = matrix.length;
     const cols = matrix[0].length;
@@ -144,7 +144,10 @@ const useRotation = ({ hasCollided }) => {
         rotatedShape,
         candidateTopLeft
       );
-      if (hasCollided(MOVES.ROTATE, candidateCoords) === COLLISION.NO) {
+      if (
+        hasCollided(MOVES.ROTATE, candidateCoords, boardRef?.current) ===
+        COLLISION.NO
+      ) {
         return {
           coords: candidateCoords,
           shape: rotatedShape,
