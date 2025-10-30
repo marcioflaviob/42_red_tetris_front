@@ -44,7 +44,10 @@ const Countdown = ({ onComplete, isVisible = false }) => {
     <div className={styles.overlay}>
       <div className={styles.background}></div>
       <div className={styles.container}>
-        <div className={`${styles.countdown} ${countdownClass}`} key={animationKey}>
+        <div
+          className={`${styles.countdown} ${countdownClass}`}
+          key={animationKey}
+        >
           {displayText}
         </div>
         {phase === 'go' && (

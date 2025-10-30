@@ -6,7 +6,11 @@ const useDifficultySelector = () => {
   const [piecePrediction, setPiecePrediction] = useState(true);
 
   const getDifficulty = () => {
-    const activeOptions = [invisiblePieces, increasedGravity, !piecePrediction].filter(Boolean).length;
+    const activeOptions = [
+      invisiblePieces,
+      increasedGravity,
+      !piecePrediction,
+    ].filter(Boolean).length;
 
     switch (activeOptions) {
       case 0:

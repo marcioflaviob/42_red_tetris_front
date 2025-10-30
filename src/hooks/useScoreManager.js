@@ -1,7 +1,22 @@
 import { useCallback, useEffect, useState } from 'react';
-import { BOARD_COLS, BOARD_ROWS, BUFFER_ZONE_ROWS, LEVEL, MOVES, SCORE, SCORED_ACTION } from '../utils/constants';
+import {
+  BOARD_COLS,
+  BOARD_ROWS,
+  BUFFER_ZONE_ROWS,
+  LEVEL,
+  MOVES,
+  SCORE,
+  SCORED_ACTION,
+} from '../utils/constants';
 
-const useScoreManager = ({ setScore, level, setLevel, board, setBoard, lastDrop }) => {
+const useScoreManager = ({
+  setScore,
+  level,
+  setLevel,
+  board,
+  setBoard,
+  lastDrop,
+}) => {
   const [rowsCleared, setRowsCleared] = useState(0);
   const [lastScoredAction, setLastScoredAction] = useState(null);
 
@@ -20,7 +35,10 @@ const useScoreManager = ({ setScore, level, setLevel, board, setBoard, lastDrop 
           sum = SCORE.TRIPLE * level;
           break;
         case 4:
-          if (lastScoredAction !== SCORED_ACTION.TETRIS && lastScoredAction !== SCORED_ACTION.TETRIS_B2B) {
+          if (
+            lastScoredAction !== SCORED_ACTION.TETRIS &&
+            lastScoredAction !== SCORED_ACTION.TETRIS_B2B
+          ) {
             sum = SCORE.TETRIS * level;
             setLastScoredAction(SCORED_ACTION.TETRIS);
           } else {

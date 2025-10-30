@@ -32,7 +32,8 @@ const UserCard = () => {
 
   const handleUsernameChange = (e) => {
     const value = e.target.value;
-    if (USERNAME_REGEX.test(value) && value.length <= 30) setTempUsername(value);
+    if (USERNAME_REGEX.test(value) && value.length <= 30)
+      setTempUsername(value);
   };
 
   const handleUsernameSubmit = () => {
@@ -70,7 +71,11 @@ const UserCard = () => {
               className={styles.usernameInput}
             />
           ) : (
-            <div className={styles.usernameDisplay} onClick={handleUsernameClick} title="Click to edit username">
+            <div
+              className={styles.usernameDisplay}
+              onClick={handleUsernameClick}
+              title="Click to edit username"
+            >
               {username || 'Click to set username'}
             </div>
           )}
@@ -85,7 +90,9 @@ const UserCard = () => {
               <span className={styles.statLabel}>Wins</span>
             </InfoCard>
             <InfoCard className={styles.statItem}>
-              <Title className={styles.statValue}>{userStats.bestScore.toLocaleString()}</Title>
+              <Title className={styles.statValue}>
+                {userStats.bestScore.toLocaleString()}
+              </Title>
               <span className={styles.statLabel}>Best Score</span>
             </InfoCard>
           </div>

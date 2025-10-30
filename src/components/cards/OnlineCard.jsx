@@ -12,8 +12,15 @@ import InputText from '../ui/Inputs/InputText';
 import { useState } from 'react';
 
 const OnlineCard = () => {
-  const { difficulty, invisiblePieces, setInvisiblePieces, increasedGravity, setIncreasedGravity, piecePrediction, setPiecePrediction } =
-    useDifficultySelector();
+  const {
+    difficulty,
+    invisiblePieces,
+    setInvisiblePieces,
+    increasedGravity,
+    setIncreasedGravity,
+    piecePrediction,
+    setPiecePrediction,
+  } = useDifficultySelector();
   const [createRoom, { isLoading }] = useCreateRoomMutation();
   const [roomIdInput, setRoomIdInput] = useState('');
   const [isRoomIdValid, setIsRoomIdValid] = useState(false);
@@ -56,37 +63,70 @@ const OnlineCard = () => {
         <InfoCard>
           <div className={styles.optionInfo}>
             <label className={styles.optionLabel}>Piece Preview</label>
-            <span className={styles.optionDescription}>Shows a preview of where the piece will land</span>
+            <span className={styles.optionDescription}>
+              Shows a preview of where the piece will land
+            </span>
           </div>
-          <InputSwitch checked={piecePrediction} onChange={() => setPiecePrediction(!piecePrediction)} className={styles.switch} />
+          <InputSwitch
+            checked={piecePrediction}
+            onChange={() => setPiecePrediction(!piecePrediction)}
+            className={styles.switch}
+          />
         </InfoCard>
         <InfoCard>
           <div className={styles.optionInfo}>
             <label className={styles.optionLabel}>Invisible Pieces</label>
-            <span className={styles.optionDescription}>Pieces become invisible after placement</span>
+            <span className={styles.optionDescription}>
+              Pieces become invisible after placement
+            </span>
           </div>
-          <InputSwitch checked={invisiblePieces} onChange={() => setInvisiblePieces(!invisiblePieces)} className={styles.switch} />
+          <InputSwitch
+            checked={invisiblePieces}
+            onChange={() => setInvisiblePieces(!invisiblePieces)}
+            className={styles.switch}
+          />
         </InfoCard>
 
         <InfoCard>
           <div className={styles.optionInfo}>
             <label className={styles.optionLabel}>Increased Gravity</label>
-            <span className={styles.optionDescription}>Pieces fall faster for extra challenge</span>
+            <span className={styles.optionDescription}>
+              Pieces fall faster for extra challenge
+            </span>
           </div>
-          <InputSwitch checked={increasedGravity} onChange={() => setIncreasedGravity(!increasedGravity)} className={styles.switch} />
+          <InputSwitch
+            checked={increasedGravity}
+            onChange={() => setIncreasedGravity(!increasedGravity)}
+            className={styles.switch}
+          />
         </InfoCard>
       </div>
 
-      <div className={`${styles.difficultyInfo} ${difficulty.color === 'hard' ? styles.hardDifficulty : ''}`}>
+      <div
+        className={`${styles.difficultyInfo} ${difficulty.color === 'hard' ? styles.hardDifficulty : ''}`}
+      >
         <div className={styles.difficultyLabel}>Difficulty Level</div>
-        <div className={`${styles.difficultyValue} ${styles[difficulty.color + 'Text']}`}>{difficulty.level}</div>
+        <div
+          className={`${styles.difficultyValue} ${styles[difficulty.color + 'Text']}`}
+        >
+          {difficulty.level}
+        </div>
         <div className={styles.difficultyBar}>
-          <div className={`${styles.difficultyProgress} ${styles[difficulty.color]}`} style={{ width: `${difficulty.progress}%` }}></div>
+          <div
+            className={`${styles.difficultyProgress} ${styles[difficulty.color]}`}
+            style={{ width: `${difficulty.progress}%` }}
+          ></div>
         </div>
       </div>
 
       <div className={styles.playSection}>
-        <Button variant="play" size="large" onClick={handleRoomCreation} className={styles.playButton} loading={isLoading}>
+        <Button
+          variant="play"
+          size="large"
+          onClick={handleRoomCreation}
+          className={styles.playButton}
+          loading={isLoading}
+        >
           <span className={styles.playIcon}>▶</span>
           Create room
         </Button>
@@ -98,7 +138,11 @@ const OnlineCard = () => {
       </div>
       <p className={styles.subtitle}>Join a friend's game</p>
       <div className={styles.playSection}>
-        <InputText value={roomIdInput} onChange={handleRoomIdChange} placeholder="Type the room ID" />
+        <InputText
+          value={roomIdInput}
+          onChange={handleRoomIdChange}
+          placeholder="Type the room ID"
+        />
         <Button
           tooltip="Room ID is invalid"
           tooltipBool={!isRoomIdValid}

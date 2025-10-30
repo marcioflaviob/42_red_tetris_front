@@ -3,10 +3,13 @@ import { createUserService } from '../../services/UserService';
 
 const service = createUserService();
 
-export const loadMatchesFromStorage = createAsyncThunk('user/loadMatchesFromStorage', async () => {
-  const matches = await service.getMatches();
-  return matches;
-});
+export const loadMatchesFromStorage = createAsyncThunk(
+  'user/loadMatchesFromStorage',
+  async () => {
+    const matches = await service.getMatches();
+    return matches;
+  }
+);
 
 const userSlice = createSlice({
   name: 'user',

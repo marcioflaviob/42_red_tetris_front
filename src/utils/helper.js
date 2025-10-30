@@ -1,4 +1,12 @@
-import { BOARD_COLS, BOARD_ROWS, BUFFER_ZONE_ROWS, CLASS, COLLISION, COLOR, MOVES } from './constants';
+import {
+  BOARD_COLS,
+  BOARD_ROWS,
+  BUFFER_ZONE_ROWS,
+  CLASS,
+  COLLISION,
+  COLOR,
+  MOVES,
+} from './constants';
 import styles from '../components/cards/GameCard.module.css';
 
 export const getRandom = (array) => {
@@ -20,7 +28,8 @@ export const hasCollided = (move, coords, board) => {
       // Cell collision
       if (getCell([r, c], board)) return COLLISION.LOCK;
     } else {
-      if (r >= BUFFER_ZONE_ROWS + BOARD_ROWS || getCell([r, c], board)) return COLLISION.CONTINUE;
+      if (r >= BUFFER_ZONE_ROWS + BOARD_ROWS || getCell([r, c], board))
+        return COLLISION.CONTINUE;
     }
   }
   return COLLISION.NO;

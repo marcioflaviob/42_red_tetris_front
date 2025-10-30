@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import { BOARD_COLS, BOARD_ROWS, BUFFER_ZONE_ROWS } from '../utils/constants';
 
 const useBoard = () => {
-  const [board, setBoard] = useState(new Array(BUFFER_ZONE_ROWS * BOARD_COLS + BOARD_ROWS * BOARD_COLS).fill(0));
+  const [board, setBoard] = useState(
+    new Array(BUFFER_ZONE_ROWS * BOARD_COLS + BOARD_ROWS * BOARD_COLS).fill(0)
+  );
   const boardRef = useRef(board);
   const [activePiece, setActivePiece] = useState(null);
   const activePieceRef = useRef(activePiece);

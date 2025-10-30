@@ -13,7 +13,10 @@ class PieceBag {
       // Shuffle the bag
       for (let i = this.shapeBag.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [this.shapeBag[i], this.shapeBag[j]] = [this.shapeBag[j], this.shapeBag[i]];
+        [this.shapeBag[i], this.shapeBag[j]] = [
+          this.shapeBag[j],
+          this.shapeBag[i],
+        ];
       }
     }
     return SHAPES[this.shapeBag.pop()];
@@ -25,7 +28,10 @@ class PieceBag {
       // Shuffle the bag
       for (let i = this.colorBag.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [this.colorBag[i], this.colorBag[j]] = [this.colorBag[j], this.colorBag[i]];
+        [this.colorBag[i], this.colorBag[j]] = [
+          this.colorBag[j],
+          this.colorBag[i],
+        ];
       }
     }
     return this.colorBag.pop();
@@ -87,7 +93,8 @@ export class Tetromino {
       const next = prediction.map(([r, c]) => [r + 1, c]);
       const collision = hasCollided(MOVES.DOWN, next, board);
 
-      if (collision === COLLISION.LOCK || collision === COLLISION.CONTINUE) break;
+      if (collision === COLLISION.LOCK || collision === COLLISION.CONTINUE)
+        break;
 
       prediction = next;
     }

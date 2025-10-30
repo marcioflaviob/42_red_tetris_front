@@ -11,7 +11,9 @@ describe('Title', () => {
   });
 
   it('classname is passed correctly', () => {
-    const { container, getByText } = render(<Title className="custom-class">Test</Title>);
+    const { container, getByText } = render(
+      <Title className="custom-class">Test</Title>
+    );
 
     const titleElement = container.querySelector('.custom-class');
     expect(titleElement).toBeInTheDocument();

@@ -7,7 +7,10 @@ import styles from './Avatar.module.css';
 import { useAppSelector } from '../../../store/hooks';
 
 const isVideo = (src) => {
-  return src && (src.endsWith('.mp4') || src.endsWith('.mov') || src.endsWith('.webm'));
+  return (
+    src &&
+    (src.endsWith('.mp4') || src.endsWith('.mov') || src.endsWith('.webm'))
+  );
 };
 
 const AvatarMedia = ({ src, size, shape, className, onClick }) => {
@@ -30,10 +33,24 @@ const AvatarMedia = ({ src, size, shape, className, onClick }) => {
       />
     );
   }
-  return <PrimeReactAvatar image={src} size={size} shape={shape} className={className} onClick={onClick} />;
+  return (
+    <PrimeReactAvatar
+      image={src}
+      size={size}
+      shape={shape}
+      className={className}
+      onClick={onClick}
+    />
+  );
 };
 
-const Avatar = ({ size, shape = 'circle', className = '', editable = false, avatar: avatarProp }) => {
+const Avatar = ({
+  size,
+  shape = 'circle',
+  className = '',
+  editable = false,
+  avatar: avatarProp,
+}) => {
   const overlayRef = useRef(null);
   const dispatch = useDispatch();
   const selectedAvatar = useAppSelector(selectAvatar);
@@ -41,7 +58,10 @@ const Avatar = ({ size, shape = 'circle', className = '', editable = false, avat
 
   const avatarOptions = [
     '/assets/avatars/default.webp',
-    ...Array.from({ length: 13 }, (_, i) => `/assets/avatars/avatar${i + 1}.webp`),
+    ...Array.from(
+      { length: 13 },
+      (_, i) => `/assets/avatars/avatar${i + 1}.webp`
+    ),
     '/assets/anakin/idle/anakin-idle-animation.mov',
   ];
 
@@ -80,7 +100,11 @@ const Avatar = ({ size, shape = 'circle', className = '', editable = false, avat
                     className={`${styles.avatar} ${editable ? 'cursor-pointer' : ''} ${avatar === avatarPath ? styles.selectedAvatar : ''}`}
                     onClick={() => handleAvatarSelect(avatarPath)}
                   >
-                    <AvatarMedia src={avatarPath} size="xlarge" shape="circle" />
+                    <AvatarMedia
+                      src={avatarPath}
+                      size="xlarge"
+                      shape="circle"
+                    />
                   </div>
                 ))}
               </div>

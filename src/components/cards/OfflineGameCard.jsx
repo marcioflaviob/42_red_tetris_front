@@ -10,7 +10,12 @@ import { BOARD_COLS, CLASS, COLLISION, MOVES } from '../../utils/constants';
 import useBoard from '../../hooks/useBoard';
 import useScoreManager from '../../hooks/useScoreManager';
 import { useLocation } from 'react-router-dom';
-import { getCellClassName, getColorHex, getIndex, hasCollided } from '../../utils/helper';
+import {
+  getCellClassName,
+  getColorHex,
+  getIndex,
+  hasCollided,
+} from '../../utils/helper';
 import LegoPiece from '../ui/Backgrounds/LegoPiece';
 import usePieceGenerator from '../../hooks/usePieceGenerator';
 
@@ -19,7 +24,14 @@ const Cell = React.memo(({ index, type, color }) => {
 });
 
 const GameCard = ({ player, setScore, level, setLevel }) => {
-  const { board, boardRef, setBoard, activePiece, activePieceRef, setActivePiece } = useBoard();
+  const {
+    board,
+    boardRef,
+    setBoard,
+    activePiece,
+    activePieceRef,
+    setActivePiece,
+  } = useBoard();
   // const [warningState, setWarningState] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const { nextPieces, getNextPiece } = usePieceGenerator();
@@ -143,15 +155,34 @@ const GameCard = ({ player, setScore, level, setLevel }) => {
   }, [board]);
 
   const cells = useMemo(() => {
-    const activePieceIndices = new Set(activePiece?.coords?.map((coords) => getIndex(coords)) || []);
+    const activePieceIndices = new Set(
+      activePiece?.coords?.map((coords) => getIndex(coords)) || []
+    );
 
-    const predictCoords = piecePrediction && activePiece ? activePiece.getPredictCoords(boardRef.current) : [];
-    const predictIndices = new Set(predictCoords.map((coords) => getIndex(coords)));
+    const predictCoords =
+      piecePrediction && activePiece
+        ? activePiece.getPredictCoords(boardRef.current)
+        : [];
+    const predictIndices = new Set(
+      predictCoords.map((coords) => getIndex(coords))
+    );
 
     return boardCells.map(({ idx, filled }) => {
       const isActivePiece = activePieceIndices.has(idx);
-      const type = isActivePiece || filled ? CLASS.TILE : predictIndices.has(idx) ? CLASS.PREDICT : CLASS.EMPTY;
-      return <Cell key={idx} index={idx} color={isActivePiece ? activePiece?.color : filled} type={type} />;
+      const type =
+        isActivePiece || filled
+          ? CLASS.TILE
+          : predictIndices.has(idx)
+            ? CLASS.PREDICT
+            : CLASS.EMPTY;
+      return (
+        <Cell
+          key={idx}
+          index={idx}
+          color={isActivePiece ? activePiece?.color : filled}
+          type={type}
+        />
+      );
     });
   }, [boardCells, activePiece, piecePrediction, boardRef]);
 
@@ -171,7 +202,14 @@ const GameCard = ({ player, setScore, level, setLevel }) => {
         <div className="flex flex-col gap-5 bg-gray-800 p-4 rounded-lg border-2 border-gray-700 shadow-lg min-w-[120px]">
           {/* <h3 className='text-white text-sm font-semibold text-center mb-2 uppercase tracking-wide'>Next Pieces</h3> */}
           {nextPieces?.slice(0, 5).map((piece, index) => {
-            return <LegoPiece key={index} color={getColorHex(piece?.color)} shape={piece.shape} size={20} />;
+            return (
+              <LegoPiece
+                key={index}
+                color={getColorHex(piece?.color)}
+                shape={piece.shape}
+                size={20}
+              />
+            );
           })}
         </div>
       </div>

@@ -3,7 +3,21 @@ import { InputText as PrimeInputText } from 'primereact/inputtext';
 import styles from './InputText.module.css';
 
 const InputText = forwardRef(
-  ({ value = '', id = '', onChange, placeholder = '', type = 'text', keyFilter = '', name, disabled = false, className = '', ...props }, ref) => {
+  (
+    {
+      value = '',
+      id = '',
+      onChange,
+      placeholder = '',
+      type = 'text',
+      keyFilter = '',
+      name,
+      disabled = false,
+      className = '',
+      ...props
+    },
+    ref
+  ) => {
     return (
       <PrimeInputText
         ref={ref}
