@@ -76,13 +76,7 @@
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(255, 69, 0, 0.1) 0%,
-    rgba(255, 140, 0, 0.05) 30%,
-    rgba(255, 69, 0, 0.02) 50%,
-    transparent 70%
-  );
+  background: radial-gradient(ellipse at center, rgba(255, 69, 0, 0.1) 0%, rgba(255, 140, 0, 0.05) 30%, rgba(255, 69, 0, 0.02) 50%, transparent 70%);
   animation: flameRotate 4s linear infinite;
   pointer-events: none;
 }
@@ -94,12 +88,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-    45deg,
-    transparent 40%,
-    rgba(255, 69, 0, 0.03) 50%,
-    transparent 60%
-  );
+  background: linear-gradient(45deg, transparent 40%, rgba(255, 69, 0, 0.03) 50%, transparent 60%);
   animation: flameFlicker 2s infinite alternate;
   pointer-events: none;
 }

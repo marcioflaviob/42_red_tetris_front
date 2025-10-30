@@ -1,6 +1,6 @@
 import { COLLISION, MOVES } from '../utils/constants';
 
-const useRotation = ({ hasCollided }) => {
+const useRotation = ({ hasCollided, boardRef }) => {
   const rotateMatrixCW = (matrix) => {
     const rows = matrix.length;
     const cols = matrix[0].length;
@@ -130,21 +130,15 @@ const useRotation = ({ hasCollided }) => {
     const rotatedShape = rotateMatrixCW(piece.shape);
     const newPivotIdx = rotateIndexCW(piece.pivot, rows);
 
-    const baseTopLeft = [
-      pivotAbs[0] - newPivotIdx[0],
-      pivotAbs[1] - newPivotIdx[1],
-    ];
+    const baseTopLeft = [pivotAbs[0] - newPivotIdx[0], pivotAbs[1] - newPivotIdx[1]];
 
     const key = `${from}>${to}`;
     const kicks = type === 'I' ? I_KICKS[key] : JLSTZ_KICKS[key];
 
     for (const [dx, dy] of kicks) {
       const candidateTopLeft = [baseTopLeft[0] + dy, baseTopLeft[1] + dx];
-      const candidateCoords = buildCoordsFromShapeAt(
-        rotatedShape,
-        candidateTopLeft
-      );
-      if (hasCollided(MOVES.ROTATE, candidateCoords) === COLLISION.NO) {
+      const candidateCoords = buildCoordsFromShapeAt(rotatedShape, candidateTopLeft);
+      if (hasCollided(MOVES.ROTATE, candidateCoords, boardRef?.current) === COLLISION.NO) {
         return {
           coords: candidateCoords,
           shape: rotatedShape,

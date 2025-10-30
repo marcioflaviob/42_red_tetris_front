@@ -1,10 +1,9 @@
 import { useCallback, useState } from 'react';
-import { getRandom } from '../utils/helper';
-import { SHAPES } from '../utils/tetromino';
+import { Tetromino } from '../utils/tetromino';
 
 const usePieceGenerator = () => {
   const addPieces = useCallback(() => {
-    const pieces = Array.from({ length: 6 }, () => getRandom(SHAPES));
+    const pieces = Array.from({ length: 6 }, () => new Tetromino({}));
     return pieces;
   }, []);
 

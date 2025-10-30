@@ -86,8 +86,7 @@ const useAudioManager = (autoPlay = false) => {
     const initAudio = async () => {
       try {
         setIsLoading(true);
-        audioContextRef.current = new (window.AudioContext ||
-          window.webkitAudioContext)();
+        audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
 
         const [lobbyBuffer, gameBuffer, introBuffer] = await Promise.all([
           loadAudioBuffer(AUDIO_PATHS.LOBBY),

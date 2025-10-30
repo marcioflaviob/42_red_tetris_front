@@ -5,11 +5,7 @@ const useKeyboard = () => {
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      if (
-        ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(
-          event.key
-        )
-      ) {
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(event.key)) {
         event.preventDefault();
       }
       keysPressed.current.add(event.key);

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import styles from './LegoPiece.module.css';
 import { useState, useRef } from 'react';
-import { SHAPES } from '../../../utils/tetromino';
+import { SHAPES } from '../../../utils/constants';
 
 function rotateMatrix(matrix, times = 1) {
   let result = matrix;
@@ -48,13 +48,7 @@ function lightenColor(hex, percent) {
   return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
 }
 
-const LegoPiece = ({
-  shape = SHAPES.I,
-  color = '#FFD700',
-  angle = 0,
-  size = 32,
-  ...props
-}) => {
+const LegoPiece = ({ shape = SHAPES.I, color = '#FFD700', angle = 0, size = 32, ...props }) => {
   const [animatedAngle, setAnimatedAngle] = useState(angle);
   const isRightAngle = angle % 90 === 0;
   const rotationSteps = isRightAngle ? ((angle % 360) / 90) % 4 : 0;

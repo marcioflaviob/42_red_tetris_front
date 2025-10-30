@@ -1,5 +1,5 @@
-import { getRandom } from '../../../utils/helper';
-import { SHAPES } from '../../../utils/tetromino';
+import { COLOR, SHAPES } from '../../../utils/constants';
+import { getColorHex, getRandom } from '../../../utils/helper';
 import styles from './HomePageBg.module.css';
 import LegoPiece from './LegoPiece';
 import { useEffect, useRef } from 'react';
@@ -62,7 +62,7 @@ const Row = ({ pieces, speed }) => {
 const HomePageBg = () => {
   const rows = Array.from({ length: ROW_COUNT }, () =>
     Array.from({ length: PIECE_COUNT }, (_, idx) => ({
-      color: getRandom(['#b3851b']), //TODO replace with colors array from my other PR
+      color: getColorHex(getRandom(COLOR)), //TODO replace with colors array from my other PR
       angle: getRandomAngle(),
       shape: getRandom(SHAPES),
       size: 80,

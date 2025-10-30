@@ -1,11 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import {
-  COLLISION,
-  FRAMES_PER_SECOND,
-  MOVE_DELAY,
-  MOVES,
-  SCORED_ACTION,
-} from '../utils/constants';
+import { COLLISION, FRAMES_PER_SECOND, MOVE_DELAY, MOVES, SCORED_ACTION } from '../utils/constants';
 import useKeyboard from './useKeyboard';
 
 const useGameLoop = (callback, movePiece, lockPiece, level = 1) => {
@@ -38,36 +32,21 @@ const useGameLoop = (callback, movePiece, lockPiece, level = 1) => {
         lastGravityTime.current = now;
       }
 
-      if (
-        keysPressed.current.has('ArrowLeft') &&
-        now - lastMoveTime.current.left > MOVE_DELAY
-      ) {
+      if (keysPressed.current.has('ArrowLeft') && now - lastMoveTime.current.left > MOVE_DELAY) {
         // Only move left if right is not pressed, or if left was pressed more recently
-        if (
-          !keysPressed.current.has('ArrowRight') ||
-          lastMoveTime.current.left > lastMoveTime.current.right
-        ) {
+        if (!keysPressed.current.has('ArrowRight') || lastMoveTime.current.left > lastMoveTime.current.right) {
           movePiece(MOVES.LEFT);
           lastMoveTime.current.left = now;
         }
       }
-      if (
-        keysPressed.current.has('ArrowRight') &&
-        now - lastMoveTime.current.right > MOVE_DELAY
-      ) {
+      if (keysPressed.current.has('ArrowRight') && now - lastMoveTime.current.right > MOVE_DELAY) {
         // Only move right if left is not pressed, or if right was pressed more recently
-        if (
-          !keysPressed.current.has('ArrowLeft') ||
-          lastMoveTime.current.right > lastMoveTime.current.left
-        ) {
+        if (!keysPressed.current.has('ArrowLeft') || lastMoveTime.current.right > lastMoveTime.current.left) {
           movePiece(MOVES.RIGHT);
           lastMoveTime.current.right = now;
         }
       }
-      if (
-        keysPressed.current.has('ArrowDown') &&
-        now - lastMoveTime.current.down > MOVE_DELAY
-      ) {
+      if (keysPressed.current.has('ArrowDown') && now - lastMoveTime.current.down > MOVE_DELAY) {
         movePiece(MOVES.DOWN);
         lastMoveTime.current.down = now;
       }

@@ -24,8 +24,7 @@ const MatchRoom = () => {
   const [showCountdown, setShowCountdown] = useState(false);
   const { isPlaying, play, pause, startGameTransition } = useAudioManager(true);
   const navigate = useNavigate();
-  const [joinRoom, { data: roomData, isSuccess, error, isError }] =
-    useJoinRoomMutation();
+  const [joinRoom, { data: roomData, isSuccess, error, isError }] = useJoinRoomMutation();
   const {
     // emit,
     // on,
@@ -45,11 +44,7 @@ const MatchRoom = () => {
 
   const addPlayerIfNotExists = useCallback(
     (player) => {
-      if (
-        !players.some(
-          (savedPlayer) => savedPlayer.sessionId === player.sessionId
-        )
-      ) {
+      if (!players.some((savedPlayer) => savedPlayer.sessionId === player.sessionId)) {
         setPlayers((prev) => [...prev, player]);
       }
     },
@@ -134,10 +129,7 @@ const MatchRoom = () => {
 
   return (
     <div className={`${styles.content} flex flex-col h-full`}>
-      <Countdown
-        isVisible={showCountdown}
-        onComplete={handleCountdownComplete}
-      />
+      <Countdown isVisible={showCountdown} onComplete={handleCountdownComplete} />
       <div className="container mx-auto grid grid-cols-3 row-span-10 gap-8 flex-1 p-8">
         <div className="grid grid-rows-7 gap-4">
           <Card className="row-span-3">
@@ -145,10 +137,7 @@ const MatchRoom = () => {
             <Button variant="play" onClick={handleStartGame}>
               Start game
             </Button>
-            <Button
-              onClick={isPlaying ? pause : play}
-              icon={isPlaying ? 'pi pi-volume-up' : 'pi pi-volume-off'}
-            ></Button>
+            <Button onClick={isPlaying ? pause : play} icon={isPlaying ? 'pi pi-volume-up' : 'pi pi-volume-off'}></Button>
             <div>
               Number of players {players.length}
               <Button onClick={() => increasePlayers(false)}>-</Button>

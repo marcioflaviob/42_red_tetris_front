@@ -22,31 +22,18 @@ const OfflineMatchRoom = () => {
 
   return (
     <div className={`${styles.content} flex flex-col h-full`}>
-      <Countdown
-        isVisible={showCountdown}
-        onComplete={handleCountdownComplete}
-      />
+      <Countdown isVisible={showCountdown} onComplete={handleCountdownComplete} />
       <div className="container mx-auto grid grid-cols-3 row-span-10 gap-8 flex-1 p-8">
         <div className="grid grid-rows-7 gap-4">
           <Card className="row-span-3">
-            <Button
-              onClick={isPlaying ? pause : play}
-              icon={isPlaying ? 'pi pi-volume-up' : 'pi pi-volume-off'}
-            ></Button>
+            <Button onClick={isPlaying ? pause : play} icon={isPlaying ? 'pi pi-volume-up' : 'pi pi-volume-off'}></Button>
           </Card>
           <Card className="row-span-4">
             <p>Score: {score}</p>
             <p>Level: {level}</p>
           </Card>
         </div>
-        <GameCard
-          player={user}
-          key={user.sessionId}
-          score={score}
-          setScore={setScore}
-          level={level}
-          setLevel={setLevel}
-        />
+        <GameCard player={user} key={user.sessionId} score={score} setScore={setScore} level={level} setLevel={setLevel} />
       </div>
     </div>
   );

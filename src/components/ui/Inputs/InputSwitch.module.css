@@ -20,12 +20,7 @@
   left: 2px;
   right: 2px;
   bottom: 2px;
-  background: linear-gradient(
-    135deg,
-    rgba(100, 200, 150, 0.05) 0%,
-    rgba(255, 100, 255, 0.03) 50%,
-    rgba(100, 255, 200, 0.05) 100%
-  );
+  background: linear-gradient(135deg, rgba(100, 200, 150, 0.05) 0%, rgba(255, 100, 255, 0.03) 50%, rgba(100, 255, 200, 0.05) 100%);
   border-radius: 0.75rem;
   pointer-events: none;
 }
@@ -37,12 +32,7 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(0, 255, 255, 0.2) 50%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg, transparent 0%, rgba(0, 255, 255, 0.2) 50%, transparent 100%);
   border-radius: 1rem 1rem 0 0;
 }
 
@@ -68,12 +58,7 @@
   left: 1px;
   right: 1px;
   bottom: 1px;
-  background: radial-gradient(
-    circle at 30% 30%,
-    rgba(255, 255, 255, 0.8) 0%,
-    rgba(255, 255, 255, 0.2) 50%,
-    transparent 100%
-  );
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
   border-radius: 50%;
   pointer-events: none;
 }
@@ -88,12 +73,7 @@
 }
 
 .switch.p-inputswitch-checked .p-inputswitch-slider::before {
-  background: linear-gradient(
-    135deg,
-    rgba(52, 211, 153, 0.1) 0%,
-    rgba(16, 185, 129, 0.05) 50%,
-    rgba(5, 150, 105, 0.1) 100%
-  );
+  background: linear-gradient(135deg, rgba(52, 211, 153, 0.1) 0%, rgba(16, 185, 129, 0.05) 50%, rgba(5, 150, 105, 0.1) 100%);
 }
 
 .switch.p-inputswitch-checked .p-inputswitch-handle {
