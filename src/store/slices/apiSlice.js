@@ -12,6 +12,9 @@ export const api = createApi({
     },
   }),
   endpoints: (builder) => ({
+    getHealth: builder.query({
+      query: () => 'health',
+    }),
     createRoom: builder.mutation({
       query: (userData) => ({
         url: '/room',
@@ -29,4 +32,5 @@ export const api = createApi({
   }),
 });
 
-export const { useCreateRoomMutation, useJoinRoomMutation } = api;
+export const { useGetHealthQuery, useCreateRoomMutation, useJoinRoomMutation } =
+  api;
