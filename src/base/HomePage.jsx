@@ -6,9 +6,13 @@ import { useAppSelector } from '../store/hooks';
 import { selectUsername } from '../store/slices/userSlice';
 import HomePageBg from '../components/ui/Backgrounds/HomePageBg';
 import OnlineCard from '../components/cards/OnlineCard';
+import { useGetHealthQuery } from '../store/slices/apiSlice';
 
 const HomePage = () => {
   const username = useAppSelector(selectUsername);
+  const { data /*, error, isLoading*/ } = useGetHealthQuery();
+
+  console.log(data);
 
   return (
     <div className={`${styles.content} flex flex-col h-full`}>
