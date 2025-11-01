@@ -2,7 +2,8 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 
 const AUDIO_PATHS = {
   LOBBY: '/music/lobby_loop.ogg',
-  GAME: '/music/begin_game_alt.ogg',
+  GAME: '/music/begin_game.ogg',
+  ALT_GAME: '/music/begin_game_alt.ogg',
   INTRO: '/music/intro.ogg',
 };
 
@@ -20,6 +21,8 @@ const useAudioManager = (autoPlay = false) => {
   const [audioState, setAudioState] = useState(AUDIO_STATES.IDLE);
   const [isLoading, setIsLoading] = useState(false);
   const loopStartTimeRef = useRef(0);
+  const transitionTimeoutRef = useRef(null);
+  const currentTrackRef = useRef(null);
 
   const loadAudioBuffer = useCallback(async (path) => {
     try {
@@ -69,6 +72,7 @@ const useAudioManager = (autoPlay = false) => {
           loopStartTimeRef.current = audioContextRef.current.currentTime;
         }
 
+        currentTrackRef.current = bufferKey;
         sourceRef.current.start();
         setAudioState(AUDIO_STATES.PLAYING);
       } catch (error) {
@@ -79,7 +83,7 @@ const useAudioManager = (autoPlay = false) => {
   );
 
   const playLobbyMusic = useCallback(() => {
-    playAudio('lobby', true);
+    if (currentTrackRef.current !== 'lobby') playAudio('lobby', true);
   }, [playAudio]);
 
   useEffect(() => {
@@ -91,7 +95,9 @@ const useAudioManager = (autoPlay = false) => {
 
         const [lobbyBuffer, gameBuffer, introBuffer] = await Promise.all([
           loadAudioBuffer(AUDIO_PATHS.LOBBY),
-          loadAudioBuffer(AUDIO_PATHS.GAME),
+          loadAudioBuffer(
+            Math.random() < 0.5 ? AUDIO_PATHS.GAME : AUDIO_PATHS.ALT_GAME
+          ),
           loadAudioBuffer(AUDIO_PATHS.INTRO),
         ]);
 
@@ -104,7 +110,7 @@ const useAudioManager = (autoPlay = false) => {
         setIsLoading(false);
 
         if (autoPlay) {
-          setTimeout(() => playLobbyMusic(), 100);
+          setTimeout(() => playLobbyMusic(), 20);
         }
       } catch (error) {
         console.error('Audio initialization failed:', error);
@@ -115,6 +121,9 @@ const useAudioManager = (autoPlay = false) => {
     initAudio();
 
     return () => {
+      if (transitionTimeoutRef.current) {
+        clearTimeout(transitionTimeoutRef.current);
+      }
       stopCurrentSource();
       if (audioContextRef.current) {
         audioContextRef.current.close();
@@ -131,8 +140,16 @@ const useAudioManager = (autoPlay = false) => {
   }, [playAudio, playIntroMusic]);
 
   const scheduleGameMusicTransition = useCallback(() => {
+    // Clear any existing scheduled transition to prevent multiple timeouts
+    if (transitionTimeoutRef.current) {
+      clearTimeout(transitionTimeoutRef.current);
+      transitionTimeoutRef.current = null;
+    }
+
     const lobbyBuffer = buffersRef.current.lobby;
-    if (!lobbyBuffer || !audioContextRef.current || !sourceRef.current) return;
+    if (!lobbyBuffer || !audioContextRef.current || !sourceRef.current) {
+      return;
+    }
 
     const lobbyDuration = lobbyBuffer.duration;
     const currentTime = audioContextRef.current.currentTime;
@@ -140,9 +157,13 @@ const useAudioManager = (autoPlay = false) => {
     const timeInCurrentLoop = elapsedTime % lobbyDuration;
     const timeUntilLoopEnd = lobbyDuration - timeInCurrentLoop;
 
-    setTimeout(
+    transitionTimeoutRef.current = setTimeout(
       () => {
-        playGameMusic();
+        // Only play if we're still on the lobby track to prevent double-play
+        if (currentTrackRef.current === 'lobby') {
+          playGameMusic();
+        }
+        transitionTimeoutRef.current = null;
       },
       Math.max(0, timeUntilLoopEnd * 1000)
     );
@@ -156,6 +177,7 @@ const useAudioManager = (autoPlay = false) => {
   const pause = useCallback(() => {
     stopCurrentSource();
     setAudioState(AUDIO_STATES.PAUSED);
+    currentTrackRef.current = null;
   }, [stopCurrentSource]);
 
   const startGameTransition = useCallback(() => {
@@ -164,7 +186,7 @@ const useAudioManager = (autoPlay = false) => {
     } else {
       playGameMusic();
     }
-  }, [audioState, scheduleGameMusicTransition, playGameMusic]);
+  }, [audioState, playGameMusic, scheduleGameMusicTransition]);
 
   return {
     isPlaying: audioState === AUDIO_STATES.PLAYING,
