@@ -12,7 +12,8 @@ const OfflineMatchRoom = () => {
   const [showCountdown, setShowCountdown] = useState(false);
   const [score, setScore] = useState(0);
   const [level, setLevel] = useState(1);
-  const { isPlaying, play, pause, startGameTransition } = useAudioManager(true);
+  const { isPlaying, play, pause, startGameTransition } =
+    useAudioManager(false);
   const user = useAppSelector(selectUser);
 
   const handleCountdownComplete = () => {
@@ -46,6 +47,7 @@ const OfflineMatchRoom = () => {
           setScore={setScore}
           level={level}
           setLevel={setLevel}
+          startGame={!showCountdown}
         />
       </div>
     </div>
