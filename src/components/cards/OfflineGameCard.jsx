@@ -41,7 +41,7 @@ const GameCard = ({ player, setScore, level, setLevel }) => {
   const {
     piecePrediction,
     // invisiblePieces,
-    // increasedGravity
+    increasedGravity,
   } = location.state || {};
 
   const movePiece = (move) => {
@@ -123,7 +123,13 @@ const GameCard = ({ player, setScore, level, setLevel }) => {
     spawnTetromino(getRandom(SHAPES));
   };
 
-  const lastDrop = useGameLoop(() => {}, movePiece, lockPiece, level);
+  const lastDrop = useGameLoop(
+    () => {},
+    movePiece,
+    lockPiece,
+    level,
+    increasedGravity
+  );
   const rowsCleared = useScoreManager({
     setScore,
     level,
