@@ -8,7 +8,13 @@ import {
 } from '../utils/constants';
 import useKeyboard from './useKeyboard';
 
-const useGameLoop = (callback, movePiece, lockPiece, level = 1) => {
+const useGameLoop = (
+  callback,
+  movePiece,
+  lockPiece,
+  level = 1,
+  increasedGravity = false
+) => {
   const callbackRef = useRef(callback);
   const lastMoveTime = useRef({ left: 0, right: 0, down: 0, up: 0, drop: 0 });
   const lastGravityTime = useRef(0);
@@ -18,8 +24,15 @@ const useGameLoop = (callback, movePiece, lockPiece, level = 1) => {
 
   const getGravityDelay = useMemo(() => {
     const timePerRow = Math.pow(0.8 - (level - 1) * 0.007, level - 1);
-    return Math.max(16.67, timePerRow * 1000);
-  }, [level]);
+    const baseDelay = Math.max(16.67, timePerRow * 1000);
+
+    if (increasedGravity) {
+      const multiplier = Math.max(0.4, 0.55 - (level - 1) * 0.015);
+      return baseDelay * multiplier;
+    }
+
+    return baseDelay;
+  }, [level, increasedGravity]);
 
   useEffect(() => {
     callbackRef.current = callback;

@@ -18,7 +18,7 @@ const useDifficultySelector = () => {
       case 1:
         return { level: 'Medium', progress: 66, color: 'medium' };
       case 2:
-        return { level: 'Medium', progress: 66, color: 'medium' };
+        return { level: 'Hard', progress: 100, color: 'hard' };
       case 3:
         return { level: 'Hard', progress: 100, color: 'hard' };
       default:
