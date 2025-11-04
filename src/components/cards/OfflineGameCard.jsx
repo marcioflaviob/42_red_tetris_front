@@ -25,7 +25,7 @@ const Cell = React.memo(({ index, type, color }) => {
   return <div className={getCellClassName(index, type, color)} />;
 });
 
-const GameCard = ({ player, setScore, level, setLevel }) => {
+const GameCard = ({ player, setScore, level, setLevel, startGame }) => {
   const {
     board,
     boardRef,
@@ -251,8 +251,8 @@ const GameCard = ({ player, setScore, level, setLevel }) => {
   }, [boardCells, activePiece, invisiblePieces, piecePrediction]);
 
   useEffect(() => {
-    spawnTetromino(getRandom(SHAPES));
-  }, [spawnTetromino]);
+    if (startGame) spawnTetromino(getRandom(SHAPES));
+  }, [startGame, spawnTetromino]);
 
   return (
     <Card greyScale={gameOver}>
