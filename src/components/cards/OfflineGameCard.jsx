@@ -111,7 +111,6 @@ const GameCard = ({ player, setScore, level, setLevel }) => {
     const piece = activePieceRef?.current;
     if (!piece) return;
     const coords = piece.getPredictCoords(boardRef.current);
-    console.log(coords);
     updateBoard(coords, piece.color);
     setActivePiece(null);
     if (coords.some(([r]) => r === 0)) {
@@ -188,6 +187,7 @@ const GameCard = ({ player, setScore, level, setLevel }) => {
 
   useEffect(() => {
     spawnTetromino(getNextPiece());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [spawnTetromino]);
 
   return (
