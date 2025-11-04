@@ -40,7 +40,7 @@ const GameCard = ({ player, setScore, level, setLevel }) => {
   const location = useLocation();
   const {
     piecePrediction,
-    // invisiblePieces,
+    invisiblePieces,
     // increasedGravity
   } = location.state || {};
 
@@ -234,12 +234,11 @@ const GameCard = ({ player, setScore, level, setLevel }) => {
 
     return boardCells.map(({ idx, filled }) => {
       const isActivePiece = activePieceIndices.has(idx);
-      const type =
-        isActivePiece || filled
-          ? CLASS.TILE
-          : predictIndices.has(idx)
-            ? CLASS.PREDICT
-            : CLASS.EMPTY;
+
+      let type = CLASS.EMPTY;
+      if (isActivePiece || (filled && !invisiblePieces)) type = CLASS.TILE;
+      else if (predictIndices.has(idx)) type = CLASS.PREDICT;
+
       return (
         <Cell
           key={idx}
@@ -249,7 +248,7 @@ const GameCard = ({ player, setScore, level, setLevel }) => {
         />
       );
     });
-  }, [boardCells, activePiece]);
+  }, [boardCells, activePiece, invisiblePieces, piecePrediction]);
 
   useEffect(() => {
     spawnTetromino(getRandom(SHAPES));
