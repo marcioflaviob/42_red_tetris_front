@@ -38,11 +38,8 @@ const GameCard = ({ player, setScore, level, setLevel, startGame }) => {
   const [gameOver, setGameOver] = useState(false);
 
   const location = useLocation();
-  const {
-    piecePrediction,
-    increasedGravity,
-    invisiblePieces,
-  } = location.state || {};
+  const { piecePrediction, increasedGravity, invisiblePieces } =
+    location.state || {};
 
   const movePiece = (move) => {
     const piece = activePieceRef.current;
