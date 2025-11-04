@@ -255,7 +255,7 @@ const GameCard = ({ player, setScore, level, setLevel }) => {
         />
       );
     });
-  }, [boardCells, activePiece]);
+  }, [boardCells, activePiece, piecePrediction]);
 
   useEffect(() => {
     spawnTetromino(getRandom(SHAPES));
