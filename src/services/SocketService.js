@@ -11,8 +11,7 @@ class SocketService {
       return this.socket;
     }
 
-    // TODO: replace with a global variable
-    this.socket = io('http://localhost:3000', {
+    this.socket = io(import.meta.env.VITE_BACKEND_URL, {
       auth: {
         sessionId,
         username,
