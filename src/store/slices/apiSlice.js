@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const api = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:3000', // TODO: replace with a env variable
+    baseUrl: import.meta.env.VITE_BACKEND_URL,
     prepareHeaders: (headers, { getState }) => {
       const sessionId = getState().user.sessionId;
       headers.set('x-session-id', sessionId);
@@ -12,16 +12,19 @@ export const api = createApi({
     },
   }),
   endpoints: (builder) => ({
+    getHealth: builder.query({
+      query: () => 'health',
+    }),
     createRoom: builder.mutation({
       query: (userData) => ({
-        url: '/room',
+        url: 'room',
         method: 'POST',
         body: userData,
       }),
     }),
     joinRoom: builder.mutation({
       query: ({ user, roomId }) => ({
-        url: `/room/${roomId}/join`,
+        url: `room/${roomId}/join`,
         method: 'POST',
         body: { user },
       }),
@@ -29,4 +32,5 @@ export const api = createApi({
   }),
 });
 
-export const { useCreateRoomMutation, useJoinRoomMutation } = api;
+export const { useGetHealthQuery, useCreateRoomMutation, useJoinRoomMutation } =
+  api;
