@@ -50,7 +50,8 @@ function lightenColor(hex, percent) {
 
 const LegoPiece = ({
   shape = SHAPES.I,
-  color = '#FFD700',
+  color: propColor = '#FFD700',
+  disabled = false,
   angle = 0,
   size = 32,
   ...props
@@ -61,6 +62,7 @@ const LegoPiece = ({
   const rotated = rotateMatrix(shape, rotationSteps);
   const timeoutRef = useRef(null);
   const pieceRef = useRef(null);
+  const color = disabled ? '#808080' : propColor;
 
   const animateToTargetAngle = (targetAngle) => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);

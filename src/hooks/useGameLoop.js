@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   COLLISION,
   FRAMES_PER_SECOND,
+  GRAVITY_DELAY,
   MOVE_DELAY,
   MOVES,
   SCORED_ACTION,
@@ -12,6 +13,8 @@ const useGameLoop = (
   callback,
   movePiece,
   lockPiece,
+  updateSavedPiece,
+  gameOver,
   level = 1,
   increasedGravity = false
 ) => {
@@ -24,7 +27,7 @@ const useGameLoop = (
 
   const getGravityDelay = useMemo(() => {
     const timePerRow = Math.pow(0.8 - (level - 1) * 0.007, level - 1);
-    const baseDelay = Math.max(16.67, timePerRow * 1000);
+    const baseDelay = Math.max(16.67, timePerRow * GRAVITY_DELAY);
 
     if (increasedGravity) {
       const multiplier = Math.max(0.4, 0.55 - (level - 1) * 0.015);
@@ -39,6 +42,8 @@ const useGameLoop = (
   }, [callback]);
 
   useEffect(() => {
+    if (gameOver) return;
+
     const loop = () => {
       const now = Date.now();
       callbackRef.current();
@@ -97,6 +102,9 @@ const useGameLoop = (
           lastMoveTime.current.up = now;
         }
       } else lastMoveTime.current.up = 0;
+      if (keysPressed.current.has('C') || keysPressed.current.has('c')) {
+        updateSavedPiece();
+      }
     };
 
     const intervalId = setInterval(loop, frameInterval);
@@ -104,7 +112,15 @@ const useGameLoop = (
     return () => {
       clearInterval(intervalId);
     };
-  }, [frameInterval, getGravityDelay, keysPressed, lockPiece, movePiece]);
+  }, [
+    frameInterval,
+    getGravityDelay,
+    keysPressed,
+    lockPiece,
+    movePiece,
+    updateSavedPiece,
+    gameOver,
+  ]);
 
   return lastDrop;
 };
