@@ -1,4 +1,3 @@
 .content {
-  background: #383841;
-  color: aliceblue;
+  max-height: 100vh - var(--footer-height);
 }

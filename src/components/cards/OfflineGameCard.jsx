@@ -1,6 +1,5 @@
 import Avatar from '../ui/Avatar/Avatar';
 import Card from '../ui/Card/Card';
-import Title from '../ui/Titles/Title';
 import styles from './GameCard.module.css';
 import React, { useMemo, useEffect } from 'react';
 import { CLASS } from '../../utils/constants';
@@ -105,39 +104,69 @@ const GameCard = ({
 
   return (
     <Card greyScale={gameOver} message="Game over">
-      <Avatar avatar={player.avatar} />
-      <Title>{player.username}</Title>
-      <div className="flex flex-row gap-4">
-        <div className="gap-5 bg-gray-800 p-4 rounded-lg border-2 border-gray-700 shadow-lg">
-          <h3 className="text-white text-sm font-semibold text-center mb-2 uppercase tracking-wide">
-            Piece Saved
-          </h3>
-          {savedPiece?.tetromino && (
-            <LegoPiece
-              color={getColorHex(savedPiece?.tetromino?.color)}
-              shape={savedPiece?.tetromino?.shape}
-              disabled={savedPiece?.disabled}
-              size={20}
-            />
-          )}
+      <div className="flex flex-col gap-3 h-full overflow-hidden">
+        <div className="flex items-center gap-3 p-2 bg-gradient-to-r from-cyan-500/10 via-green-500/10 to-purple-500/10 rounded-xl border border-cyan-500/20 shadow-lg flex-shrink-0">
+          <Avatar avatar={player.avatar} size="large" />
+          <div
+            className="text-xl font-bold text-white tracking-wide flex-1"
+            style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}
+          >
+            {player.username}
+          </div>
         </div>
-        <div className={styles.gameGrid}>
-          <div className={styles.tetrisBoard}>{cells}</div>
-        </div>
-        <div className="flex flex-col gap-5 bg-gray-800 p-4 rounded-lg border-2 border-gray-700 shadow-lg min-w-[120px]">
-          <h3 className="text-white text-sm font-semibold text-center mb-2 uppercase tracking-wide">
-            Next Pieces
+
+        <div className="bg-gradient-to-b from-gray-800/80 to-gray-900/90 rounded-lg p-2 border border-cyan-500/20 shadow-md flex-shrink-0">
+          <h3
+            className="text-xs font-bold text-cyan-400 uppercase tracking-widest text-center mb-1 pb-1 border-b border-cyan-500/20"
+            style={{ textShadow: '0 0 10px rgba(100, 200, 150, 0.5)' }}
+          >
+            Hold
           </h3>
-          {nextPieces?.slice(0, 5).map((piece, index) => {
-            return (
+          <div className="flex items-center justify-center min-h-[70px] bg-black/30 rounded-md border border-gray-700/50 p-2">
+            {savedPiece?.tetromino ? (
               <LegoPiece
-                key={index}
-                color={getColorHex(piece?.color)}
-                shape={piece.shape}
+                color={getColorHex(savedPiece.tetromino.color)}
+                shape={savedPiece.tetromino.shape}
+                disabled={savedPiece.disabled}
                 size={20}
               />
-            );
-          })}
+            ) : (
+              <div className="text-white/30 text-xs text-center italic">
+                No piece
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className={`${styles.gameBoardWrapper} p-2 flex-1 min-h-0`}>
+          <div className={styles.gameGrid}>
+            <div className={styles.tetrisBoard}>{cells}</div>
+          </div>
+        </div>
+
+        <div className="bg-gradient-to-b from-gray-800/80 to-gray-900/90 rounded-lg p-2 border border-cyan-500/20 shadow-md flex-shrink-0">
+          <h3
+            className="text-xs font-bold text-cyan-400 uppercase tracking-widest text-center mb-1 pb-1 border-b border-cyan-500/20"
+            style={{ textShadow: '0 0 10px rgba(100, 200, 150, 0.5)' }}
+          >
+            Next
+          </h3>
+          <div
+            className={`flex gap-2 overflow-x-auto pb-1 ${styles.nextPiecesScroll}`}
+          >
+            {nextPieces?.slice(0, 5).map((piece, index) => (
+              <div
+                key={index}
+                className="flex items-center justify-center min-w-[60px] min-h-[60px] bg-black/20 rounded-md border border-gray-700/30 p-2 hover:bg-black/30 hover:border-cyan-500/30 transition-all"
+              >
+                <LegoPiece
+                  color={getColorHex(piece.color)}
+                  shape={piece.shape}
+                  size={18}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </Card>

@@ -11,6 +11,7 @@ import { selectUser } from '../store/slices/userSlice';
 import { createMatchService } from '../services/MatchService';
 import useGameState from '../hooks/useGameState';
 import useMatchPersistence from '../hooks/useMatchPersistence';
+import HomePageBg from '../components/ui/Backgrounds/HomePageBg';
 
 const OfflineMatchRoom = () => {
   const [showCountdown, setShowCountdown] = useState(true);
@@ -82,11 +83,14 @@ const OfflineMatchRoom = () => {
 
   return (
     <div className={`${styles.content} flex flex-col h-full`}>
+      <HomePageBg />
       <Countdown
         isVisible={showCountdown}
         onComplete={handleCountdownComplete}
       />
-      <div className="container mx-auto grid grid-cols-3 row-span-10 gap-8 flex-1 p-8">
+      <div
+        className={`${styles.content} container mx-auto grid grid-cols-3 row-span-10 gap-8 flex-1 p-8`}
+      >
         <div className="grid grid-rows-7 gap-4">
           <Card className="row-span-3">
             <Button
