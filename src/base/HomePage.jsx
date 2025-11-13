@@ -10,15 +10,13 @@ import { useGetHealthQuery } from '../store/slices/apiSlice';
 
 const HomePage = () => {
   const username = useAppSelector(selectUsername);
-  const { data /*, error, isLoading*/ } = useGetHealthQuery();
-
-  console.log(data);
+  const { error, isLoading } = useGetHealthQuery();
 
   return (
     <div className={`${styles.content} flex flex-col h-full`}>
       <HomePageBg />
       {!username && ( // TODO: Design a card to welcome new users
-        <div className="container mx-auto flex-none h-1/6 p-8 pb-0">
+        <div className="container mx-auto flex-none h-1/6 pt-8 pb-0">
           <Card className="">
             Welcome, set a username and invite others to play
           </Card>
@@ -38,7 +36,12 @@ const HomePage = () => {
         <Card isUsernameRequired={true}>
           <OfflineCard />
         </Card>
-        <Card isUsernameRequired={true}>
+        <Card
+          isUsernameRequired={true}
+          greyScale={error}
+          message="Multiplayer not available"
+          loading={isLoading}
+        >
           <OnlineCard />
         </Card>
       </div>

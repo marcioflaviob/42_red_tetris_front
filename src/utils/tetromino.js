@@ -79,11 +79,6 @@ export class Tetromino {
     return [centerRow, centerCol];
   }
 
-  /**
-   * Calculate the predicted landing coordinates for this tetromino
-   * @param {Array} board - The game board state
-   * @returns {Array} Array of [row, col] tuples representing where the piece will land
-   */
   getPredictCoords(board) {
     if (!this.coords || !this.coords.length) return [];
 

@@ -1,6 +1,7 @@
 export const USERNAME_REGEX = /^[a-zA-Z0-9]*$/;
 
 export const MOVE_DELAY = 100;
+export const GRAVITY_DELAY = 1000;
 export const FRAMES_PER_SECOND = 60;
 
 export const BUFFER_ZONE_ROWS = 2;
@@ -55,11 +56,11 @@ export const COLOR = {
 };
 
 export const LEVEL = {
-  1: 5, // Lines to be cleared to move to the next level
-  2: 10,
-  3: 15,
-  4: 20,
-  5: 25,
+  1: 3, // Lines to be cleared to move to the next level
+  2: 5,
+  3: 7,
+  4: 10,
+  5: 15,
   6: 30,
   7: 35,
   8: 40,

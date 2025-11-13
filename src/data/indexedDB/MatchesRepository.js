@@ -1,12 +1,12 @@
 import { openDB } from 'idb';
+import { DATABASE } from '../constants';
 
 const createMatchesRepository = () => {
-  const DB_NAME = 'MatchesDB';
   const STORE_NAME = 'matches';
 
   const initDB = async () => {
     try {
-      return openDB(DB_NAME, 1, {
+      return openDB(DATABASE, 1, {
         upgrade(db) {
           if (!db.objectStoreNames.contains(STORE_NAME)) {
             db.createObjectStore(STORE_NAME, {
@@ -25,10 +25,21 @@ const createMatchesRepository = () => {
   const addMatch = async (matchData) => {
     try {
       const db = await initDB();
-      return await db.add(STORE_NAME, matchData);
+      const id = await db.add(STORE_NAME, matchData);
+      return await getMatch(id);
     } catch (error) {
       console.error('Error adding match to storage:', error);
       throw error;
+    }
+  };
+
+  const getMatch = async (id) => {
+    try {
+      const db = await initDB();
+      return await db.get(STORE_NAME, id);
+    } catch (error) {
+      console.error('Error loading matches from storage:', error);
+      return [];
     }
   };
 
@@ -54,6 +65,7 @@ const createMatchesRepository = () => {
 
   return {
     addMatch,
+    getMatch,
     getMatches,
     updateMatch,
   };

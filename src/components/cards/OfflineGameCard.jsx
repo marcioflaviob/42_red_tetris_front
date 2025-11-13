@@ -1,130 +1,57 @@
 import Avatar from '../ui/Avatar/Avatar';
 import Card from '../ui/Card/Card';
-import Title from '../ui/Titles/Title';
 import styles from './GameCard.module.css';
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
-import { Tetromino } from '../../utils/tetromino';
-import useGameLoop from '../../hooks/useGameLoop';
-import useRotation from '../../hooks/useRotation';
-import { BOARD_COLS, CLASS, COLLISION, MOVES } from '../../utils/constants';
-import useBoard from '../../hooks/useBoard';
+import React, { useMemo, useEffect } from 'react';
+import { CLASS } from '../../utils/constants';
+import useTetrisGame from '../../hooks/useTetrisGame';
 import useScoreManager from '../../hooks/useScoreManager';
-import { useLocation } from 'react-router-dom';
-import {
-  getCellClassName,
-  getColorHex,
-  getIndex,
-  hasCollided,
-} from '../../utils/helper';
+import { getCellClassName, getColorHex, getIndex } from '../../utils/helper';
 import LegoPiece from '../ui/Backgrounds/LegoPiece';
-import usePieceGenerator from '../../hooks/usePieceGenerator';
 
 const Cell = React.memo(({ index, type, color }) => {
   return <div className={getCellClassName(index, type, color)} />;
 });
 
-const GameCard = ({ player, setScore, level, setLevel, startGame }) => {
+const GameCard = ({
+  player,
+  setScore,
+  level,
+  setLevel,
+  setRowsCleared,
+  gameOver,
+  setGameOver,
+  startGame,
+  piecePrediction,
+  increasedGravity,
+  invisiblePieces,
+  onPieceLocked,
+  onGameOver,
+}) => {
   const {
     board,
-    boardRef,
     setBoard,
     activePiece,
-    activePieceRef,
-    setActivePiece,
-  } = useBoard();
-  // const [warningState, setWarningState] = useState(false);
-  const [gameOver, setGameOver] = useState(false);
-  const { nextPieces, getNextPiece } = usePieceGenerator();
-
-  const location = useLocation();
-  const { piecePrediction, increasedGravity, invisiblePieces } =
-    location.state || {};
-
-  const movePiece = (move) => {
-    const piece = activePieceRef.current;
-    if (!piece) return COLLISION.NO;
-    let proposed = null;
-    let coords = [];
-    let shape = piece.shape;
-    switch (move) {
-      case MOVES.DOWN:
-        coords = piece.coords?.map(([r, c]) => [r + 1, c]);
-        proposed = {
-          coords,
-          shape,
-          pivot: piece.pivot,
-          rotation: piece.rotation,
-        };
-        break;
-      case MOVES.RIGHT:
-        coords = piece.coords?.map(([r, c]) => [r, c + 1]);
-        proposed = {
-          coords,
-          shape,
-          pivot: piece.pivot,
-          rotation: piece.rotation,
-        };
-        break;
-      case MOVES.LEFT:
-        coords = piece.coords?.map(([r, c]) => [r, c - 1]);
-        proposed = {
-          coords,
-          shape,
-          pivot: piece.pivot,
-          rotation: piece.rotation,
-        };
-        break;
-      case MOVES.ROTATE:
-        proposed = rotatePiece(piece);
-        if (!proposed) return COLLISION.CONTINUE;
-        setActivePiece(
-          new Tetromino({
-            shape: proposed.shape,
-            color: piece.color,
-            coords: proposed.coords,
-            pivot: proposed.pivot,
-            rotation: proposed.rotation,
-          })
-        );
-        return COLLISION.NO;
-      default:
-        return COLLISION.NO;
-    }
-    const collision = hasCollided(move, proposed.coords, boardRef?.current);
-    if (!collision)
-      setActivePiece(
-        new Tetromino({
-          shape: proposed.shape,
-          color: piece.color,
-          coords: proposed.coords,
-          pivot: proposed.pivot,
-          rotation: proposed.rotation,
-        })
-      );
-    return collision;
-  };
-
-  const lockPiece = () => {
-    const piece = activePieceRef?.current;
-    if (!piece) return;
-    const coords = piece.getPredictCoords(boardRef.current);
-    updateBoard(coords, piece.color);
-    setActivePiece(null);
-    if (coords.some(([r]) => r === 0)) {
-      setGameOver(true);
-      return;
-    }
-    spawnTetromino(getNextPiece());
-  };
-
-  const lastDrop = useGameLoop(
-    () => {},
-    movePiece,
-    lockPiece,
+    nextPieces,
+    lastDrop,
+    savedPiece,
+    spawnTetromino,
+    getNextPiece,
+    getFullGameState,
+  } = useTetrisGame({
     level,
-    increasedGravity
-  );
-  const rowsCleared = useScoreManager({
+    increasedGravity,
+    onPieceLocked: () => {
+      onPieceLocked(getFullGameState());
+    },
+    onGameStateChange: (state) => {
+      if (state.gameOver && !gameOver) {
+        setGameOver(true);
+        onGameOver();
+      }
+    },
+  });
+
+  const clearedRows = useScoreManager({
     setScore,
     level,
     setLevel,
@@ -133,24 +60,9 @@ const GameCard = ({ player, setScore, level, setLevel, startGame }) => {
     lastDrop,
   });
 
-  const spawnTetromino = useCallback(
-    (tetromino) => {
-      setActivePiece(tetromino);
-    },
-    [setActivePiece]
-  );
-
-  const updateBoard = (coords, color) => {
-    setBoard((prev) => {
-      const newBoard = [...prev];
-      coords.forEach(([row, col]) => {
-        newBoard[row * BOARD_COLS + col] = color;
-      });
-      return newBoard;
-    });
-  };
-
-  const rotatePiece = useRotation({ hasCollided, boardRef });
+  useEffect(() => {
+    setRowsCleared(clearedRows);
+  }, [clearedRows, setRowsCleared]);
 
   const boardCells = useMemo(() => {
     return board.map((filled, idx) => ({ idx, filled }));
@@ -162,9 +74,7 @@ const GameCard = ({ player, setScore, level, setLevel, startGame }) => {
     );
 
     const predictCoords =
-      piecePrediction && activePiece
-        ? activePiece.getPredictCoords(boardRef.current)
-        : [];
+      piecePrediction && activePiece ? activePiece.getPredictCoords(board) : [];
     const predictIndices = new Set(
       predictCoords.map((coords) => getIndex(coords))
     );
@@ -185,34 +95,77 @@ const GameCard = ({ player, setScore, level, setLevel, startGame }) => {
         />
       );
     });
-  }, [boardCells, activePiece, invisiblePieces, piecePrediction]);
+  }, [boardCells, activePiece, invisiblePieces, piecePrediction, board]);
 
   useEffect(() => {
     if (startGame) spawnTetromino(getNextPiece());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [startGame, spawnTetromino]);
+  }, [startGame]);
 
   return (
-    <Card greyScale={gameOver}>
-      <Avatar avatar={player.avatar} />
-      <Title>{player.username}</Title>
-      <p>Rows cleared: {rowsCleared}</p>
-      <div className="flex flex-row gap-4">
-        <div className={styles.gameGrid}>
-          <div className={styles.tetrisBoard}>{cells}</div>
+    <Card greyScale={gameOver} message="Game over">
+      <div className="flex flex-col gap-3 h-full overflow-hidden">
+        <div className="flex items-center gap-3 p-2 bg-gradient-to-r from-cyan-500/10 via-green-500/10 to-purple-500/10 rounded-xl border border-cyan-500/20 shadow-lg flex-shrink-0">
+          <Avatar avatar={player.avatar} size="large" />
+          <div
+            className="text-xl font-bold text-white tracking-wide flex-1"
+            style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}
+          >
+            {player.username}
+          </div>
+          <div className="bg-gradient-to-b from-gray-800/80 to-gray-900/90 rounded-lg p-2 border border-cyan-500/20 shadow-md flex-shrink-0">
+            <h3
+              className="text-xs font-bold text-cyan-400 uppercase tracking-widest text-center mb-1 pb-1 border-b border-cyan-500/20"
+              style={{ textShadow: '0 0 10px rgba(100, 200, 150, 0.5)' }}
+            >
+              Hold
+            </h3>
+            <div className="flex items-center justify-center min-h-[70px] bg-black/30 rounded-md border border-gray-700/50 p-2">
+              {savedPiece?.tetromino ? (
+                <LegoPiece
+                  color={getColorHex(savedPiece.tetromino.color)}
+                  shape={savedPiece.tetromino.shape}
+                  disabled={savedPiece.disabled}
+                  size={20}
+                />
+              ) : (
+                <div className="text-white/30 text-xs text-center italic">
+                  No piece
+                </div>
+              )}
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col gap-5 bg-gray-800 p-4 rounded-lg border-2 border-gray-700 shadow-lg min-w-[120px]">
-          {/* <h3 className='text-white text-sm font-semibold text-center mb-2 uppercase tracking-wide'>Next Pieces</h3> */}
-          {nextPieces?.slice(0, 5).map((piece, index) => {
-            return (
-              <LegoPiece
+
+        <div className={`${styles.gameBoardWrapper} p-2 flex-1 min-h-0`}>
+          <div className={styles.gameGrid}>
+            <div className={styles.tetrisBoard}>{cells}</div>
+          </div>
+        </div>
+
+        <div className="bg-gradient-to-b from-gray-800/80 to-gray-900/90 rounded-lg p-2 border border-cyan-500/20 shadow-md flex-shrink-0">
+          <h3
+            className="text-xs font-bold text-cyan-400 uppercase tracking-widest text-center mb-1 pb-1 border-b border-cyan-500/20"
+            style={{ textShadow: '0 0 10px rgba(100, 200, 150, 0.5)' }}
+          >
+            Next
+          </h3>
+          <div
+            className={`flex gap-2 overflow-x-auto pb-1 ${styles.nextPiecesScroll}`}
+          >
+            {nextPieces?.slice(0, 5).map((piece, index) => (
+              <div
                 key={index}
-                color={getColorHex(piece?.color)}
-                shape={piece.shape}
-                size={20}
-              />
-            );
-          })}
+                className="flex items-center justify-center min-w-[60px] min-h-[60px] bg-black/20 rounded-md border border-gray-700/30 p-2 hover:bg-black/30 hover:border-cyan-500/30 transition-all"
+              >
+                <LegoPiece
+                  color={getColorHex(piece.color)}
+                  shape={piece.shape}
+                  size={18}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </Card>
