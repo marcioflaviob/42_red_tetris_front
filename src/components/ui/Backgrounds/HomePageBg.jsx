@@ -2,7 +2,7 @@ import { COLOR, SHAPES } from '../../../utils/constants';
 import { getColorHex, getRandom } from '../../../utils/helper';
 import styles from './HomePageBg.module.css';
 import LegoPiece from './LegoPiece';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 
 const PIECE_COUNT = 10;
 const ROW_COUNT = 3;
@@ -60,14 +60,18 @@ const Row = ({ pieces, speed }) => {
 };
 
 const HomePageBg = () => {
-  const rows = Array.from({ length: ROW_COUNT }, () =>
-    Array.from({ length: PIECE_COUNT }, (_, idx) => ({
-      color: getColorHex(getRandom(COLOR)), //TODO replace with colors array from my other PR
-      angle: getRandomAngle(),
-      shape: getRandom(SHAPES),
-      size: 80,
-      key: idx,
-    }))
+  const rows = useMemo(
+    () =>
+      Array.from({ length: ROW_COUNT }, () =>
+        Array.from({ length: PIECE_COUNT }, (_, idx) => ({
+          color: getColorHex(getRandom(COLOR)),
+          angle: getRandomAngle(),
+          shape: getRandom(SHAPES),
+          size: 80,
+          key: idx,
+        }))
+      ),
+    []
   );
 
   return (

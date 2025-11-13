@@ -113,28 +113,27 @@ const GameCard = ({
           >
             {player.username}
           </div>
-        </div>
-
-        <div className="bg-gradient-to-b from-gray-800/80 to-gray-900/90 rounded-lg p-2 border border-cyan-500/20 shadow-md flex-shrink-0">
-          <h3
-            className="text-xs font-bold text-cyan-400 uppercase tracking-widest text-center mb-1 pb-1 border-b border-cyan-500/20"
-            style={{ textShadow: '0 0 10px rgba(100, 200, 150, 0.5)' }}
-          >
-            Hold
-          </h3>
-          <div className="flex items-center justify-center min-h-[70px] bg-black/30 rounded-md border border-gray-700/50 p-2">
-            {savedPiece?.tetromino ? (
-              <LegoPiece
-                color={getColorHex(savedPiece.tetromino.color)}
-                shape={savedPiece.tetromino.shape}
-                disabled={savedPiece.disabled}
-                size={20}
-              />
-            ) : (
-              <div className="text-white/30 text-xs text-center italic">
-                No piece
-              </div>
-            )}
+          <div className="bg-gradient-to-b from-gray-800/80 to-gray-900/90 rounded-lg p-2 border border-cyan-500/20 shadow-md flex-shrink-0">
+            <h3
+              className="text-xs font-bold text-cyan-400 uppercase tracking-widest text-center mb-1 pb-1 border-b border-cyan-500/20"
+              style={{ textShadow: '0 0 10px rgba(100, 200, 150, 0.5)' }}
+            >
+              Hold
+            </h3>
+            <div className="flex items-center justify-center min-h-[70px] bg-black/30 rounded-md border border-gray-700/50 p-2">
+              {savedPiece?.tetromino ? (
+                <LegoPiece
+                  color={getColorHex(savedPiece.tetromino.color)}
+                  shape={savedPiece.tetromino.shape}
+                  disabled={savedPiece.disabled}
+                  size={20}
+                />
+              ) : (
+                <div className="text-white/30 text-xs text-center italic">
+                  No piece
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
