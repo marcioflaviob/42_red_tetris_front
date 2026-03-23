@@ -45,8 +45,7 @@ const Button = ({
         position: 'top',
         showOnDisabled: true,
       }}
-      {...props}
-    >
+      {...props}>
       {children}
     </PrimeReactButton>
   );

@@ -33,6 +33,7 @@ const OnlineCard = () => {
       const room = await createRoom({
         user,
         room: {
+          piecePrediction,
           invisiblePieces,
           increasedGravity,
         },
@@ -63,9 +64,7 @@ const OnlineCard = () => {
         <InfoCard>
           <div className={styles.optionInfo}>
             <label className={styles.optionLabel}>Piece Preview</label>
-            <span className={styles.optionDescription}>
-              Shows a preview of where the piece will land
-            </span>
+            <span className={styles.optionDescription}>Shows a preview of where the piece will land</span>
           </div>
           <InputSwitch
             checked={piecePrediction}
@@ -76,9 +75,7 @@ const OnlineCard = () => {
         <InfoCard>
           <div className={styles.optionInfo}>
             <label className={styles.optionLabel}>Invisible Pieces</label>
-            <span className={styles.optionDescription}>
-              Pieces become invisible after placement
-            </span>
+            <span className={styles.optionDescription}>Pieces become invisible after placement</span>
           </div>
           <InputSwitch
             checked={invisiblePieces}
@@ -90,9 +87,7 @@ const OnlineCard = () => {
         <InfoCard>
           <div className={styles.optionInfo}>
             <label className={styles.optionLabel}>Increased Gravity</label>
-            <span className={styles.optionDescription}>
-              Pieces fall faster for extra challenge
-            </span>
+            <span className={styles.optionDescription}>Pieces fall faster for extra challenge</span>
           </div>
           <InputSwitch
             checked={increasedGravity}
@@ -102,20 +97,13 @@ const OnlineCard = () => {
         </InfoCard>
       </div>
 
-      <div
-        className={`${styles.difficultyInfo} ${difficulty.color === 'hard' ? styles.hardDifficulty : ''}`}
-      >
+      <div className={`${styles.difficultyInfo} ${difficulty.color === 'hard' ? styles.hardDifficulty : ''}`}>
         <div className={styles.difficultyLabel}>Difficulty Level</div>
-        <div
-          className={`${styles.difficultyValue} ${styles[difficulty.color + 'Text']}`}
-        >
-          {difficulty.level}
-        </div>
+        <div className={`${styles.difficultyValue} ${styles[difficulty.color + 'Text']}`}>{difficulty.level}</div>
         <div className={styles.difficultyBar}>
           <div
             className={`${styles.difficultyProgress} ${styles[difficulty.color]}`}
-            style={{ width: `${difficulty.progress}%` }}
-          ></div>
+            style={{ width: `${difficulty.progress}%` }}></div>
         </div>
       </div>
 
@@ -125,8 +113,7 @@ const OnlineCard = () => {
           size="large"
           onClick={handleRoomCreation}
           className={styles.playButton}
-          loading={isLoading}
-        >
+          loading={isLoading}>
           <span className={styles.playIcon}>▶</span>
           Create room
         </Button>
@@ -138,19 +125,14 @@ const OnlineCard = () => {
       </div>
       <p className={styles.subtitle}>Join a friend's game</p>
       <div className={styles.playSection}>
-        <InputText
-          value={roomIdInput}
-          onChange={handleRoomIdChange}
-          placeholder="Type the room ID"
-        />
+        <InputText value={roomIdInput} onChange={handleRoomIdChange} placeholder="Type the room ID" />
         <Button
           tooltip="Room ID is invalid"
           tooltipBool={!isRoomIdValid}
           variant="play"
           className={styles.playButton}
           onClick={handleJoinRoom}
-          disabled={!isRoomIdValid}
-        >
+          disabled={!isRoomIdValid}>
           Join Room
         </Button>
       </div>

@@ -26,7 +26,7 @@ const Card = ({
           const newProgress = prev + increment;
           return newProgress >= 99.5 ? 99.5 : newProgress;
         });
-      }, 400);
+      }, 250);
 
       return () => clearInterval(interval);
     } else {
@@ -34,11 +34,9 @@ const Card = ({
     }
   }, [loading]);
 
-  const isUsernameEmpty =
-    isUsernameRequired && (!username || username.trim() === '');
+  const isUsernameEmpty = isUsernameRequired && (!username || username.trim() === '');
 
-  const shouldShowOverlay =
-    isUsernameEmpty || (greyScale && message) || loading;
+  const shouldShowOverlay = isUsernameEmpty || (greyScale && message) || loading;
   const shouldApplyGreyScale = isUsernameEmpty || greyScale || loading;
 
   const cardClassName = `${styles.card} ${className} ${
@@ -69,19 +67,12 @@ const Card = ({
             <div className={styles.loadingContainer}>
               <div className={styles.loadingText}>Loading...</div>
               <div className={styles.loadingBar}>
-                <div
-                  className={styles.loadingBarFill}
-                  style={{ width: `${progress}%` }}
-                />
+                <div className={styles.loadingBarFill} style={{ width: `${progress}%` }} />
               </div>
-              <div className={styles.loadingPercentage}>
-                {Math.floor(progress)}%
-              </div>
+              <div className={styles.loadingPercentage}>{Math.floor(progress)}%</div>
             </div>
           ) : overlayContent?.type === 'message' ? (
-            <div className={styles.overlayMessage}>
-              {overlayContent.content}
-            </div>
+            <div className={styles.overlayMessage}>{overlayContent.content}</div>
           ) : null}
         </div>
       )}

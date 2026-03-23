@@ -1,10 +1,7 @@
 import { createUserRepository } from '../data/localStorage/UserRepository';
 import { createMatchesRepository } from '../data/indexedDB/MatchesRepository';
 
-const createUserService = (
-  userRepo = createUserRepository(),
-  matchesRepo = createMatchesRepository()
-) => {
+const createUserService = (userRepo = createUserRepository(), matchesRepo = createMatchesRepository()) => {
   const getUsername = () => {
     return userRepo.loadUsernameFromStorage();
   };

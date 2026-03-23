@@ -1,171 +1,53 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Avatar from '../ui/Avatar/Avatar';
 import Card from '../ui/Card/Card';
 import styles from './GameCard.module.css';
 import useSocket from '../../hooks/useSocket';
-import { getColorHex, getIndex, hasCollided } from '../../utils/helper';
-import { BOARD_COLS, CLASS, MOVES } from '../../utils/constants';
-import useBoard from '../../hooks/useBoard';
+import { getColorHex, getIndex } from '../../utils/helper';
+import { CLASS } from '../../utils/constants';
 import Cell from '../game/Cell';
-import usePieceGenerator from '../../hooks/usePieceGenerator';
 import LegoPiece from '../ui/Backgrounds/LegoPiece';
-import useRotation from '../../hooks/useRotation';
-import useMovement from '../../hooks/useMovement';
-import { Tetromino } from '../../utils/tetromino';
 
-const OnlineGameCard = ({ player, matchData, startGame, compact = false, playerCount = 1 }) => {
+const DebugServerGameCard = ({ player, compact = false, playerCount = 1 }) => {
   const showNextOnSide = compact && playerCount === 3;
+  const [board, setBoard] = useState(Array(200).fill(null));
+  const [activePiece, setActivePiece] = useState(null);
+  const [savedPiece, setSavedPiece] = useState({ tetromino: null, disabled: false });
+  const [nextPieces, setNextPieces] = useState([]);
   const [gameOver, setGameOver] = useState(false);
-  const { board, boardRef, setBoard, activePiece, activePieceRef, setActivePiece, savedPiece, setSavedPiece } =
-    useBoard();
-  const { nextPieces, getNextPiece } = usePieceGenerator(startGame, matchData?.id);
-  const rotatePiece = useRotation({ hasCollided, boardRef });
-  const { movePiece } = useMovement({
-    boardRef,
-    activePieceRef,
-    setActivePiece,
-    rotatePiece,
-  });
-  const shortSessionId = player?.sessionId?.slice(0, 8);
-
-  const updateBoard = useCallback(
-    (coords, color) => {
-      setBoard((prev) => {
-        const newBoard = [...prev];
-        coords.forEach(([row, col]) => {
-          newBoard[row * BOARD_COLS + col] = color;
-        });
-        return newBoard;
-      });
-    },
-    [setBoard]
-  );
-
-  const spawnTetromino = useCallback(
-    (tetromino) => {
-      setActivePiece(tetromino);
-    },
-    [setActivePiece]
-  );
-
-  const clearRows = useCallback(
-    (rows = []) => {
-      if (!Array.isArray(rows) || rows.length === 0) return;
-
-      setBoard((prev) => {
-        const newBoard = [...prev];
-        rows
-          .slice()
-          .sort((a, b) => a - b)
-          .forEach((row) => {
-            newBoard.splice(row * BOARD_COLS, BOARD_COLS);
-            newBoard.unshift(...new Array(BOARD_COLS).fill(0));
-          });
-        return newBoard;
-      });
-    },
-    [setBoard]
-  );
-
-  const lockPiece = useCallback(() => {
-    const piece = activePieceRef?.current;
-    if (!piece) return;
-
-    const coords = piece.getPredictCoords(board);
-    updateBoard(coords, piece.color);
-    setActivePiece(null);
-
-    if (coords.some(([r]) => r === 0)) {
-      setGameOver(true);
-      return;
-    }
-
-    if (savedPiece.disabled) {
-      setSavedPiece({ ...savedPiece, disabled: false });
-    }
-
-    const nextPiece = getNextPiece();
-    spawnTetromino(nextPiece);
-  }, [board, activePieceRef, updateBoard, setActivePiece, setSavedPiece, savedPiece, getNextPiece, spawnTetromino]);
-
-  const updateSavedPiece = useCallback(() => {
-    if (savedPiece.disabled) return;
-
-    setSavedPiece({ tetromino: activePiece, disabled: true });
-    if (savedPiece.tetromino) {
-      spawnTetromino(
-        new Tetromino({
-          shape: savedPiece?.tetromino?.shape,
-          color: savedPiece?.tetromino?.color,
-        })
-      );
-    } else {
-      spawnTetromino(getNextPiece());
-    }
-  }, [savedPiece, setSavedPiece, activePiece, spawnTetromino, getNextPiece]);
-
   const { on, off } = useSocket();
 
-  const eventReceived = useCallback(
-    (data) => {
-      console.log(`OnlineGameCard (${shortSessionId}): received event:`, data);
-      switch (data?.action) {
-        case MOVES.DOWN:
-          movePiece(MOVES.DOWN);
-          break;
-        case MOVES.LEFT:
-          movePiece(MOVES.LEFT);
-          break;
-        case MOVES.RIGHT:
-          movePiece(MOVES.RIGHT);
-          break;
-        case MOVES.ROTATE:
-          movePiece(MOVES.ROTATE);
-          break;
-        case MOVES.SAVE:
-          updateSavedPiece();
-          break;
-        case MOVES.SOFT_DROP:
-        case MOVES.HARD_DROP:
-          lockPiece();
-          break;
-        case 'clear-row':
-          clearRows(data?.rows);
-          break;
-        default:
-          console.error('An error has occurred: Unknown move.');
+  useEffect(() => {
+    const handleBoardUpdate = (data) => {
+      // console.log("Board message received", data);
+      if (data?.board) {
+        setBoard(data.board);
       }
-    },
-    [movePiece, updateSavedPiece, lockPiece, clearRows]
-  ); // Intentionally exclude shortSessionId from deps
+      if (data?.activePiece !== undefined) {
+        setActivePiece(data.activePiece);
+      }
+      if (data?.savedPiece !== undefined) {
+        setSavedPiece(data.savedPiece);
+      }
+      if (data?.nextPieces) {
+        setNextPieces(data.nextPieces);
+      }
+      if (data?.gameOver !== undefined) {
+        setGameOver(data.gameOver);
+      }
+    };
 
-  useEffect(() => {
-    if (nextPieces.length === 6 && !activePieceRef.current) spawnTetromino(getNextPiece());
-  }, [startGame, nextPieces, activePieceRef, getNextPiece, spawnTetromino]);
-
-  // Register socket event listener
-  useEffect(() => {
-    if (!shortSessionId) {
-      console.log(`OnlineGameCard: Skipping listener setup - no shortSessionId`);
-      return;
-    }
-    console.log(`OnlineGameCard: Setting up listener for opponent ${player.username} (${shortSessionId})`);
-    on(shortSessionId, eventReceived);
+    on('board', handleBoardUpdate);
 
     return () => {
-      console.log(`OnlineGameCard: Removing listener for opponent ${player.username} (${shortSessionId})`);
-      off(shortSessionId, eventReceived);
+      off('board', handleBoardUpdate);
     };
-  }, [on, off, shortSessionId, player.username]);
-
-  const boardCells = useMemo(() => {
-    return board.map((filled, idx) => ({ idx, filled }));
-  }, [board]);
+  }, [on, off]);
 
   const cells = useMemo(() => {
     const activePieceIndices = new Set(activePiece?.coords?.map((coords) => getIndex(coords)) || []);
 
-    return boardCells.map(({ idx, filled }) => {
+    return board.map((filled, idx) => {
       const isActivePiece = activePieceIndices.has(idx);
 
       let type = CLASS.EMPTY;
@@ -173,7 +55,7 @@ const OnlineGameCard = ({ player, matchData, startGame, compact = false, playerC
 
       return <Cell key={idx} index={idx} color={isActivePiece ? activePiece?.color : filled} type={type} />;
     });
-  }, [boardCells, activePiece]);
+  }, [board, activePiece]);
 
   return (
     <Card greyScale={gameOver} message="Game over">
@@ -195,7 +77,7 @@ const OnlineGameCard = ({ player, matchData, startGame, compact = false, playerC
             </h3>
             <div
               className={`flex items-center justify-center ${compact ? 'min-h-[40px]' : 'min-h-[70px]'} bg-black/30 rounded-md border border-gray-700/50 ${compact ? 'p-1' : 'p-2'}`}>
-              {savedPiece?.tetromino ? (
+              {savedPiece.tetromino ? (
                 <LegoPiece
                   color={getColorHex(savedPiece.tetromino.color)}
                   shape={savedPiece.tetromino.shape}
@@ -260,4 +142,4 @@ const OnlineGameCard = ({ player, matchData, startGame, compact = false, playerC
   );
 };
 
-export default OnlineGameCard;
+export default DebugServerGameCard;

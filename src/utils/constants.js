@@ -1,7 +1,7 @@
 export const USERNAME_REGEX = /^[a-zA-Z0-9]*$/;
 
 export const MOVE_DELAY = 100;
-export const GRAVITY_DELAY = 1000;
+export const GRAVITY_DELAY = 100000;
 export const FRAMES_PER_SECOND = 60;
 
 export const BUFFER_ZONE_ROWS = 2;
@@ -10,10 +10,13 @@ export const BOARD_COLS = 10;
 export const SPAWN_CELL_COL = 3;
 
 export const MOVES = {
-  DOWN: 1,
-  LEFT: 2,
-  RIGHT: 3,
-  ROTATE: 4,
+  DOWN: 'move-down',
+  LEFT: 'move-left',
+  RIGHT: 'move-right',
+  ROTATE: 'rotate',
+  SAVE: 'save',
+  SOFT_DROP: 'soft-drop',
+  HARD_DROP: 'hard-drop',
 };
 
 export const COLLISION = {

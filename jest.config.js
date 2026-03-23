@@ -9,10 +9,7 @@ export default {
     '^.+\\.(js|jsx)$': 'babel-jest',
   },
   moduleFileExtensions: ['js', 'jsx', 'json'],
-  testMatch: [
-    '<rootDir>/tests/**/*.test.{js,jsx}',
-    '<rootDir>/src/**/*.test.{js,jsx}',
-  ],
+  testMatch: ['<rootDir>/tests/**/*.test.{js,jsx}', '<rootDir>/src/**/*.test.{js,jsx}'],
   collectCoverageFrom: [
     'src/**/*.{js,jsx}',
     '!src/main.jsx',

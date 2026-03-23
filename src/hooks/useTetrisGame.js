@@ -8,28 +8,13 @@ import useGameLoop from './useGameLoop';
 import usePieceGenerator from './usePieceGenerator';
 import { Tetromino } from '../utils/tetromino';
 
-const useTetrisGame = ({
-  level,
-  increasedGravity,
-  onPieceLocked,
-  onGameStateChange,
-}) => {
+const useTetrisGame = ({ player, level, startGame, matchData, onPieceLocked, onGameStateChange, emit }) => {
   const [gameOver, setGameOver] = useState(false);
-  const [savedPiece, setSavedPiece] = useState({
-    tetromino: null,
-    disabled: false,
-  });
 
-  const {
-    board,
-    boardRef,
-    setBoard,
-    activePiece,
-    activePieceRef,
-    setActivePiece,
-  } = useBoard();
+  const { board, boardRef, setBoard, activePiece, activePieceRef, setActivePiece, savedPiece, setSavedPiece } =
+    useBoard();
 
-  const { nextPieces, getNextPiece } = usePieceGenerator();
+  const { nextPieces, getNextPiece } = usePieceGenerator(startGame, matchData?.id);
 
   const rotatePiece = useRotation({ hasCollided, boardRef });
 
@@ -64,7 +49,7 @@ const useTetrisGame = ({
     const piece = activePieceRef?.current;
     if (!piece) return;
 
-    const coords = piece.getPredictCoords(board);
+    const coords = piece.getPredictCoords(boardRef.current);
     updateBoard(coords, piece.color);
     setActivePiece(null);
 
@@ -88,7 +73,6 @@ const useTetrisGame = ({
       });
     }
   }, [
-    board,
     activePieceRef,
     boardRef,
     updateBoard,
@@ -118,12 +102,15 @@ const useTetrisGame = ({
 
   const lastDrop = useGameLoop(
     () => {},
+    player,
     movePiece,
     lockPiece,
     updateSavedPiece,
+    startGame,
     gameOver,
     level,
-    increasedGravity
+    matchData?.increasedGravity,
+    emit
   );
 
   useEffect(() => {
@@ -154,6 +141,7 @@ const useTetrisGame = ({
     boardRef,
     setBoard,
     activePiece,
+    activePieceRef,
     gameOver,
     nextPieces,
     lastDrop,

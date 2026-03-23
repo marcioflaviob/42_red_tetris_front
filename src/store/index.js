@@ -9,8 +9,7 @@ export const store = configureStore({
     match: matchReducer,
     [api.reducerPath]: api.reducer,
   },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(api.middleware),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(api.middleware),
 });
 
 store.dispatch(loadMatchesFromStorage());

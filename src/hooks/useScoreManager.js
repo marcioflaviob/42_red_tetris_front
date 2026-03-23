@@ -1,24 +1,18 @@
 import { useCallback, useEffect, useState } from 'react';
-import {
-  BOARD_COLS,
-  BOARD_ROWS,
-  BUFFER_ZONE_ROWS,
-  LEVEL,
-  MOVES,
-  SCORE,
-  SCORED_ACTION,
-} from '../utils/constants';
+import { BOARD_COLS, BOARD_ROWS, BUFFER_ZONE_ROWS, LEVEL, MOVES, SCORE, SCORED_ACTION } from '../utils/constants';
 
-const useScoreManager = ({
-  setScore,
-  level,
-  setLevel,
-  board,
-  setBoard,
-  lastDrop,
-}) => {
+const useScoreManager = ({ player, setScore, level, setLevel, board, setBoard, lastDrop, emit }) => {
   const [rowsCleared, setRowsCleared] = useState(0);
   const [lastScoredAction, setLastScoredAction] = useState(null);
+
+  const broadcast = useCallback(
+    (event, data) => {
+      const shortId = player?.sessionId?.slice(0, 8);
+      console.log(`Emitting ${shortId}`, { event, ...data });
+      if (emit) emit(shortId, { event, ...data });
+    },
+    [emit, player]
+  );
 
   const calculateScore = useCallback(
     (rows) => {
@@ -35,10 +29,7 @@ const useScoreManager = ({
           sum = SCORE.TRIPLE * level;
           break;
         case 4:
-          if (
-            lastScoredAction !== SCORED_ACTION.TETRIS &&
-            lastScoredAction !== SCORED_ACTION.TETRIS_B2B
-          ) {
+          if (lastScoredAction !== SCORED_ACTION.TETRIS && lastScoredAction !== SCORED_ACTION.TETRIS_B2B) {
             sum = SCORE.TETRIS * level;
             setLastScoredAction(SCORED_ACTION.TETRIS);
           } else {
@@ -101,6 +92,7 @@ const useScoreManager = ({
           const emptyRow = new Array(BOARD_COLS).fill(0);
           newBoard.unshift(...emptyRow);
         });
+      broadcast('board', { action: 'clear-row', rows: fullRows.sort((a, b) => a - b) });
       return newBoard;
     });
 

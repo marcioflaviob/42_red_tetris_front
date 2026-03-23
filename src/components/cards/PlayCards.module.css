@@ -94,12 +94,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-    45deg,
-    transparent 40%,
-    rgba(255, 69, 0, 0.03) 50%,
-    transparent 60%
-  );
+  background: linear-gradient(45deg, transparent 40%, rgba(255, 69, 0, 0.03) 50%, transparent 60%);
   animation: flameFlicker 2s infinite alternate;
   pointer-events: none;
 }

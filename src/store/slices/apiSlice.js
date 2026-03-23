@@ -32,5 +32,4 @@ export const api = createApi({
   }),
 });
 
-export const { useGetHealthQuery, useCreateRoomMutation, useJoinRoomMutation } =
-  api;
+export const { useGetHealthQuery, useCreateRoomMutation, useJoinRoomMutation } = api;
