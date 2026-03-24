@@ -39,7 +39,7 @@ const MatchStats = ({ roomId, playerCount, hostName, onStartGame, isHost, gameSt
         <div className={styles.playersContainer}>
           {players.map((player) => (
             <div key={player.sessionId} className={styles.playerRow}>
-              <Avatar avatar={player.avatar} />
+              {/* <Avatar avatar={player.avatar} /> */}
               <div className={styles.playerDetails}>
                 <div className={styles.playerName}>{player.username}</div>
                 <div className={styles.playerRole}>
