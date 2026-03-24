@@ -112,10 +112,6 @@
 .avatar {
   position: absolute;
   pointer-events: none;
-  top: -36%;
-  left: -10%;
-  transform: scale(80%);
-  z-index: -1;
 }
 
 @keyframes tilePulse {
@@ -210,7 +206,7 @@
 .topContainer {
   display: flex;
   flex-direction: row;
-  gap: 1rem;
+  gap: 5rem;
   align-items: center;
   justify-content: center;
 }

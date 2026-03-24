@@ -91,6 +91,7 @@ const UserCard = ({ showStats = true, username, avatarClassName = '' }) => {
                 onKeyDown={handleUsernameKeyPress}
                 onBlur={handleUsernameSubmit}
                 className={styles.usernameInput}
+                resizable={true}
               />
             ) : (
               <div className={styles.usernameDisplay} onClick={handleUsernameClick} title="Click to edit username">

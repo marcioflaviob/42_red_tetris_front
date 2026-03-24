@@ -4,8 +4,12 @@
   align-items: center;
   height: 100%;
   position: relative;
-  gap: 0.5rem;
+  gap: 2rem;
   z-index: 4;
+  pointer-events: none;
+}
+
+.cardContainer {
   pointer-events: none;
 }
 
@@ -107,4 +111,6 @@
 .avatar {
   right: 10%;
   bottom: 10%;
+  pointer-events: auto !important;
+  position: absolute;
 }

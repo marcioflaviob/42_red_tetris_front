@@ -268,3 +268,11 @@
   outline: 3px solid rgba(16, 185, 129, 0.6) !important;
   outline-offset: 3px !important;
 }
+
+.roomIdInput {
+  text-align: left;
+  font-size: 1rem;
+  font-weight: 600;
+  pointer-events: auto;
+  border-color: #63636370;
+}

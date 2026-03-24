@@ -44,7 +44,18 @@ const MatchRoom = () => {
     isConnected,
   } = useSocket();
 
-  const { setScore, level, setLevel, setRowsCleared, setAccuracy, gameOver, setGameOver, getGameState } = useGameState({
+  const {
+    score,
+    setScore,
+    level,
+    setLevel,
+    setRowsCleared,
+    setAccuracy,
+    accuracy,
+    gameOver,
+    setGameOver,
+    getGameState,
+  } = useGameState({
     initialLevel: 1,
     matchId: roomId,
   });
@@ -251,6 +262,8 @@ const MatchRoom = () => {
               gameStarted={gameStarted}
               players={players}
               currentUser={user}
+              accuracy={accuracy}
+              score={score}
             />
           </Card>
 
@@ -264,7 +277,7 @@ const MatchRoom = () => {
             </Button>
           </div>
         </div>
-        <div className="min-h-0 overflow-hidden">
+        <div className="min-h-0">
           <GameCard
             player={user}
             setScore={setScore}
@@ -288,7 +301,7 @@ const MatchRoom = () => {
             setAccuracy={setAccuracy}
           />
         </div>
-        <div className={`${getMultiplayerClassname()} min-h-0 overflow-hidden`}>
+        <div className={`${getMultiplayerClassname()} min-h-0`}>
           {/* <div className="min-h-0 overflow-hidden flex-1">
             <OnlineGameCard
               player={user}
@@ -309,9 +322,7 @@ const MatchRoom = () => {
             const opponentCount = opponents.length;
 
             return (
-              <div
-                key={player.sessionId}
-                className={`min-h-0 overflow-hidden ${opponentCount === 1 ? 'h-full flex-1' : 'h-full'}`}>
+              <div key={player.sessionId} className={`min-h-0 ${opponentCount === 1 ? 'h-full flex-1' : 'h-full'}`}>
                 <OnlineGameCard
                   player={player}
                   matchData={roomData}
@@ -319,6 +330,7 @@ const MatchRoom = () => {
                   compact={players.length >= 3}
                   playerCount={players.length}
                   isTargeted={player.sessionId === targetId}
+                  setAccuracy={setAccuracy}
                 />
               </div>
             );
