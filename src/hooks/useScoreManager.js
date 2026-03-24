@@ -10,7 +10,18 @@ import {
   SCORED_ACTION,
 } from '../utils/constants';
 
-const useScoreManager = ({ player, setScore, level, setLevel, board, setBoard, lastDrop, emit, onLinesCleared }) => {
+const useScoreManager = ({
+  player,
+  setScore,
+  level,
+  setLevel,
+  board,
+  setBoard,
+  lastDrop,
+  emit,
+  onLinesCleared,
+  setAccuracy,
+}) => {
   const [rowsCleared, setRowsCleared] = useState(0);
   const [lastScoredAction, setLastScoredAction] = useState(null);
   // Use a ref so the board-scan effect doesn't re-run every time the callback identity changes
@@ -26,6 +37,14 @@ const useScoreManager = ({ player, setScore, level, setLevel, board, setBoard, l
       if (emit) emit(shortId, { event, ...data });
     },
     [emit, player]
+  );
+
+  const calculateAccuracy = useCallback(
+    (holes) => {
+      const newAccuracy = Math.max(1, 100 * Math.exp(-holes / 20));
+      setAccuracy(Math.round(newAccuracy * 100) / 100);
+    },
+    [setAccuracy]
   );
 
   const calculateScore = useCallback(
@@ -75,27 +94,53 @@ const useScoreManager = ({ player, setScore, level, setLevel, board, setBoard, l
     }
   }, [rowsCleared, level, setLevel]);
 
+  const checkHole = useCallback(
+    (row, col) => {
+      const rowArray = board.slice(row * BOARD_COLS, row * BOARD_COLS + BOARD_COLS);
+      const totalRows = BUFFER_ZONE_ROWS + BOARD_ROWS;
+      const colArray = Array.from({ length: totalRows }, (_, r) => board[r * BOARD_COLS + col]);
+      const leftSlice = rowArray.slice(0, col);
+      const rightSlice = rowArray.slice(col + 1);
+      const aboveSlice = colArray.slice(0, row);
+
+      const hasLeft = leftSlice.length === 0 || leftSlice.some((v) => v !== 0);
+      const hasRight = rightSlice.length === 0 || rightSlice.some((v) => v !== 0);
+      const hasAbove = aboveSlice.length == 0 || aboveSlice.some((v) => v !== 0);
+
+      if ((hasAbove && hasLeft) || (hasAbove && hasRight)) {
+        return 1;
+      }
+      return 0;
+    },
+    [board]
+  );
+
   // Clear rows
   useEffect(() => {
     const fullRows = [];
     const startRow = BUFFER_ZONE_ROWS;
     const endRow = BUFFER_ZONE_ROWS + BOARD_ROWS - 1;
+    let holes = 0;
+    let isRowAboveEmpty = false;
 
     for (let r = endRow; r >= startRow; r--) {
       let full = true;
+      const rowAbove = r > 0 ? board.slice((r - 1) * BOARD_COLS, (r - 1) * BOARD_COLS + BOARD_COLS) : null;
+      isRowAboveEmpty = rowAbove ? rowAbove.every((v) => v === 0) : false;
+      if (isRowAboveEmpty) break;
       for (let c = 0; c < BOARD_COLS; c++) {
         const cell = board[r * BOARD_COLS + c];
         // Garbage rows are intentionally uncleared
         if (!cell || cell === GARBAGE_COLOR) {
           full = false;
-          break;
+          holes += checkHole(r, c);
         }
       }
       if (full) fullRows.push(r);
     }
-
     const rowsClearedNow = fullRows.length;
     calculateScore(rowsClearedNow);
+    calculateAccuracy(holes);
 
     if (rowsClearedNow === 0) return;
 
@@ -113,7 +158,7 @@ const useScoreManager = ({ player, setScore, level, setLevel, board, setBoard, l
 
     setRowsCleared((prev) => prev + rowsClearedNow);
     if (onLinesClearedRef.current) onLinesClearedRef.current(rowsClearedNow);
-  }, [board, setBoard, calculateScore]);
+  }, [board, setBoard, calculateScore, broadcast, calculateAccuracy, checkHole]);
 
   return rowsCleared;
 };

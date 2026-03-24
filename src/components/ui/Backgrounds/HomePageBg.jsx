@@ -2,6 +2,8 @@ import { COLOR, SHAPES } from '../../../utils/constants';
 import { getColorHex, getRandom } from '../../../utils/helper';
 import styles from './HomePageBg.module.css';
 import LegoPiece from './LegoPiece';
+import { selectUser } from '../../../store/slices/userSlice';
+import { useAppSelector } from '../../../store/hooks';
 import { useEffect, useRef, useMemo } from 'react';
 
 const PIECE_COUNT = 10;
@@ -60,6 +62,7 @@ const Row = ({ pieces, speed }) => {
 };
 
 const HomePageBg = () => {
+  const user = useAppSelector(selectUser);
   const rows = useMemo(
     () =>
       Array.from({ length: ROW_COUNT }, () =>
@@ -75,7 +78,9 @@ const HomePageBg = () => {
   );
 
   return (
-    <div className={styles.background}>
+    <div
+      className={styles.background}
+      data-color-scheme={user?.avatar?.toLowerCase().includes('evil') ? 'evil' : 'good'}>
       <div className={styles.overlay}></div>
       {rows.map((pieces, idx) => (
         <Row key={idx} pieces={pieces} speed={idx % 2 === 0 ? 60 : -60} />

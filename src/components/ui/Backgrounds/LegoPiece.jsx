@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import styles from './LegoPiece.module.css';
 import { useState, useRef } from 'react';
 import { SHAPES } from '../../../utils/constants';
@@ -136,14 +135,6 @@ const LegoPiece = ({
       )}
     </div>
   );
-};
-
-LegoPiece.propTypes = {
-  shape: PropTypes.oneOf(Object.keys(SHAPES)),
-  color: PropTypes.string,
-  angle: PropTypes.oneOf([0, 90, 180, 270]),
-  size: PropTypes.number,
-  className: PropTypes.string,
 };
 
 export default LegoPiece;

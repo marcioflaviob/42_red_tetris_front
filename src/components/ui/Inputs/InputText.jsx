@@ -4,27 +4,19 @@ import styles from './InputText.module.css';
 
 const InputText = forwardRef(
   (
-    {
-      value = '',
-      id = '',
-      onChange,
-      placeholder = '',
-      type = 'text',
-      keyFilter = '',
-      name,
-      disabled = false,
-      className = '',
-      ...props
-    },
+    { value = '', id = '', onChange, type = 'text', keyFilter = '', name, disabled = false, className = '', ...props },
     ref
   ) => {
+    const handleFocus = (e) => {
+      e.target.selectionStart = e.target.selectionEnd = e.target.value.length;
+    };
     return (
-      <PrimeInputText
+      <textarea
         ref={ref}
         value={value}
         id={id}
+        onFocus={handleFocus}
         onChange={onChange}
-        placeholder={placeholder}
         type={type}
         name={name}
         keyfilter={keyFilter}

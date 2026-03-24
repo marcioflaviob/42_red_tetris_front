@@ -5,6 +5,7 @@ const useGameState = ({ initialLevel = 1, matchId }) => {
   const [level, setLevel] = useState(initialLevel);
   const [rowsCleared, setRowsCleared] = useState(0);
   const [gameOver, setGameOver] = useState(false);
+  const [accuracy, setAccuracy] = useState(100);
 
   const getGameState = useCallback(
     () => ({
@@ -13,9 +14,10 @@ const useGameState = ({ initialLevel = 1, matchId }) => {
       rowsCleared,
       gameOver,
       matchId,
+      accuracy,
       updatedAt: new Date().toISOString(),
     }),
-    [score, level, rowsCleared, gameOver, matchId]
+    [score, level, rowsCleared, gameOver, matchId, accuracy]
   );
 
   return {
@@ -25,9 +27,11 @@ const useGameState = ({ initialLevel = 1, matchId }) => {
     setLevel,
     rowsCleared,
     setRowsCleared,
+    setAccuracy,
     gameOver,
     setGameOver,
     getGameState,
+    accuracy,
   };
 };
 

@@ -1,5 +1,5 @@
 .card {
-  background: rgba(22, 22, 28, 0.609);
+  background-color: rgba(20, 20, 30, 0.6);
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
   border-radius: 8px;
@@ -9,49 +9,12 @@
   max-width: 100%;
   min-width: 0;
   box-sizing: border-box;
+  z-index: 0;
   box-shadow:
     0 4px 12px rgba(0, 0, 0, 0.4),
     inset 0 1px 0 rgba(100, 200, 150, 0.1),
     inset 0 -1px 0 rgba(255, 180, 60, 0.05);
   position: relative;
-  transition: all 0.3s ease;
-}
-
-.card::before {
-  content: '';
-  position: absolute;
-  top: 1px;
-  left: 1px;
-  right: 1px;
-  bottom: 1px;
-  background: linear-gradient(
-    135deg,
-    rgba(0, 255, 255, 0.03) 0%,
-    rgba(255, 100, 255, 0.02) 25%,
-    rgba(100, 255, 100, 0.03) 50%,
-    rgba(255, 200, 0, 0.02) 75%,
-    rgba(0, 255, 255, 0.02) 100%
-  );
-  border-radius: 7px;
-  pointer-events: none;
-}
-
-.card::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(0, 255, 255, 0.3) 25%,
-    rgba(255, 100, 255, 0.3) 50%,
-    rgba(100, 255, 100, 0.3) 75%,
-    transparent 100%
-  );
-  border-radius: 8px 8px 0 0;
 }
 
 .card:hover {
@@ -76,13 +39,13 @@
 }
 
 .greyScale * {
-  filter: grayscale(1);
+  /* filter: grayscale(1); */
   pointer-events: none;
   cursor: not-allowed;
 }
 
 .usernameRequired:hover {
-  filter: grayscale(1);
+  /* filter: grayscale(1); */
   transform: translateY(-1px);
   border-color: #5a5a6a;
   box-shadow:
@@ -93,7 +56,7 @@
 }
 
 .usernameRequired:hover * {
-  filter: grayscale(1);
+  /* filter: grayscale(1); */
   pointer-events: none;
   cursor: not-allowed;
 }
@@ -172,6 +135,16 @@
   animation: shimmer 2s infinite;
   transition: width 0.1s ease-out;
   border-radius: 3px;
+}
+
+[data-color-scheme='good'] {
+  transition: background-color 1.3s ease;
+  background-color: rgba(7, 7, 58, 0.557) !important;
+}
+
+[data-color-scheme='evil'] {
+  transition: background-color 1.3s ease;
+  background-color: rgba(41, 4, 4, 0.557) !important;
 }
 
 @keyframes shimmer {

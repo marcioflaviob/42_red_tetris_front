@@ -1,4 +1,4 @@
-import { Navigate, Outlet, useParams } from 'react-router';
+import { Navigate, Outlet, useParams } from 'react-router-dom';
 
 const ProtectedRoutes = () => {
   const { roomId } = useParams();

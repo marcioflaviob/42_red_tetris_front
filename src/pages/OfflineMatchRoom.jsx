@@ -23,8 +23,19 @@ const OfflineMatchRoom = () => {
   const location = useLocation();
   const { piecePrediction, increasedGravity, invisiblePieces } = location.state || {};
 
-  const { score, setScore, level, setLevel, rowsCleared, setRowsCleared, gameOver, setGameOver, getGameState } =
-    useGameState({ initialLevel: 1, matchId: match?.id });
+  const {
+    score,
+    setScore,
+    level,
+    setLevel,
+    rowsCleared,
+    setRowsCleared,
+    gameOver,
+    setGameOver,
+    getGameState,
+    setAccuracy,
+    accuracy,
+  } = useGameState({ initialLevel: 1, matchId: match?.id });
 
   const { updateMatch, saveMatchImmediate } = useMatchPersistence(match?.id);
 
@@ -60,7 +71,6 @@ const OfflineMatchRoom = () => {
         ...tetrisGameState,
         type: 'offline',
       };
-
       updateMatch(fullMatchState);
     },
     [match, getGameState, updateMatch]
@@ -95,6 +105,7 @@ const OfflineMatchRoom = () => {
             <p>Score: {score}</p>
             <p>Level: {level}</p>
             <p>Rows Cleared: {rowsCleared}</p>
+            <p>Accuracy: {accuracy}%</p>
           </Card>
         </div>
         <GameCard
@@ -109,6 +120,7 @@ const OfflineMatchRoom = () => {
           matchData={match}
           onPieceLocked={handlePieceLocked}
           onGameOver={handleGameOver}
+          setAccuracy={setAccuracy}
         />
       </div>
     </div>
