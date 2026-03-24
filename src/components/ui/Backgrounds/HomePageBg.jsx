@@ -80,10 +80,7 @@ const HomePageBg = () => {
   return (
     <div
       className={styles.background}
-      data-color-scheme={
-        user?.avatar?.toLowerCase().includes('evil') ? 'evil' : 'good'
-      }
-    >
+      data-color-scheme={user?.avatar?.toLowerCase().includes('evil') ? 'evil' : 'good'}>
       <div className={styles.overlay}></div>
       {rows.map((pieces, idx) => (
         <Row key={idx} pieces={pieces} speed={idx % 2 === 0 ? 60 : -60} />

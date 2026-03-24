@@ -7,32 +7,21 @@ import styles from './Avatar.module.css';
 import { useAppSelector } from '../../../store/hooks';
 import Card from '../Card/Card';
 
-const Avatar = ({
-  shape = '3d',
-  className = '',
-  editable = false,
-  avatar: avatarProp,
-}) => {
+const Avatar = ({ shape = '3d', className = '', editable = false, avatar: avatarProp }) => {
   const dispatch = useDispatch();
   const selectedAvatar = useAppSelector(selectAvatar);
   const avatar = avatarProp || selectedAvatar;
   const [filteredAvatars, setFilteredAvatars] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [characterSelectionVisible, setCharacterSelectionVisible] =
-    useState(false);
+  const [characterSelectionVisible, setCharacterSelectionVisible] = useState(false);
 
   const avatarOptions = useMemo(() => {
-    const modules = import.meta.glob(
-      '/src/assets/avatars/*.{webp,png,jpg,jpeg,webm}',
-      { eager: true }
-    );
+    const modules = import.meta.glob('/src/assets/avatars/*.{webp,png,jpg,jpeg,webm}', { eager: true });
     const avatars = Object.entries(modules).map(([path, module]) => {
       const imagePath = typeof module === 'string' ? module : module.default;
       const filename = path.split('/').pop();
       const filenameWithoutExt = filename.replace(/\.[^.]+$/, '');
-      const category = filenameWithoutExt.toLowerCase().includes('evil')
-        ? 'evil'
-        : 'good';
+      const category = filenameWithoutExt.toLowerCase().includes('evil') ? 'evil' : 'good';
       return {
         path: imagePath,
         name: filename,
@@ -78,10 +67,7 @@ const Avatar = ({
 
   return (
     <div className={`${styles.avatarContainer}`}>
-      <div
-        className={`${styles.avatar3d} ${className} ${styles.avatarImg} `}
-        onClick={handleEditClick}
-      >
+      <div className={`${styles.avatar3d} ${className} ${styles.avatarImg} `} onClick={handleEditClick}>
         <img src={avatar} alt="avatar" />
       </div>
       {editable && (
@@ -95,29 +81,18 @@ const Avatar = ({
             visible={characterSelectionVisible}
             header="Choose your character"
             className={styles.avatarSelector}
-            onHide={() => setCharacterSelectionVisible(false)}
-          >
+            onHide={() => setCharacterSelectionVisible(false)}>
             <div className={styles.overlayPanelHeader}>
-              <div
-                className={styles.category}
-                onClick={() => handleCategoryClick('good')}
-              >
+              <div className={styles.category} onClick={() => handleCategoryClick('good')}>
                 <img
-                  className={
-                    selectedCategory === 'good' ? styles.selectedCategory : ''
-                  }
+                  className={selectedCategory === 'good' ? styles.selectedCategory : ''}
                   src="/icons/good-class.png"
                   alt="good-class"
                 />
               </div>
-              <div
-                className={styles.category}
-                onClick={() => handleCategoryClick('evil')}
-              >
+              <div className={styles.category} onClick={() => handleCategoryClick('evil')}>
                 <img
-                  className={
-                    selectedCategory === 'evil' ? styles.selectedCategory : ''
-                  }
+                  className={selectedCategory === 'evil' ? styles.selectedCategory : ''}
                   src="/icons/evil-class.png"
                   alt="evil-class"
                 />
@@ -128,12 +103,10 @@ const Avatar = ({
                 {filteredAvatars.map((avatarObj, index) => (
                   <div
                     className={`${styles.avatarWrapper} ${avatarObj.category === 'evil' ? styles.evilAvatarWrapper : ''} ${avatar?.includes(avatarObj.name) ? styles.selectedAvatar : ''}`}
-                    key={index}
-                  >
+                    key={index}>
                     <div
                       className={`${styles.avatar} ${editable ? 'cursor-pointer' : ''} ${avatarObj.category === 'evil' ? styles.evilAvatar : ''} ${avatarObj.default ? styles.defaultAvatar : ''}`}
-                      onClick={() => handleAvatarSelect(avatarObj.name)}
-                    >
+                      onClick={() => handleAvatarSelect(avatarObj.name)}>
                       <PrimeReactAvatar
                         image={avatarObj.path}
                         size="xlarge"

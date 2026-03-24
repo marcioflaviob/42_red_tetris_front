@@ -4,17 +4,7 @@ import styles from './InputText.module.css';
 
 const InputText = forwardRef(
   (
-    {
-      value = '',
-      id = '',
-      onChange,
-      type = 'text',
-      keyFilter = '',
-      name,
-      disabled = false,
-      className = '',
-      ...props
-    },
+    { value = '', id = '', onChange, type = 'text', keyFilter = '', name, disabled = false, className = '', ...props },
     ref
   ) => {
     const handleFocus = (e) => {

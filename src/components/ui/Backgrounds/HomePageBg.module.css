@@ -15,32 +15,13 @@
 }
 
 [data-color-scheme='evil'].background {
-  background-image: linear-gradient(
-    -45deg,
-    #0f0505 0%,
-    #380000 25%,
-    #3c0606 50%,
-    #240b0b 75%,
-    #0f0505 100%
-  );
+  background-image: linear-gradient(-45deg, #0f0505 0%, #380000 25%, #3c0606 50%, #240b0b 75%, #0f0505 100%);
 }
 
 [data-color-scheme='good'].background {
-  background-image: linear-gradient(
-    -45deg,
-    #020024 0%,
-    #090979 35%,
-    #00d4ff 100%
-  );
+  background-image: linear-gradient(-45deg, #020024 0%, #090979 35%, #00d4ff 100%);
 
-  background-image: linear-gradient(
-    -45deg,
-    #000000 0%,
-    #0a192f 25%,
-    #112240 50%,
-    #0a192f 75%,
-    #000000 100%
-  );
+  background-image: linear-gradient(-45deg, #000000 0%, #0a192f 25%, #112240 50%, #0a192f 75%, #000000 100%);
 }
 
 @keyframes smoothGradient {
