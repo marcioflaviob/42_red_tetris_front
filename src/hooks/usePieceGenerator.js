@@ -7,11 +7,13 @@ const usePieceGenerator = (startGame, seed) => {
   const colorRngRef = useRef(null);
   const colorBagRef = useRef(null);
   const pieceCountRef = useRef(0);
-  const nextPiecesLengthRef = useRef(0);
+  // Keep a ref that always mirrors the latest nextPieces so getNextPiece
+  // doesn't close over a stale state snapshot.
+  const nextPiecesRef = useRef([]);
   const [nextPieces, setNextPieces] = useState([]);
 
   const addPieces = useCallback(() => {
-    if (!rngRef.current || !colorBagRef.current || nextPiecesLengthRef.current >= 6) return [];
+    if (!rngRef.current || !colorBagRef.current) return [];
     const pieces = Array.from({ length: 6 }, () => {
       pieceCountRef.current += 1;
       return new Tetromino({
@@ -28,24 +30,21 @@ const usePieceGenerator = (startGame, seed) => {
       colorBagRef.current = new PieceBag();
       rngRef.current = seedrandom(seed);
       colorRngRef.current = seedrandom(seed + '-color');
-      setNextPieces(addPieces);
-      nextPiecesLengthRef.current = 6;
-      console.log('Next pieces initially set to 6', nextPiecesLengthRef.current);
+      const initial = addPieces();
+      nextPiecesRef.current = initial;
+      setNextPieces(initial);
     }
   }, [seed, addPieces, startGame]);
 
-  const getNextPiece = () => {
-    let pieces = [];
-    console.log('herere');
-    if (nextPiecesLengthRef.current < 6) {
-      console.log('Next pieces is below 6, adding it', nextPiecesLengthRef.current);
-      pieces = addPieces();
-    }
-    const [firstPiece, ...rest] = nextPieces;
-    nextPiecesLengthRef.current = [...rest, ...pieces].length;
-    setNextPieces([...rest, ...pieces]);
+  // Stable callback — reads from the ref so it never captures a stale state snapshot.
+  const getNextPiece = useCallback(() => {
+    const current = nextPiecesRef.current;
+    const [firstPiece, ...rest] = current;
+    const refilled = rest.length < 6 ? [...rest, ...addPieces()] : rest;
+    nextPiecesRef.current = refilled;
+    setNextPieces(refilled);
     return firstPiece;
-  };
+  }, [addPieces]);
 
   return {
     nextPieces,

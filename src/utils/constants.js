@@ -58,6 +58,11 @@ export const COLOR = {
   TURK: 7,
 };
 
+export const GARBAGE_COLOR = 8;
+
+// Lines cleared → garbage lines to send to target (0 for singles)
+export const GARBAGE_LINES = { 2: 1, 3: 2, 4: 4 };
+
 export const LEVEL = {
   1: 3, // Lines to be cleared to move to the next level
   2: 5,

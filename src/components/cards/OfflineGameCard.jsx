@@ -8,6 +8,7 @@ import useScoreManager from '../../hooks/useScoreManager';
 import { getColorHex, getIndex } from '../../utils/helper';
 import LegoPiece from '../ui/Backgrounds/LegoPiece';
 import Cell from '../game/Cell';
+import GarbagePreviewBar from '../game/GarbagePreviewBar';
 
 const GameCard = ({
   player,
@@ -22,6 +23,8 @@ const GameCard = ({
   onPieceLocked,
   onGameOver,
   onGameStateChange,
+  onLinesCleared = null,
+  onRegisterAddGarbage = null,
   emit = null,
 }) => {
   const {
@@ -35,6 +38,8 @@ const GameCard = ({
     spawnTetromino,
     getNextPiece,
     getFullGameState,
+    pendingGarbage,
+    addGarbage,
   } = useTetrisGame({
     player,
     level,
@@ -53,6 +58,11 @@ const GameCard = ({
     emit: emit,
   });
 
+  // Register addGarbage with parent (MatchRoom) so it can push incoming lines
+  useEffect(() => {
+    if (onRegisterAddGarbage) onRegisterAddGarbage(addGarbage);
+  }, [onRegisterAddGarbage, addGarbage]);
+
   const clearedRows = useScoreManager({
     player,
     setScore,
@@ -62,6 +72,7 @@ const GameCard = ({
     setBoard,
     lastDrop,
     emit,
+    onLinesCleared,
   });
 
   useEffect(() => {
@@ -125,9 +136,12 @@ const GameCard = ({
           </div>
         </div>
 
-        <div className={`${styles.gameBoardWrapper} p-2 flex-1 min-h-0`}>
-          <div className={styles.gameGrid}>
-            <div className={styles.tetrisBoard}>{cells}</div>
+        <div className="flex gap-1 flex-1 min-h-0">
+          <GarbagePreviewBar pendingGarbage={pendingGarbage} />
+          <div className={`${styles.gameBoardWrapper} p-2 flex-1 min-h-0`}>
+            <div className={styles.gameGrid}>
+              <div className={styles.tetrisBoard}>{cells}</div>
+            </div>
           </div>
         </div>
 

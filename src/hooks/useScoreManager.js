@@ -1,9 +1,23 @@
-import { useCallback, useEffect, useState } from 'react';
-import { BOARD_COLS, BOARD_ROWS, BUFFER_ZONE_ROWS, LEVEL, MOVES, SCORE, SCORED_ACTION } from '../utils/constants';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  BOARD_COLS,
+  BOARD_ROWS,
+  BUFFER_ZONE_ROWS,
+  GARBAGE_COLOR,
+  LEVEL,
+  MOVES,
+  SCORE,
+  SCORED_ACTION,
+} from '../utils/constants';
 
-const useScoreManager = ({ player, setScore, level, setLevel, board, setBoard, lastDrop, emit }) => {
+const useScoreManager = ({ player, setScore, level, setLevel, board, setBoard, lastDrop, emit, onLinesCleared }) => {
   const [rowsCleared, setRowsCleared] = useState(0);
   const [lastScoredAction, setLastScoredAction] = useState(null);
+  // Use a ref so the board-scan effect doesn't re-run every time the callback identity changes
+  const onLinesClearedRef = useRef(onLinesCleared);
+  useEffect(() => {
+    onLinesClearedRef.current = onLinesCleared;
+  }, [onLinesCleared]);
 
   const broadcast = useCallback(
     (event, data) => {
@@ -70,7 +84,9 @@ const useScoreManager = ({ player, setScore, level, setLevel, board, setBoard, l
     for (let r = endRow; r >= startRow; r--) {
       let full = true;
       for (let c = 0; c < BOARD_COLS; c++) {
-        if (!board[r * BOARD_COLS + c]) {
+        const cell = board[r * BOARD_COLS + c];
+        // Garbage rows are intentionally uncleared
+        if (!cell || cell === GARBAGE_COLOR) {
           full = false;
           break;
         }
@@ -97,6 +113,7 @@ const useScoreManager = ({ player, setScore, level, setLevel, board, setBoard, l
     });
 
     setRowsCleared((prev) => prev + rowsClearedNow);
+    if (onLinesClearedRef.current) onLinesClearedRef.current(rowsClearedNow);
   }, [board, setBoard, calculateScore]);
 
   return rowsCleared;

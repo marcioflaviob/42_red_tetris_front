@@ -6,10 +6,24 @@ const useBoard = () => {
   const boardRef = useRef(board);
   const [activePiece, setActivePieceState] = useState(null);
   const activePieceRef = useRef(activePiece);
-  const [savedPiece, setSavedPiece] = useState({
+  const [savedPiece, setSavedPieceState] = useState({
     tetromino: null,
     disabled: false,
   });
+  const savedPieceRef = useRef({ tetromino: null, disabled: false });
+
+  const setSavedPiece = useCallback((next) => {
+    if (typeof next === 'function') {
+      setSavedPieceState((prev) => {
+        const resolved = next(prev);
+        savedPieceRef.current = resolved;
+        return resolved;
+      });
+      return;
+    }
+    savedPieceRef.current = next;
+    setSavedPieceState(next);
+  }, []);
 
   const setBoard = useCallback((nextBoard) => {
     if (typeof nextBoard === 'function') {
@@ -55,6 +69,7 @@ const useBoard = () => {
     activePieceRef,
     setActivePiece,
     savedPiece,
+    savedPieceRef,
     setSavedPiece,
   };
 };

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Button from '../components/ui/Buttons/Button';
 import useAudioManager from '../hooks/useAudioManager';
@@ -8,6 +8,7 @@ import Countdown from '../components/ui/Countdown/Countdown';
 import { useAppSelector } from '../store/hooks';
 import { useJoinRoomMutation } from '../store/slices/apiSlice';
 import useSocket from '../hooks/useSocket';
+import { GARBAGE_LINES } from '../utils/constants';
 import { socketService } from '../services/SocketService';
 import { selectUser } from '../store/slices/userSlice';
 import GameCard from '../components/cards/OfflineGameCard';
@@ -27,6 +28,11 @@ const MatchRoom = () => {
   const user = useAppSelector(selectUser);
   const [players, setPlayers] = useState([user]);
   const opponents = players.filter((player) => player.sessionId !== user.sessionId);
+
+  // Garbage queue: target selection and addGarbage fn ref
+  const [targetId, setTargetId] = useState(null);
+  const addGarbageRef = useRef(null);
+  const opponentsRef = useRef(opponents);
   const [showCountdown, setShowCountdown] = useState(false);
   const { isPlaying, play, pause, startGameTransition } = useAudioManager(false);
   const navigate = useNavigate();
@@ -102,9 +108,68 @@ const MatchRoom = () => {
     }
   }, [roomData, isSuccess]);
 
+  // Keep opponentsRef in sync so Tab handler doesn't need re-registration
+  useEffect(() => {
+    opponentsRef.current = opponents;
+  }, [opponents]);
+
+  // Auto-select first opponent as initial target
+  useEffect(() => {
+    if (opponents.length > 0 && !targetId) {
+      setTargetId(opponents[0].sessionId);
+    }
+  }, [opponents, targetId]);
+
+  // Tab key: cycle target among opponents
+  useEffect(() => {
+    if (!gameStarted) return;
+
+    const handleTabKey = (e) => {
+      if (e.key !== 'Tab') return;
+      e.preventDefault();
+      const ops = opponentsRef.current;
+      if (ops.length === 0) return;
+      setTargetId((prev) => {
+        const currentIndex = ops.findIndex((p) => p.sessionId === prev);
+        const nextIndex = (currentIndex + 1) % ops.length;
+        return ops[nextIndex].sessionId;
+      });
+    };
+
+    window.addEventListener('keydown', handleTabKey);
+    return () => window.removeEventListener('keydown', handleTabKey);
+  }, [gameStarted]);
+
+  // Listen for incoming garbage lines from the server
+  useEffect(() => {
+    const handleGarbageQueued = ({ lines }) => {
+      addGarbageRef.current?.(lines);
+    };
+
+    socketService.on('garbage-queued', handleGarbageQueued);
+    return () => socketService.off('garbage-queued', handleGarbageQueued);
+  }, []);
+
   const handleStartGame = () => {
     emit('start_game', { roomId });
   };
+
+  // Keep a stable ref to targetId so handleLinesCleared doesn't change every render
+  const targetIdRef = useRef(targetId);
+  useEffect(() => {
+    targetIdRef.current = targetId;
+  }, [targetId]);
+
+  // When player clears lines, send garbage to selected target
+  // Uses refs for targetId and opponents to keep this callback stable
+  const handleLinesCleared = useCallback(
+    (lineCount) => {
+      const garbageLines = GARBAGE_LINES[lineCount] ?? 0;
+      if (!targetIdRef.current || garbageLines === 0 || opponentsRef.current.length === 0) return;
+      emit('send-garbage', { targetId: targetIdRef.current, lines: garbageLines });
+    },
+    [emit]
+  );
 
   const handleCountdownComplete = () => {
     setShowCountdown(false);
@@ -160,7 +225,7 @@ const MatchRoom = () => {
       case 1:
         return 'flex flex-col gap-4 h-full';
       case 2:
-        return 'grid grid-cols-2 gap-4 h-full';
+        return 'grid grid-rows-2 gap-4 h-full';
       default:
         return 'grid grid-rows-2 grid-cols-2 gap-4 h-full';
     }
@@ -216,6 +281,10 @@ const MatchRoom = () => {
             onGameStateChange={(state) => {
               emit('game-update', state);
             }}
+            onLinesCleared={handleLinesCleared}
+            onRegisterAddGarbage={(fn) => {
+              addGarbageRef.current = fn;
+            }}
           />
         </div>
         <div className={`${getMultiplayerClassname()} min-h-0 overflow-hidden`}>
@@ -248,6 +317,7 @@ const MatchRoom = () => {
                   startGame={gameStarted}
                   compact={players.length >= 3}
                   playerCount={players.length}
+                  isTargeted={player.sessionId === targetId}
                 />
               </div>
             );

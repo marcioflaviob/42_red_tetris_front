@@ -151,6 +151,35 @@
   }
 }
 
+/* Garbage cells – uncleared grey lines sent by opponents */
+.garbageCell {
+  background: linear-gradient(135deg, rgba(70, 70, 75, 0.95) 0%, rgba(50, 50, 55, 0.95) 100%);
+  border: 1px solid rgba(100, 100, 105, 0.5);
+}
+
+/* Preview bar (left of board) showing incoming garbage queue */
+.garbagePreviewBar {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 1px;
+  width: 7px;
+  flex-shrink: 0;
+  align-self: stretch;
+}
+
+.garbageSegmentFilled {
+  flex: 1;
+  background: rgba(220, 60, 60, 0.85);
+  border-radius: 1px;
+  box-shadow: 0 0 3px rgba(220, 60, 60, 0.5);
+}
+
+.garbageSegmentEmpty {
+  flex: 1;
+  background: rgba(40, 40, 40, 0.4);
+  border-radius: 1px;
+}
+
 .nextPiecesScroll::-webkit-scrollbar {
   width: 4px;
 }

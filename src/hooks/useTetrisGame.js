@@ -1,5 +1,5 @@
-import { useState, useCallback, useEffect } from 'react';
-import { BOARD_COLS } from '../utils/constants';
+import { useState, useCallback, useEffect, useRef } from 'react';
+import { BOARD_COLS, BOARD_ROWS, GARBAGE_COLOR } from '../utils/constants';
 import { hasCollided } from '../utils/helper';
 import useBoard from './useBoard';
 import useRotation from './useRotation';
@@ -10,6 +10,21 @@ import { Tetromino } from '../utils/tetromino';
 
 const useTetrisGame = ({ player, level, startGame, matchData, onPieceLocked, onGameStateChange, emit }) => {
   const [gameOver, setGameOver] = useState(false);
+  const [pendingGarbage, setPendingGarbage] = useState(0);
+  const pendingGarbageRef = useRef(0);
+
+  // Stable ref so lockPiece can broadcast without needing emit/player in its deps
+  const broadcastRef = useRef(null);
+  const broadcast = useCallback(
+    (event, data) => {
+      const shortId = player?.sessionId?.slice(0, 8);
+      if (emit) emit(shortId, { event, ...data });
+    },
+    [emit, player]
+  );
+  useEffect(() => {
+    broadcastRef.current = broadcast;
+  }, [broadcast]);
 
   const { board, boardRef, setBoard, activePiece, activePieceRef, setActivePiece, savedPiece, setSavedPiece } =
     useBoard();
@@ -45,6 +60,11 @@ const useTetrisGame = ({ player, level, startGame, matchData, onPieceLocked, onG
     [setActivePiece]
   );
 
+  const addGarbage = useCallback((lines) => {
+    pendingGarbageRef.current += lines;
+    setPendingGarbage((prev) => prev + lines);
+  }, []);
+
   const lockPiece = useCallback(() => {
     const piece = activePieceRef?.current;
     if (!piece) return;
@@ -65,6 +85,23 @@ const useTetrisGame = ({ player, level, startGame, matchData, onPieceLocked, onG
     const nextPiece = getNextPiece();
     spawnTetromino(nextPiece);
 
+    // Apply any queued garbage lines to the bottom of the board
+    if (pendingGarbageRef.current > 0) {
+      const linesToAdd = Math.min(pendingGarbageRef.current, BOARD_ROWS);
+      pendingGarbageRef.current = 0;
+      setPendingGarbage(0);
+      setBoard((prev) => {
+        const newBoard = [...prev];
+        for (let i = 0; i < linesToAdd; i++) {
+          newBoard.splice(0, BOARD_COLS); // drop top row to make room
+          newBoard.push(...new Array(BOARD_COLS).fill(GARBAGE_COLOR));
+        }
+        return newBoard;
+      });
+      // Tell all spectators to apply the same grey rows on the opponent view
+      broadcastRef.current?.('board', { action: 'add-garbage', lines: linesToAdd });
+    }
+
     if (onPieceLocked) {
       onPieceLocked({
         board: boardRef.current,
@@ -77,7 +114,9 @@ const useTetrisGame = ({ player, level, startGame, matchData, onPieceLocked, onG
     boardRef,
     updateBoard,
     setActivePiece,
+    setBoard,
     savedPiece,
+    setSavedPiece,
     getNextPiece,
     spawnTetromino,
     nextPieces,
@@ -149,6 +188,8 @@ const useTetrisGame = ({ player, level, startGame, matchData, onPieceLocked, onG
     spawnTetromino,
     getNextPiece,
     getFullGameState,
+    pendingGarbage,
+    addGarbage,
   };
 };
 

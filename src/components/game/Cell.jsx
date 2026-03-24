@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { CLASS, COLOR } from '../../utils/constants';
+import { CLASS, COLOR, GARBAGE_COLOR } from '../../utils/constants';
 import styles from '../cards/GameCard.module.css';
 
 const Cell = memo(({ index, type, color }) => {
@@ -19,6 +19,8 @@ const Cell = memo(({ index, type, color }) => {
         return 'bg-(--royal)';
       case COLOR.TURK:
         return 'bg-(--turk)';
+      case GARBAGE_COLOR:
+        return styles.garbageCell;
     }
   };
 
