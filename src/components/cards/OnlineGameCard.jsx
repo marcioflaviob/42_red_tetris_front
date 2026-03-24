@@ -14,9 +14,18 @@ import useRotation from '../../hooks/useRotation';
 import useMovement from '../../hooks/useMovement';
 import { Tetromino } from '../../utils/tetromino';
 
-const OnlineGameCard = ({ player, matchData, startGame, compact = false, playerCount = 1, isTargeted = false }) => {
+const OnlineGameCard = ({
+  player,
+  matchData,
+  startGame,
+  compact = false,
+  playerCount = 1,
+  isTargeted = false,
+  eliminated = false,
+}) => {
   const showNextOnSide = compact && playerCount === 3;
   const [gameOver, setGameOver] = useState(false);
+  const isEliminated = eliminated || gameOver;
   const [pendingGarbage, setPendingGarbage] = useState(0);
   const pendingGarbageRef = useRef(0);
   const {
@@ -159,7 +168,7 @@ const OnlineGameCard = ({ player, matchData, startGame, compact = false, playerC
           console.error('An error has occurred: Unknown move.');
       }
     },
-    [movePiece, updateSavedPiece, lockPiece, decrementPendingGarbage, setBoard]
+    [movePiece, updateSavedPiece, lockPiece, decrementPendingGarbage, setBoard, shortSessionId]
   ); // Intentionally exclude shortSessionId from deps
 
   // Listen for garbage-pending events so the preview bar fills before rows are applied
@@ -191,7 +200,7 @@ const OnlineGameCard = ({ player, matchData, startGame, compact = false, playerC
       console.log(`OnlineGameCard: Removing listener for opponent ${player.username} (${shortSessionId})`);
       off(shortSessionId, eventReceived);
     };
-  }, [on, off, shortSessionId, player.username]);
+  }, [on, off, shortSessionId, player.username, eventReceived]);
 
   const boardCells = useMemo(() => {
     return board.map((filled, idx) => ({ idx, filled }));
@@ -212,7 +221,7 @@ const OnlineGameCard = ({ player, matchData, startGame, compact = false, playerC
 
   return (
     <div className="h-full">
-      <Card greyScale={gameOver} message="Game over">
+      <Card greyScale={isEliminated} message="Game over">
         <div className="flex flex-col gap-2 h-full overflow-hidden">
           <div
             className={`flex items-center ${compact ? 'gap-2 p-1' : 'gap-3 p-2'} rounded-xl border shadow-lg flex-shrink-0 transition-all duration-300 ${

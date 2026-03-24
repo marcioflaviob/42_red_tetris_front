@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 const createUserRepository = () => {
-  const DEFAULT_AVATAR = 'assets/avatars/default.webp';
+  const DEFAULT_AVATAR = '/avatarsUi/default.webp';
 
   const loadUsernameFromStorage = () => {
     try {

@@ -18,6 +18,7 @@ import useGameState from '../hooks/useGameState';
 import useMatchPersistence from '../hooks/useMatchPersistence';
 import DebugServerGameCard from '../components/cards/DebugServerGameCard';
 import MatchStats from '../components/cards/MatchStats';
+import MatchEndOverlay from '../components/ui/MatchEndOverlay/MatchEndOverlay';
 
 const MatchRoom = () => {
   const {
@@ -25,6 +26,9 @@ const MatchRoom = () => {
     // host
   } = useParams();
   const [gameStarted, setGameStarted] = useState(false);
+  const [matchOver, setMatchOver] = useState(false);
+  const [matchWinner, setMatchWinner] = useState(null);
+  const [eliminatedIds, setEliminatedIds] = useState(new Set());
   const user = useAppSelector(selectUser);
   const [players, setPlayers] = useState([user]);
   const opponents = players.filter((player) => player.sessionId !== user.sessionId);
@@ -82,11 +86,21 @@ const MatchRoom = () => {
           setGameStarted(true);
           startGameTransition();
           break;
+        case 'player_eliminated':
+          setEliminatedIds((prev) => new Set([...prev, data.sessionId]));
+          break;
+        case 'match_over':
+          setMatchOver(true);
+          setMatchWinner(data.winner);
+          break;
+        case 'new_room':
+          navigate(`/${data.roomId}`);
+          break;
         default:
           break;
       }
     },
-    [addPlayerIfNotExists, startGameTransition]
+    [addPlayerIfNotExists, startGameTransition, navigate]
   );
 
   useEffect(() => {
@@ -199,7 +213,8 @@ const MatchRoom = () => {
   );
 
   const handleGameOver = useCallback(async () => {
-    // Get opponent names (up to 4 for online matches)
+    emit('player-game-over');
+
     const opponentNames = opponents
       .slice(0, 4)
       .map((player) => player.username)
@@ -215,7 +230,11 @@ const MatchRoom = () => {
     };
 
     await saveMatchImmediate(finalState);
-  }, [getGameState, saveMatchImmediate, opponents]);
+  }, [emit, getGameState, saveMatchImmediate, opponents]);
+
+  const handlePlayAgain = useCallback(() => {
+    emit('play-again');
+  }, [emit]);
 
   const getMultiplayerClassname = () => {
     const opponentsCount = players.length - 1;
@@ -236,6 +255,15 @@ const MatchRoom = () => {
 
   return (
     <div className={`${styles.content} flex flex-col h-screen overflow-hidden`}>
+      {matchOver && (
+        <MatchEndOverlay
+          winner={matchWinner}
+          currentUser={user}
+          isHost={isHost}
+          onPlayAgain={handlePlayAgain}
+          onBackToMenu={() => navigate('/')}
+        />
+      )}
       <HomePageBg />
       <Countdown isVisible={showCountdown} onComplete={handleCountdownComplete} />
       <div className="container mx-auto grid grid-cols-3 gap-8 flex-1 p-8 min-h-0 overflow-hidden">
@@ -319,6 +347,7 @@ const MatchRoom = () => {
                   compact={players.length >= 3}
                   playerCount={players.length}
                   isTargeted={player.sessionId === targetId}
+                  eliminated={eliminatedIds.has(player.sessionId)}
                 />
               </div>
             );
