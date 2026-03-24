@@ -35,6 +35,8 @@ const OfflineMatchRoom = () => {
     gameOver,
     setGameOver,
     getGameState,
+    setAccuracy,
+    accuracy,
   } = useGameState({ initialLevel: 1, matchId: match?.id });
 
   const { updateMatch, saveMatchImmediate } = useMatchPersistence(match?.id);
@@ -63,7 +65,6 @@ const OfflineMatchRoom = () => {
         ...getGameState(),
         ...tetrisGameState,
       };
-
       updateMatch(fullMatchState);
     },
     [match, getGameState, updateMatch]
@@ -103,6 +104,7 @@ const OfflineMatchRoom = () => {
             <p>Score: {score}</p>
             <p>Level: {level}</p>
             <p>Rows Cleared: {rowsCleared}</p>
+            <p>Accuracy: {accuracy}%</p>
           </Card>
         </div>
         <GameCard
@@ -119,6 +121,7 @@ const OfflineMatchRoom = () => {
           invisiblePieces={invisiblePieces}
           onPieceLocked={handlePieceLocked}
           onGameOver={handleGameOver}
+          setAccuracy={setAccuracy}
         />
       </div>
     </div>

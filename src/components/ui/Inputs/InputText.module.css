@@ -1,0 +1,17 @@
+.input {
+  background-color: transparent;
+  color: white;
+  border: 1px solid white;
+  box-shadow: none;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  outline: none;
+  border-radius: 8px;
+  text-shadow:
+    0 0 3px rgba(0, 0, 0, 0.8),
+    0 0 6px rgba(0, 0, 0, 0.6);
+  field-sizing: content;
+  resize: none;
+  height: 2.5rem;
+  padding-top: 0.21rem;
+}

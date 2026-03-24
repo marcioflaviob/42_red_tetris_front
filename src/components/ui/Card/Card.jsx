@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styles from './Card.module.css';
 import { useAppSelector } from '../../../store/hooks';
-import { selectUsername } from '../../../store/slices/userSlice';
+import { selectUser } from '../../../store/slices/userSlice';
+// import { useGetHealthQuery } from '../../../store/slices/apiSlice';
+import avatarStyles from '../Avatar/AvatarOverlay.module.css';
 
 const Card = ({
   children,
@@ -11,8 +13,18 @@ const Card = ({
   loading = false,
   greyScale = false,
 }) => {
-  const username = useAppSelector(selectUsername);
   const [progress, setProgress] = useState(0);
+  const user = useAppSelector(selectUser);
+  // const { error, isLoading } = useGetHealthQuery();
+  const [colorScheme, setColorScheme] = useState(
+    user?.avatar?.toLowerCase().includes('evil') ? 'evil' : 'good'
+  );
+
+  useEffect(() => {
+    setColorScheme(
+      user?.avatar?.toLowerCase().includes('evil') ? 'evil' : 'good'
+    );
+  }, [user?.avatar, colorScheme]);
 
   useEffect(() => {
     if (loading) {
@@ -35,13 +47,13 @@ const Card = ({
   }, [loading]);
 
   const isUsernameEmpty =
-    isUsernameRequired && (!username || username.trim() === '');
+    isUsernameRequired && (!user.username || user.username.trim() === '');
 
   const shouldShowOverlay =
     isUsernameEmpty || (greyScale && message) || loading;
   const shouldApplyGreyScale = isUsernameEmpty || greyScale || loading;
 
-  const cardClassName = `${styles.card} ${className} ${
+  const cardClassName = `${className} ${styles.card} ${
     shouldShowOverlay ? styles.usernameRequired : ''
   } ${shouldApplyGreyScale ? styles.greyScale : ''}`;
 
@@ -59,9 +71,10 @@ const Card = ({
   };
 
   const overlayContent = getOverlayContent();
+  // console.log('Card colorScheme:', colorScheme);
 
   return (
-    <div className={cardClassName}>
+    <div className={cardClassName} data-color-scheme={colorScheme}>
       {children}
       {shouldShowOverlay && (
         <div className={styles.overlay}>
@@ -84,6 +97,11 @@ const Card = ({
             </div>
           ) : null}
         </div>
+      )}
+      {user.avatar && (
+        <div
+          className={`${avatarStyles.avatarOverlay} ${colorScheme === 'evil' ? avatarStyles.evilOverlay : ''}`}
+        ></div>
       )}
     </div>
   );

@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { BOARD_COLS } from '../utils/constants';
+import { BOARD_COLS, BOARD_ROWS } from '../utils/constants';
 import { hasCollided } from '../utils/helper';
 import useBoard from './useBoard';
 import useRotation from './useRotation';
@@ -65,6 +65,7 @@ const useTetrisGame = ({
     if (!piece) return;
 
     const coords = piece.getPredictCoords(board);
+
     updateBoard(coords, piece.color);
     setActivePiece(null);
 

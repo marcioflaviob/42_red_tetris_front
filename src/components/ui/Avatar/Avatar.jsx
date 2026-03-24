@@ -1,115 +1,152 @@
-import React, { useRef } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { Avatar as PrimeReactAvatar } from 'primereact/avatar';
-import { OverlayPanel } from 'primereact/overlaypanel';
+import { Dialog } from 'primereact/dialog';
 import { useDispatch } from 'react-redux';
 import { selectAvatar, setAvatar } from '../../../store/slices/userSlice';
 import styles from './Avatar.module.css';
 import { useAppSelector } from '../../../store/hooks';
-
-const isVideo = (src) => {
-  return (
-    src &&
-    (src.endsWith('.mp4') || src.endsWith('.mov') || src.endsWith('.webm'))
-  );
-};
-
-const AvatarMedia = ({ src, size, shape, className, onClick }) => {
-  if (isVideo(src)) {
-    return (
-      <video
-        src={src}
-        autoPlay
-        loop
-        muted
-        playsInline
-        className={className}
-        onClick={onClick}
-        style={{
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          borderRadius: shape === 'circle' ? '50%' : '8px',
-        }}
-      />
-    );
-  }
-  return (
-    <PrimeReactAvatar
-      image={src}
-      size={size}
-      shape={shape}
-      className={className}
-      onClick={onClick}
-    />
-  );
-};
+import Card from '../Card/Card';
 
 const Avatar = ({
-  size,
-  shape = 'circle',
+  shape = '3d',
   className = '',
   editable = false,
   avatar: avatarProp,
 }) => {
-  const overlayRef = useRef(null);
   const dispatch = useDispatch();
   const selectedAvatar = useAppSelector(selectAvatar);
   const avatar = avatarProp || selectedAvatar;
+  const [filteredAvatars, setFilteredAvatars] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [characterSelectionVisible, setCharacterSelectionVisible] =
+    useState(false);
 
-  const avatarOptions = [
-    '/assets/avatars/default.webp',
-    ...Array.from(
-      { length: 13 },
-      (_, i) => `/assets/avatars/avatar${i + 1}.webp`
-    ),
-    '/assets/anakin/idle/anakin-idle-animation.mov',
-  ];
+  const avatarOptions = useMemo(() => {
+    const modules = import.meta.glob(
+      '/src/assets/avatars/*.{webp,png,jpg,jpeg,webm}',
+      { eager: true }
+    );
+    const avatars = Object.entries(modules).map(([path, module]) => {
+      const imagePath = typeof module === 'string' ? module : module.default;
+      const filename = path.split('/').pop();
+      const filenameWithoutExt = filename.replace(/\.[^.]+$/, '');
+      const category = filenameWithoutExt.toLowerCase().includes('evil')
+        ? 'evil'
+        : 'good';
+      return {
+        path: imagePath,
+        name: filename,
+        category: category,
+        default: filenameWithoutExt.toLowerCase().includes('default'),
+      };
+    });
+    return avatars;
+  }, []);
 
-  const handleEditClick = (event) => {
-    if (editable && overlayRef.current) {
-      overlayRef.current.toggle(event);
-    }
+  useEffect(() => {
+    setFilteredAvatars(avatarOptions);
+  }, [avatarOptions]);
+
+  const handleEditClick = () => {
+    setCharacterSelectionVisible(true);
   };
 
-  const handleAvatarSelect = (avatarPath) => {
-    dispatch(setAvatar(avatarPath));
-    overlayRef.current?.hide();
+  const handleAvatarSelect = (filename) => {
+    const uiAvatarPath = `/avatarsUi/${filename}`;
+    dispatch(setAvatar(uiAvatarPath));
+    setCharacterSelectionVisible(false);
+  };
+
+  const handleCategoryClick = (category) => {
+    if (selectedCategory === category) {
+      setSelectedCategory(null);
+      setFilteredAvatars(avatarOptions);
+      return;
+    }
+    setFilteredAvatars(
+      avatarOptions.filter((avatarObj) => {
+        if (category === 'good') {
+          return avatarObj.category !== 'evil';
+        } else if (category === 'evil') {
+          return avatarObj.category === 'evil';
+        }
+        return true;
+      })
+    );
+    setSelectedCategory(category);
   };
 
   return (
-    <div className="relative inline-block">
-      <AvatarMedia
-        src={avatar}
-        size={size}
-        shape={shape}
-        className={`${editable ? styles.avatarEditable : styles.avatar} ${className}`}
+    <div className={`${styles.avatarContainer}`}>
+      <div
+        className={`${styles.avatar3d} ${className} ${styles.avatarImg} `}
         onClick={handleEditClick}
-      />
+      >
+        <img src={avatar} alt="avatar" />
+      </div>
       {editable && (
         <>
           <div className={styles.pencilButton} onClick={handleEditClick}>
-            <i className="pi pi-pencil text-white text-xs" />
+            <i className="pi pi-pencil text-white text-xl" />
           </div>
-          <OverlayPanel ref={overlayRef} className={styles.avatarSelector}>
+          <Dialog
+            modal={false}
+            position="top-left"
+            visible={characterSelectionVisible}
+            header="Choose your character"
+            className={styles.avatarSelector}
+            onHide={() => setCharacterSelectionVisible(false)}
+          >
+            <div className={styles.overlayPanelHeader}>
+              <div
+                className={styles.category}
+                onClick={() => handleCategoryClick('good')}
+              >
+                <img
+                  className={
+                    selectedCategory === 'good' ? styles.selectedCategory : ''
+                  }
+                  src="/icons/good-class.png"
+                  alt="good-class"
+                />
+              </div>
+              <div
+                className={styles.category}
+                onClick={() => handleCategoryClick('evil')}
+              >
+                <img
+                  className={
+                    selectedCategory === 'evil' ? styles.selectedCategory : ''
+                  }
+                  src="/icons/evil-class.png"
+                  alt="evil-class"
+                />
+              </div>
+            </div>
             <div className={styles.avatarGrid}>
-              <h4 className={styles.selectorTitle}>Choose Avatar</h4>
               <div className={styles.avatarOptions}>
-                {avatarOptions.map((avatarPath, index) => (
+                {filteredAvatars.map((avatarObj, index) => (
                   <div
+                    className={`${styles.avatarWrapper} ${avatarObj.category === 'evil' ? styles.evilAvatarWrapper : ''} ${avatar?.includes(avatarObj.name) ? styles.selectedAvatar : ''}`}
                     key={index}
-                    className={`${styles.avatar} ${editable ? 'cursor-pointer' : ''} ${avatar === avatarPath ? styles.selectedAvatar : ''}`}
-                    onClick={() => handleAvatarSelect(avatarPath)}
                   >
-                    <AvatarMedia
-                      src={avatarPath}
-                      size="xlarge"
-                      shape="circle"
-                    />
+                    <div
+                      className={`${styles.avatar} ${editable ? 'cursor-pointer' : ''} ${avatarObj.category === 'evil' ? styles.evilAvatar : ''} ${avatarObj.default ? styles.defaultAvatar : ''}`}
+                      onClick={() => handleAvatarSelect(avatarObj.name)}
+                    >
+                      <PrimeReactAvatar
+                        image={avatarObj.path}
+                        size="xlarge"
+                        shape={shape}
+                        className={className}
+                        onClick={() => handleAvatarSelect(avatarObj.name)}
+                      />
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
-          </OverlayPanel>
+          </Dialog>
         </>
       )}
     </div>

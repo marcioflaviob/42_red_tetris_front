@@ -7,6 +7,7 @@ import useTetrisGame from '../../hooks/useTetrisGame';
 import useScoreManager from '../../hooks/useScoreManager';
 import { getCellClassName, getColorHex, getIndex } from '../../utils/helper';
 import LegoPiece from '../ui/Backgrounds/LegoPiece';
+import UserCard from './UserCard';
 
 const Cell = React.memo(({ index, type, color }) => {
   return <div className={getCellClassName(index, type, color)} />;
@@ -26,6 +27,7 @@ const GameCard = ({
   invisiblePieces,
   onPieceLocked,
   onGameOver,
+  setAccuracy,
 }) => {
   const {
     board,
@@ -58,6 +60,7 @@ const GameCard = ({
     board,
     setBoard,
     lastDrop,
+    setAccuracy,
   });
 
   useEffect(() => {
@@ -104,16 +107,12 @@ const GameCard = ({
 
   return (
     <Card greyScale={gameOver} message="Game over">
-      <div className="flex flex-col gap-3 h-full overflow-hidden">
-        <div className="flex items-center gap-3 p-2 bg-gradient-to-r from-cyan-500/10 via-green-500/10 to-purple-500/10 rounded-xl border border-cyan-500/20 shadow-lg flex-shrink-0">
-          <Avatar avatar={player.avatar} size="large" />
-          <div
-            className="text-xl font-bold text-white tracking-wide flex-1"
-            style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}
-          >
-            {player.username}
+      <div className="flex flex-col gap-3 h-full w-full">
+        <div className={styles.topContainer}>
+          <div className={`${styles.userCardContainer}`}>
+            <div className={styles.username}>{player.username}</div>
           </div>
-          <div className="bg-gradient-to-b from-gray-800/80 to-gray-900/90 rounded-lg p-2 border border-cyan-500/20 shadow-md flex-shrink-0">
+          <div className="bg-gradient-to-b from-gray-800/80 to-gray-900/90 rounded-lg p-2 border border-cyan-500/20 shadow-md flex-shrink-0 scale-80">
             <h3
               className="text-xs font-bold text-cyan-400 uppercase tracking-widest text-center mb-1 pb-1 border-b border-cyan-500/20"
               style={{ textShadow: '0 0 10px rgba(100, 200, 150, 0.5)' }}
@@ -136,7 +135,6 @@ const GameCard = ({
             </div>
           </div>
         </div>
-
         <div className={`${styles.gameBoardWrapper} p-2 flex-1 min-h-0`}>
           <div className={styles.gameGrid}>
             <div className={styles.tetrisBoard}>{cells}</div>
@@ -168,6 +166,11 @@ const GameCard = ({
           </div>
         </div>
       </div>
+      <Avatar
+        editable={false}
+        className={styles.avatar}
+        avatar={player.avatar}
+      />
     </Card>
   );
 };
