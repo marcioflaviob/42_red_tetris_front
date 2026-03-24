@@ -206,8 +206,8 @@
 .topContainer {
   display: flex;
   flex-direction: row;
-  align-items: last baseline;
-  justify-content: center;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .username {
