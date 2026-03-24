@@ -4,7 +4,7 @@ import Card from '../ui/Card/Card';
 import styles from './GameCard.module.css';
 import useSocket from '../../hooks/useSocket';
 import { getColorHex, getIndex, hasCollided } from '../../utils/helper';
-import { BOARD_COLS, BOARD_ROWS, CLASS, GARBAGE_COLOR, MOVES } from '../../utils/constants';
+import { BOARD_COLS, BOARD_ROWS, CLASS, MOVES } from '../../utils/constants';
 import GarbagePreviewBar from '../game/GarbagePreviewBar';
 import useBoard from '../../hooks/useBoard';
 import Cell from '../game/Cell';
@@ -60,43 +60,14 @@ const OnlineGameCard = ({ player, matchData, startGame, compact = false, playerC
     [setActivePiece]
   );
 
-  const clearRows = useCallback(
-    (rows = []) => {
-      if (!Array.isArray(rows) || rows.length === 0) return;
-
-      setBoard((prev) => {
-        const newBoard = [...prev];
-        rows
-          .slice()
-          .sort((a, b) => a - b)
-          .forEach((row) => {
-            newBoard.splice(row * BOARD_COLS, BOARD_COLS);
-            newBoard.unshift(...new Array(BOARD_COLS).fill(0));
-          });
-        return newBoard;
-      });
-    },
-    [setBoard]
-  );
-
-  const addGarbageRows = useCallback(
-    (lines) => {
-      if (!lines || lines <= 0) return;
-      const linesToAdd = Math.min(lines, BOARD_ROWS);
-      // Clear the pending indicator — the rows are now on the board
-      pendingGarbageRef.current = Math.max(0, pendingGarbageRef.current - linesToAdd);
-      setPendingGarbage(pendingGarbageRef.current);
-      setBoard((prev) => {
-        const newBoard = [...prev];
-        for (let i = 0; i < linesToAdd; i++) {
-          newBoard.splice(0, BOARD_COLS);
-          newBoard.push(...new Array(BOARD_COLS).fill(GARBAGE_COLOR));
-        }
-        return newBoard;
-      });
-    },
-    [setBoard]
-  );
+  // Decrement the pending garbage bar when the player's board receives garbage.
+  // Board state comes from board-sync snapshots — no local mutation needed here.
+  const decrementPendingGarbage = useCallback((lines) => {
+    if (!lines || lines <= 0) return;
+    const linesToRemove = Math.min(lines, BOARD_ROWS);
+    pendingGarbageRef.current = Math.max(0, pendingGarbageRef.current - linesToRemove);
+    setPendingGarbage(pendingGarbageRef.current);
+  }, []);
 
   // Uses refs for board and savedPiece so this callback is stable across renders
   const lockPiece = useCallback(() => {
@@ -172,17 +143,23 @@ const OnlineGameCard = ({ player, matchData, startGame, compact = false, playerC
         case MOVES.HARD_DROP:
           lockPiece();
           break;
+        case 'board-sync':
+          // Replace board with the authoritative snapshot from the player's frontend.
+          // This is the permanent fix for event-replay drift.
+          if (Array.isArray(data?.board)) setBoard(data.board);
+          break;
         case 'clear-row':
-          clearRows(data?.rows);
+          // Board state comes from board-sync; clear-row is kept for future animation hooks.
           break;
         case 'add-garbage':
-          addGarbageRows(data?.lines);
+          // Decrement the pending bar — board state comes from board-sync.
+          decrementPendingGarbage(data?.lines);
           break;
         default:
           console.error('An error has occurred: Unknown move.');
       }
     },
-    [movePiece, updateSavedPiece, lockPiece, clearRows, addGarbageRows]
+    [movePiece, updateSavedPiece, lockPiece, decrementPendingGarbage, setBoard]
   ); // Intentionally exclude shortSessionId from deps
 
   // Listen for garbage-pending events so the preview bar fills before rows are applied

@@ -144,18 +144,17 @@ const useScoreManager = ({
 
     if (rowsClearedNow === 0) return;
 
+    const sortedRows = [...fullRows].sort((a, b) => a - b);
     setBoard((prev) => {
       const newBoard = [...prev];
-      fullRows
-        .sort((a, b) => a - b)
-        .forEach((row) => {
-          newBoard.splice(row * BOARD_COLS, BOARD_COLS);
-          const emptyRow = new Array(BOARD_COLS).fill(0);
-          newBoard.unshift(...emptyRow);
-        });
-      broadcast('board', { action: 'clear-row', rows: fullRows.sort((a, b) => a - b) });
+      sortedRows.forEach((row) => {
+        newBoard.splice(row * BOARD_COLS, BOARD_COLS);
+        const emptyRow = new Array(BOARD_COLS).fill(0);
+        newBoard.unshift(...emptyRow);
+      });
       return newBoard;
     });
+    broadcast('board', { action: 'clear-row', rows: sortedRows });
 
     setRowsCleared((prev) => prev + rowsClearedNow);
     if (onLinesClearedRef.current) onLinesClearedRef.current(rowsClearedNow);
