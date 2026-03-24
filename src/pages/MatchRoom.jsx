@@ -44,7 +44,7 @@ const MatchRoom = () => {
     isConnected,
   } = useSocket();
 
-  const { setScore, level, setLevel, setRowsCleared, gameOver, setGameOver, getGameState } = useGameState({
+  const { setScore, level, setLevel, setRowsCleared, setAccuracy, gameOver, setGameOver, getGameState } = useGameState({
     initialLevel: 1,
     matchId: roomId,
   });
@@ -285,6 +285,7 @@ const MatchRoom = () => {
             onRegisterAddGarbage={(fn) => {
               addGarbageRef.current = fn;
             }}
+            setAccuracy={setAccuracy}
           />
         </div>
         <div className={`${getMultiplayerClassname()} min-h-0 overflow-hidden`}>
