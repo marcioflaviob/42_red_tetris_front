@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Countdown from '../components/ui/Countdown/Countdown';
 import styles from './MatchRoom.module.css';
 import Card from '../components/ui/Card/Card';
@@ -12,16 +12,15 @@ import { createMatchService } from '../services/MatchService';
 import useGameState from '../hooks/useGameState';
 import useMatchPersistence from '../hooks/useMatchPersistence';
 import HomePageBg from '../components/ui/Backgrounds/HomePageBg';
+import MatchEndOverlay from '../components/ui/MatchEndOverlay/MatchEndOverlay';
 
-const OfflineMatchRoom = () => {
+// Inner component — fully remounted on every "Play Again" via key={gameKey} in parent.
+// This resets all hooks (match, board, score, game state) without any manual state cleanup.
+const OfflineGame = ({ user, piecePrediction, increasedGravity, invisiblePieces, startGameTransition, onGameOver }) => {
   const [showCountdown, setShowCountdown] = useState(true);
   const [match, setMatch] = useState(null);
   const matchService = useRef(createMatchService()).current;
   const isCreatingMatch = useRef(false);
-  const { isPlaying, play, pause, startGameTransition } = useAudioManager(false);
-  const user = useAppSelector(selectUser);
-  const location = useLocation();
-  const { piecePrediction, increasedGravity, invisiblePieces } = location.state || {};
 
   const {
     score,
@@ -52,12 +51,12 @@ const OfflineMatchRoom = () => {
   }, [increasedGravity, invisiblePieces, matchService, piecePrediction, user]);
 
   useEffect(() => {
-    if (!match || !isCreatingMatch.current) {
+    if (!match && !isCreatingMatch.current) {
       createMatch();
     }
   }, [createMatch, match]);
 
-  const handleCountdownComplete = async () => {
+  const handleCountdownComplete = () => {
     setShowCountdown(false);
     startGameTransition();
   };
@@ -65,41 +64,27 @@ const OfflineMatchRoom = () => {
   const handlePieceLocked = useCallback(
     (tetrisGameState) => {
       if (!match) return;
-
-      const fullMatchState = {
-        ...getGameState(),
-        ...tetrisGameState,
-        type: 'offline',
-      };
-      updateMatch(fullMatchState);
+      updateMatch({ ...getGameState(), ...tetrisGameState, type: 'offline' });
     },
     [match, getGameState, updateMatch]
   );
 
   const handleGameOver = useCallback(async () => {
     if (!match) return;
-
-    const finalState = {
+    await saveMatchImmediate({
       ...getGameState(),
       gameOver: true,
       endedAt: new Date().toISOString(),
       type: 'offline',
-    };
-
-    await saveMatchImmediate(finalState);
-  }, [match, getGameState, saveMatchImmediate]);
+    });
+    onGameOver();
+  }, [match, getGameState, saveMatchImmediate, onGameOver]);
 
   return (
-    <div className={`${styles.content} flex flex-col h-full`}>
-      <HomePageBg />
+    <>
       <Countdown isVisible={showCountdown} onComplete={handleCountdownComplete} />
       <div className={`${styles.content} container mx-auto grid grid-cols-3 row-span-10 gap-8 flex-1 p-8`}>
         <div className="grid grid-rows-7 gap-4">
-          <Card className="row-span-3">
-            <Button
-              onClick={isPlaying ? pause : play}
-              icon={isPlaying ? 'pi pi-volume-up' : 'pi pi-volume-off'}></Button>
-          </Card>
           <Card className="row-span-4">
             <p>Match ID: {match?.id}</p>
             <p>Score: {score}</p>
@@ -108,21 +93,70 @@ const OfflineMatchRoom = () => {
             <p>Accuracy: {accuracy}%</p>
           </Card>
         </div>
-        <GameCard
-          player={user}
-          setScore={setScore}
-          level={level}
-          setLevel={setLevel}
-          setRowsCleared={setRowsCleared}
-          gameOver={gameOver}
-          setGameOver={setGameOver}
-          startGame={!showCountdown}
-          matchData={match}
-          onPieceLocked={handlePieceLocked}
-          onGameOver={handleGameOver}
-          setAccuracy={setAccuracy}
-        />
+        {match && (
+          <GameCard
+            key={match.id}
+            player={user}
+            setScore={setScore}
+            level={level}
+            setLevel={setLevel}
+            setRowsCleared={setRowsCleared}
+            gameOver={gameOver}
+            setGameOver={setGameOver}
+            startGame={!showCountdown}
+            matchData={match}
+            onPieceLocked={handlePieceLocked}
+            onGameOver={handleGameOver}
+            setAccuracy={setAccuracy}
+          />
+        )}
       </div>
+    </>
+  );
+};
+
+// Outer shell — persists for the lifetime of the /offline route.
+// Manages the overlay and the gameKey used to remount OfflineGame.
+const OfflineMatchRoom = () => {
+  const [gameKey, setGameKey] = useState(0);
+  const [showOverlay, setShowOverlay] = useState(false);
+  const navigate = useNavigate();
+  const { isPlaying, play, pause, startGameTransition } = useAudioManager(false);
+  const user = useAppSelector(selectUser);
+  const location = useLocation();
+  const { piecePrediction, increasedGravity, invisiblePieces } = location.state || {};
+
+  const handlePlayAgain = useCallback(() => {
+    setShowOverlay(false);
+    setGameKey((k) => k + 1);
+  }, []);
+
+  return (
+    <div className={`${styles.content} flex flex-col h-full`}>
+      <HomePageBg />
+      {showOverlay && (
+        <MatchEndOverlay
+          mode="offline"
+          currentUser={user}
+          isHost={true}
+          onPlayAgain={handlePlayAgain}
+          onBackToMenu={() => navigate('/')}
+        />
+      )}
+      <div className="flex-shrink-0 p-4">
+        <Button onClick={isPlaying ? pause : play} icon={isPlaying ? 'pi pi-volume-up' : 'pi pi-volume-off'}>
+          {isPlaying ? 'Mute' : 'Unmute'}
+        </Button>
+      </div>
+      <OfflineGame
+        key={gameKey}
+        user={user}
+        piecePrediction={piecePrediction}
+        increasedGravity={increasedGravity}
+        invisiblePieces={invisiblePieces}
+        startGameTransition={startGameTransition}
+        onGameOver={() => setShowOverlay(true)}
+      />
     </div>
   );
 };

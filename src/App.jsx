@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
-import { PATHS } from './Path';
 import ProtectedRoutes from './ProtectedRoutes';
 import Layout from './Layout';
+import { PATHS } from './Paths';
 
 function App() {
   return (
