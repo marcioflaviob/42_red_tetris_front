@@ -152,6 +152,15 @@ const useTetrisGame = ({ player, level, startGame, matchData, onPieceLocked, onG
     emit
   );
 
+  // Board-sync: after every board change, broadcast the authoritative snapshot.
+  // Spectator OnlineGameCards replace their local board with this, eliminating
+  // cumulative event-replay drift permanently. React batches multiple setBoard
+  // calls in one lock cycle into a single commit, so this fires once per lock.
+  useEffect(() => {
+    if (!startGame) return;
+    broadcastRef.current?.('board', { action: 'board-sync', board });
+  }, [board, startGame]);
+
   useEffect(() => {
     if (onGameStateChange) {
       onGameStateChange({
