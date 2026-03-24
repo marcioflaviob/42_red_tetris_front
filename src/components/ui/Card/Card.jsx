@@ -16,14 +16,10 @@ const Card = ({
   const [progress, setProgress] = useState(0);
   const user = useAppSelector(selectUser);
   // const { error, isLoading } = useGetHealthQuery();
-  const [colorScheme, setColorScheme] = useState(
-    user?.avatar?.toLowerCase().includes('evil') ? 'evil' : 'good'
-  );
+  const [colorScheme, setColorScheme] = useState(user?.avatar?.toLowerCase().includes('evil') ? 'evil' : 'good');
 
   useEffect(() => {
-    setColorScheme(
-      user?.avatar?.toLowerCase().includes('evil') ? 'evil' : 'good'
-    );
+    setColorScheme(user?.avatar?.toLowerCase().includes('evil') ? 'evil' : 'good');
   }, [user?.avatar, colorScheme]);
 
   useEffect(() => {
@@ -46,11 +42,9 @@ const Card = ({
     }
   }, [loading]);
 
-  const isUsernameEmpty =
-    isUsernameRequired && (!user.username || user.username.trim() === '');
+  const isUsernameEmpty = isUsernameRequired && (!user.username || user.username.trim() === '');
 
-  const shouldShowOverlay =
-    isUsernameEmpty || (greyScale && message) || loading;
+  const shouldShowOverlay = isUsernameEmpty || (greyScale && message) || loading;
   const shouldApplyGreyScale = isUsernameEmpty || greyScale || loading;
 
   const cardClassName = `${className} ${styles.card} ${
@@ -82,26 +76,18 @@ const Card = ({
             <div className={styles.loadingContainer}>
               <div className={styles.loadingText}>Loading...</div>
               <div className={styles.loadingBar}>
-                <div
-                  className={styles.loadingBarFill}
-                  style={{ width: `${progress}%` }}
-                />
+                <div className={styles.loadingBarFill} style={{ width: `${progress}%` }} />
               </div>
-              <div className={styles.loadingPercentage}>
-                {Math.floor(progress)}%
-              </div>
+              <div className={styles.loadingPercentage}>{Math.floor(progress)}%</div>
             </div>
           ) : overlayContent?.type === 'message' ? (
-            <div className={styles.overlayMessage}>
-              {overlayContent.content}
-            </div>
+            <div className={styles.overlayMessage}>{overlayContent.content}</div>
           ) : null}
         </div>
       )}
       {user.avatar && (
         <div
-          className={`${avatarStyles.avatarOverlay} ${colorScheme === 'evil' ? avatarStyles.evilOverlay : ''}`}
-        ></div>
+          className={`${avatarStyles.avatarOverlay} ${colorScheme === 'evil' ? avatarStyles.evilOverlay : ''}`}></div>
       )}
     </div>
   );

@@ -61,7 +61,7 @@
   align-items: center;
   justify-content: center;
   background-color: #383b76;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .avatar :global(.p-avatar) {

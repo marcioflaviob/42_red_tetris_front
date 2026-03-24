@@ -22,17 +22,10 @@ const ErrorPage = () => {
       <div className="container mx-auto flex items-center justify-center flex-1 p-8">
         <Card className={styles.errorCard}>
           <div className="flex flex-col items-center gap-4 p-6 text-center">
-            <img
-              src="/assets/others/error.gif"
-              alt="Error glitch animation"
-              className={styles.glitchImage}
-            />
-            <h1 style={{ fontSize: '1.75rem', margin: 0 }}>
-              Oops! Something went wrong.
-            </h1>
+            <img src="/assets/others/error.gif" alt="Error glitch animation" className={styles.glitchImage} />
+            <h1 style={{ fontSize: '1.75rem', margin: 0 }}>Oops! Something went wrong.</h1>
             <p style={{ fontSize: '1rem', margin: 0, color: '#94a3b8' }}>
-              {error?.data?.error ||
-                'The page you are looking for does not exist or an error has occurred.'}
+              {error?.data?.error || 'The page you are looking for does not exist or an error has occurred.'}
             </p>
             <Button variant="play" size="large" onClick={handleGoHome}>
               Go Back Home

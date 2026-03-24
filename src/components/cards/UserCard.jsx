@@ -25,17 +25,11 @@ const UserCard = ({ showStats = true, username, avatarClassName = '' }) => {
     const matchesRepo = createMatchesRepository();
     matchesRepo.getMatches().then((matches) => {
       const gamesPlayed = matches.length;
-      const gamesWon = matches.filter(
-        (match) => match.winner === user.sessionId && match.online
-      ).length;
-      const bestScore = Math.max(
-        0,
-        ...matches.map((match) => match.score || 0)
-      );
+      const gamesWon = matches.filter((match) => match.winner === user.sessionId && match.online).length;
+      const bestScore = Math.max(0, ...matches.map((match) => match.score || 0));
 
       const accuracy = matches.length
-        ? matches.reduce((acc, match) => acc + (match.accuracy || 0), 0) /
-          matches.length
+        ? matches.reduce((acc, match) => acc + (match.accuracy || 0), 0) / matches.length
         : 0;
 
       setUserStats({
@@ -62,8 +56,7 @@ const UserCard = ({ showStats = true, username, avatarClassName = '' }) => {
 
   const handleUsernameChange = (e) => {
     const value = e.target.value;
-    if (USERNAME_REGEX.test(value) && value.length <= 20)
-      setTempUsername(value);
+    if (USERNAME_REGEX.test(value) && value.length <= 30) setTempUsername(value);
   };
 
   const handleUsernameSubmit = () => {
@@ -100,11 +93,7 @@ const UserCard = ({ showStats = true, username, avatarClassName = '' }) => {
                 className={styles.usernameInput}
               />
             ) : (
-              <div
-                className={styles.usernameDisplay}
-                onClick={handleUsernameClick}
-                title="Click to edit username"
-              >
+              <div className={styles.usernameDisplay} onClick={handleUsernameClick} title="Click to edit username">
                 {username || user.username || 'Click to set username'}
               </div>
             )}
@@ -119,21 +108,15 @@ const UserCard = ({ showStats = true, username, avatarClassName = '' }) => {
                 <span className={styles.statLabel}>Multiplayer Wins</span>
               </InfoCard>
               <InfoCard className={styles.statItem}>
-                <Title className={styles.statValue}>
-                  {userStats.bestScore}
-                </Title>
+                <Title className={styles.statValue}>{userStats.bestScore}</Title>
                 <span className={styles.statLabel}>Best Score</span>
               </InfoCard>
               <InfoCard className={styles.statItem}>
-                <Title className={styles.statValue}>
-                  {userStats.gamesPlayed}
-                </Title>
+                <Title className={styles.statValue}>{userStats.gamesPlayed}</Title>
                 <span className={styles.statLabel}>Games played</span>
               </InfoCard>
               <InfoCard className={styles.statItem}>
-                <Title className={styles.statValue}>
-                  {userStats.accuracy.toFixed(2)}%
-                </Title>
+                <Title className={styles.statValue}>{userStats.accuracy.toFixed(2)}%</Title>
                 <span className={styles.statLabel}>Accuracy</span>
               </InfoCard>
             </div>

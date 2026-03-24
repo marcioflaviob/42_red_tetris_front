@@ -2,12 +2,7 @@ import { COLLISION, MOVES } from '../utils/constants';
 import { Tetromino } from '../utils/tetromino';
 import { hasCollided } from '../utils/helper';
 
-const useMovement = ({
-  boardRef,
-  activePieceRef,
-  setActivePiece,
-  rotatePiece,
-}) => {
+const useMovement = ({ boardRef, activePieceRef, setActivePiece, rotatePiece }) => {
   const movePiece = (move) => {
     const piece = activePieceRef.current;
     if (!piece) return COLLISION.NO;

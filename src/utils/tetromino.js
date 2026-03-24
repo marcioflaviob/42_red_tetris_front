@@ -1,44 +1,37 @@
 import { COLOR, SPAWN_CELL_COL, MOVES, COLLISION, SHAPES } from './constants';
 import { getRandom, hasCollided } from './helper';
 
-class PieceBag {
+export class PieceBag {
   constructor() {
-    this.shapeBag = [];
     this.colorBag = [];
   }
 
-  getNextShape() {
-    if (this.shapeBag.length === 0) {
-      this.shapeBag = Object.keys(SHAPES);
-      // Shuffle the bag
-      for (let i = this.shapeBag.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [this.shapeBag[i], this.shapeBag[j]] = [
-          this.shapeBag[j],
-          this.shapeBag[i],
-        ];
-      }
-    }
-    return SHAPES[this.shapeBag.pop()];
+  reset() {
+    this.colorBag = [];
   }
 
-  getNextColor() {
+  getState() {
+    return {
+      colorBag: [...this.colorBag],
+    };
+  }
+
+  setState(state) {
+    this.colorBag = state.colorBag ? [...state.colorBag] : [];
+  }
+
+  getNextColor(rng) {
     if (this.colorBag.length === 0) {
       this.colorBag = Object.values(COLOR);
       // Shuffle the bag
       for (let i = this.colorBag.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [this.colorBag[i], this.colorBag[j]] = [
-          this.colorBag[j],
-          this.colorBag[i],
-        ];
+        const j = Math.floor(rng() * (i + 1));
+        [this.colorBag[i], this.colorBag[j]] = [this.colorBag[j], this.colorBag[i]];
       }
     }
     return this.colorBag.pop();
   }
 }
-
-const pieceBag = new PieceBag();
 
 export class Tetromino {
   constructor({
@@ -46,10 +39,13 @@ export class Tetromino {
     color = null,
     coords = null, // Array of tuples ex: [[0, 2], [1, 9]]
     pivot = null,
+    rng = null,
+    colorRng = null,
+    colorBag = null,
     rotation = 0,
   }) {
-    this.shape = shape || getRandom(SHAPES);
-    this.color = color || pieceBag.getNextColor();
+    this.shape = shape || getRandom(SHAPES, rng);
+    this.color = color || (colorBag ? colorBag.getNextColor(colorRng) : null);
     this.coords = coords || this.getInitialCoords();
     this.pivot = pivot || this.calculatePivot();
     this.rotation = rotation;
@@ -88,17 +84,11 @@ export class Tetromino {
       const next = prediction.map(([r, c]) => [r + 1, c]);
       const collision = hasCollided(MOVES.DOWN, next, board);
 
-      if (collision === COLLISION.LOCK || collision === COLLISION.CONTINUE)
-        break;
+      if (collision === COLLISION.LOCK || collision === COLLISION.CONTINUE) break;
 
       prediction = next;
     }
 
     return prediction;
   }
-
-  moveDown() {}
-  moveLeft() {}
-  moveRight() {}
-  rotate() {}
 }
