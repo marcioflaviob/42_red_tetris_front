@@ -7,7 +7,7 @@ class SocketService {
   }
 
   connect(sessionId, username) {
-    if (this.socket?.connected) {
+    if (this.socket) {
       return this.socket;
     }
 
@@ -54,12 +54,16 @@ class SocketService {
 
   on(event, callback) {
     if (this.socket) {
+      console.log(`[Socket] Registering listener for event: ${event}`);
       this.socket.on(event, callback);
+    } else {
+      console.warn(`[Socket] Cannot register listener for ${event}: socket not initialized`);
     }
   }
 
   off(event, callback) {
     if (this.socket) {
+      console.log(`[Socket] Removing listener for event: ${event}`);
       this.socket.off(event, callback);
     }
   }

@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Countdown from '../components/ui/Countdown/Countdown';
 import styles from './MatchRoom.module.css';
@@ -18,30 +18,17 @@ const OfflineMatchRoom = () => {
   const [match, setMatch] = useState(null);
   const matchService = useRef(createMatchService()).current;
   const isCreatingMatch = useRef(false);
-
-  const { isPlaying, play, pause, startGameTransition } = useAudioManager(true);
+  const { isPlaying, play, pause, startGameTransition } = useAudioManager(false);
   const user = useAppSelector(selectUser);
   const location = useLocation();
-  const { piecePrediction, increasedGravity, invisiblePieces } =
-    location.state || {};
+  const { piecePrediction, increasedGravity, invisiblePieces } = location.state || {};
 
-  const {
-    score,
-    setScore,
-    level,
-    setLevel,
-    rowsCleared,
-    setRowsCleared,
-    gameOver,
-    setGameOver,
-    getGameState,
-  } = useGameState({ initialLevel: 1, matchId: match?.id });
+  const { score, setScore, level, setLevel, rowsCleared, setRowsCleared, gameOver, setGameOver, getGameState } =
+    useGameState({ initialLevel: 1, matchId: match?.id });
 
   const { updateMatch, saveMatchImmediate } = useMatchPersistence(match?.id);
 
-  const handleCountdownComplete = async () => {
-    if (match || isCreatingMatch.current) return;
-
+  const createMatch = useCallback(async () => {
     isCreatingMatch.current = true;
     const matchData = await matchService.createMatch({
       type: 'offline',
@@ -51,6 +38,15 @@ const OfflineMatchRoom = () => {
       invisiblePieces,
     });
     setMatch(matchData);
+  }, [increasedGravity, invisiblePieces, matchService, piecePrediction, user]);
+
+  useEffect(() => {
+    if (!match || !isCreatingMatch.current) {
+      createMatch();
+    }
+  }, [createMatch, match]);
+
+  const handleCountdownComplete = async () => {
     setShowCountdown(false);
     startGameTransition();
   };
@@ -62,6 +58,7 @@ const OfflineMatchRoom = () => {
       const fullMatchState = {
         ...getGameState(),
         ...tetrisGameState,
+        type: 'offline',
       };
 
       updateMatch(fullMatchState);
@@ -76,6 +73,7 @@ const OfflineMatchRoom = () => {
       ...getGameState(),
       gameOver: true,
       endedAt: new Date().toISOString(),
+      type: 'offline',
     };
 
     await saveMatchImmediate(finalState);
@@ -84,19 +82,13 @@ const OfflineMatchRoom = () => {
   return (
     <div className={`${styles.content} flex flex-col h-full`}>
       <HomePageBg />
-      <Countdown
-        isVisible={showCountdown}
-        onComplete={handleCountdownComplete}
-      />
-      <div
-        className={`${styles.content} container mx-auto grid grid-cols-3 row-span-10 gap-8 flex-1 p-8`}
-      >
+      <Countdown isVisible={showCountdown} onComplete={handleCountdownComplete} />
+      <div className={`${styles.content} container mx-auto grid grid-cols-3 row-span-10 gap-8 flex-1 p-8`}>
         <div className="grid grid-rows-7 gap-4">
           <Card className="row-span-3">
             <Button
               onClick={isPlaying ? pause : play}
-              icon={isPlaying ? 'pi pi-volume-up' : 'pi pi-volume-off'}
-            ></Button>
+              icon={isPlaying ? 'pi pi-volume-up' : 'pi pi-volume-off'}></Button>
           </Card>
           <Card className="row-span-4">
             <p>Match ID: {match?.id}</p>
@@ -114,9 +106,7 @@ const OfflineMatchRoom = () => {
           gameOver={gameOver}
           setGameOver={setGameOver}
           startGame={!showCountdown}
-          piecePrediction={piecePrediction}
-          increasedGravity={increasedGravity}
-          invisiblePieces={invisiblePieces}
+          matchData={match}
           onPieceLocked={handlePieceLocked}
           onGameOver={handleGameOver}
         />

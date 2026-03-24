@@ -24,10 +24,15 @@ const createMatchService = (matchesRepo = createMatchesRepository()) => {
     return matchesRepo.getMatch(id);
   };
 
+  const getMatches = async () => {
+    return matchesRepo.getMatches();
+  };
+
   return {
     createMatch,
     updateMatch,
     getMatch,
+    getMatches,
   };
 };
 

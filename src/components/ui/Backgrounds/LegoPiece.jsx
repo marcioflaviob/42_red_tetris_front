@@ -103,8 +103,7 @@ const LegoPiece = ({
       }}
       onMouseEnter={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      {...props}
-    >
+      {...props}>
       {rotated.map((row, y) =>
         row.map((cell, x) =>
           cell ? (
@@ -116,8 +115,7 @@ const LegoPiece = ({
                 width: size,
                 height: size,
                 boxShadow: `0px 8px 0px 0px ${lightenColor(color, -20)}`,
-              }}
-            >
+              }}>
               <div
                 className={styles.legoStud}
                 style={{
@@ -127,8 +125,7 @@ const LegoPiece = ({
                   border: `2px solid ${color}`,
                   fontSize: size * 0.13,
                   color: lightenColor(color, -10),
-                }}
-              >
+                }}>
                 LEGO
               </div>
             </div>

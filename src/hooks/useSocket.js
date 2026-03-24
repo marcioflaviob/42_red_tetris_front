@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useAppSelector } from '../store/hooks';
 import { socketService } from '../services/SocketService';
 
@@ -17,17 +17,18 @@ const useSocket = () => {
     };
   }, [user.sessionId, user.username]);
 
-  const emit = (event, data) => {
+  // Stable references — socketService is a singleton so these never need to change
+  const emit = useCallback((event, data) => {
     socketService.emit(event, data);
-  };
+  }, []);
 
-  const on = (event, callback) => {
+  const on = useCallback((event, callback) => {
     socketService.on(event, callback);
-  };
+  }, []);
 
-  const off = (event, callback) => {
+  const off = useCallback((event, callback) => {
     socketService.off(event, callback);
-  };
+  }, []);
 
   return {
     socket: socketRef.current,

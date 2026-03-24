@@ -1,17 +1,9 @@
-import {
-  BOARD_COLS,
-  BOARD_ROWS,
-  BUFFER_ZONE_ROWS,
-  CLASS,
-  COLLISION,
-  COLOR,
-  MOVES,
-} from './constants';
-import styles from '../components/cards/GameCard.module.css';
+import { BOARD_COLS, BOARD_ROWS, BUFFER_ZONE_ROWS, CLASS, COLLISION, COLOR, MOVES } from './constants';
 
-export const getRandom = (array) => {
+export const getRandom = (array, rng = null) => {
+  const random = rng || Math.random;
   const values = Object.values(array);
-  const randomIndex = Math.floor(Math.random() * values.length);
+  const randomIndex = Math.floor(random() * values.length);
   return values[randomIndex];
 };
 
@@ -28,8 +20,7 @@ export const hasCollided = (move, coords, board) => {
       // Cell collision
       if (getCell([r, c], board)) return COLLISION.LOCK;
     } else {
-      if (r >= BUFFER_ZONE_ROWS + BOARD_ROWS || getCell([r, c], board))
-        return COLLISION.CONTINUE;
+      if (r >= BUFFER_ZONE_ROWS + BOARD_ROWS || getCell([r, c], board)) return COLLISION.CONTINUE;
     }
   }
   return COLLISION.NO;
@@ -42,38 +33,6 @@ export const getIndex = (coords) => {
 export const getCell = (coords, board) => {
   const idx = getIndex(coords);
   return board[idx];
-};
-
-export const getCellClassName = (index, type, color) => {
-  if (index < 20 && !type) return styles.bufferZoneCell;
-
-  switch (type) {
-    case CLASS.TILE:
-      return `${getColorClassName(color)}`;
-    case CLASS.PREDICT:
-      return styles.predict;
-    case CLASS.EMPTY:
-      return styles.cell;
-  }
-};
-
-const getColorClassName = (color) => {
-  switch (color) {
-    case COLOR.PURPLE:
-      return 'bg-(--purple)';
-    case COLOR.MUSTARD:
-      return 'bg-(--mustard)';
-    case COLOR.PANTHER:
-      return 'bg-(--panther)';
-    case COLOR.WINE:
-      return 'bg-(--wine)';
-    case COLOR.GRASS:
-      return 'bg-(--grass)';
-    case COLOR.ROYAL:
-      return 'bg-(--royal)';
-    case COLOR.TURK:
-      return 'bg-(--turk)';
-  }
 };
 
 export const getColorHex = (color) => {
