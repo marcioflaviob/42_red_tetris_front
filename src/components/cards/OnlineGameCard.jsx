@@ -222,14 +222,13 @@ const OnlineGameCard = ({
   return (
     <div className="h-full">
       <Card greyScale={isEliminated} message="Game over">
-        <div className="flex flex-col gap-2 h-full overflow-hidden">
+        <div className="flex flex-col gap-2 h-full">
           <div
             className={`flex items-center ${compact ? 'gap-2 p-1' : 'gap-3 p-2'} rounded-xl border shadow-lg flex-shrink-0 transition-all duration-300 ${
               isTargeted
                 ? 'bg-gradient-to-r from-red-500/20 via-red-400/10 to-red-500/20 border-red-500/40'
                 : 'bg-gradient-to-r from-cyan-500/10 via-green-500/10 to-purple-500/10 border-cyan-500/20'
             }`}>
-            <Avatar avatar={player.avatar} size={compact ? 'small' : 'large'} />
             <div className="flex items-center gap-2 flex-1 min-w-0">
               <div
                 className={`${compact ? 'text-sm' : 'text-xl'} font-bold text-white tracking-wide truncate`}
@@ -320,6 +319,7 @@ const OnlineGameCard = ({
             </div>
           )}
         </div>
+        <Avatar editable={false} className={styles.onlineAvatar} avatar={player.avatar} />
       </Card>
     </div>
   );

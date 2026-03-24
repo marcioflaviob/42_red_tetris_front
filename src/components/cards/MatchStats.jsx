@@ -2,7 +2,18 @@ import React from 'react';
 import Avatar from '../ui/Avatar/Avatar';
 import styles from './MatchStats.module.css';
 
-const MatchStats = ({ roomId, playerCount, hostName, onStartGame, isHost, gameStarted, players = [], currentUser }) => {
+const MatchStats = ({
+  roomId,
+  playerCount,
+  hostName,
+  onStartGame,
+  isHost,
+  gameStarted,
+  players = [],
+  accuracy,
+  score,
+}) => {
+  console.log('avatar', players[0].avatar);
   return (
     <div className={styles.statsContainer}>
       {/* Header */}
@@ -38,15 +49,39 @@ const MatchStats = ({ roomId, playerCount, hostName, onStartGame, isHost, gameSt
         <div className={styles.playersHeader}>Players in Lobby</div>
         <div className={styles.playersContainer}>
           {players.map((player) => (
-            <div key={player.sessionId} className={styles.playerRow}>
-              {/* <Avatar avatar={player.avatar} /> */}
-              <div className={styles.playerDetails}>
-                <div className={styles.playerName}>{player.username}</div>
-                <div className={styles.playerRole}>
-                  {player.sessionId === currentUser.sessionId ? 'You' : 'Opponent'}
+            <div key={player.sessionId} className={styles.playerCard}>
+              <div className={styles.playerCardHeader}>
+                <div className={styles.playerIdentity}>
+                  <div
+                    className={
+                      styles.avatarWrapper + (player.avatar?.includes('evil') ? styles.evilAvatarWrapper : '')
+                    }>
+                    <img
+                      src={player.avatar?.replace('/avatarsUi/', '/avatarsCircled/')}
+                      alt={player.username}
+                      className={styles.avatarCircle}
+                    />
+                  </div>
+                  <div className={styles.playerName}>{player.username}</div>
+                </div>
+
+                <div className={styles.statsAndBadges}>
+                  <div className={styles.playerStatsRow}>
+                    <div className={styles.playerStatItem}>
+                      <span className={styles.playerStatLabel}>Score</span>
+                      <span className={styles.playerStatValue}>{score ?? 0}</span>
+                    </div>
+                    <div className={styles.playerStatItem}>
+                      <span className={styles.playerStatLabel}>Acc</span>
+                      <span className={styles.playerStatValue}>{accuracy ?? 0}%</span>
+                    </div>
+                  </div>
+
+                  <div className={styles.badgeContainer}>
+                    {player.host && <span className={styles.hostBadge}>★ Host</span>}
+                  </div>
                 </div>
               </div>
-              {player.host && <span className={styles.hostBadge}>★ Host</span>}
             </div>
           ))}
         </div>

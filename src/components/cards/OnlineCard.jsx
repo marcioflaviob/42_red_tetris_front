@@ -125,7 +125,12 @@ const OnlineCard = () => {
       </div>
       <p className={styles.subtitle}>Join a friend's game</p>
       <div className={styles.playSection}>
-        <InputText value={roomIdInput} onChange={handleRoomIdChange} placeholder="Type the room ID" />
+        <InputText
+          value={roomIdInput}
+          onChange={handleRoomIdChange}
+          className={styles.roomIdInput}
+          placeholder="Type the room ID"
+        />
         <Button
           tooltip="Room ID is invalid"
           tooltipBool={!isRoomIdValid}

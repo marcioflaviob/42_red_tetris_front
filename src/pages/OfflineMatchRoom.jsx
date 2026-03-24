@@ -2,6 +2,7 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Countdown from '../components/ui/Countdown/Countdown';
 import styles from './MatchRoom.module.css';
+import statsStyles from '../components/cards/MatchStats.module.css';
 import Card from '../components/ui/Card/Card';
 import Button from '../components/ui/Buttons/Button';
 import GameCard from '../components/cards/OfflineGameCard';
@@ -16,7 +17,17 @@ import MatchEndOverlay from '../components/ui/MatchEndOverlay/MatchEndOverlay';
 
 // Inner component — fully remounted on every "Play Again" via key={gameKey} in parent.
 // This resets all hooks (match, board, score, game state) without any manual state cleanup.
-const OfflineGame = ({ user, piecePrediction, increasedGravity, invisiblePieces, startGameTransition, onGameOver }) => {
+const OfflineGame = ({
+  user,
+  piecePrediction,
+  increasedGravity,
+  invisiblePieces,
+  startGameTransition,
+  onGameOver,
+  isPlaying,
+  play,
+  pause,
+}) => {
   const [showCountdown, setShowCountdown] = useState(true);
   const [match, setMatch] = useState(null);
   const matchService = useRef(createMatchService()).current;
@@ -85,13 +96,51 @@ const OfflineGame = ({ user, piecePrediction, increasedGravity, invisiblePieces,
       <Countdown isVisible={showCountdown} onComplete={handleCountdownComplete} />
       <div className={`${styles.content} container mx-auto grid grid-cols-3 row-span-10 gap-8 flex-1 p-8`}>
         <div className="grid grid-rows-7 gap-4">
-          <Card className="row-span-4">
-            <p>Match ID: {match?.id}</p>
-            <p>Score: {score}</p>
-            <p>Level: {level}</p>
-            <p>Rows Cleared: {rowsCleared}</p>
-            <p>Accuracy: {accuracy}%</p>
-          </Card>
+          <div className="row-span-1 flex items-center px-2">
+            <button
+              onClick={isPlaying ? pause : play}
+              className={`flex items-center gap-3 px-5 py-2.5 rounded-full border transition-all duration-300 group ${
+                isPlaying
+                  ? 'bg-green-500/10 border-green-500/40 text-green-400 shadow-[0_0_15px_rgba(34,197,94,0.2)]'
+                  : 'bg-blue-500/10 border-blue-500/40 text-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.2)]'
+              } hover:scale-105 active:scale-95`}>
+              <div
+                className={`flex items-center justify-center w-8 h-8 rounded-full ${
+                  isPlaying ? 'bg-green-500/20' : 'bg-blue-500/20'
+                } group-hover:animate-pulse`}>
+                <i className={`${isPlaying ? 'pi pi-volume-up' : 'pi pi-volume-off'} text-lg`}></i>
+              </div>
+              <span className="font-semibold tracking-wide uppercase text-xs">
+                {isPlaying ? 'Now Playing' : 'Play Music'}
+              </span>
+            </button>
+          </div>
+          <div className={`${statsStyles.statsContainer} row-span-6`}>
+            <div className={statsStyles.header}>
+              <h2 className={statsStyles.title}>Match Info</h2>
+              <div className={statsStyles.statusBadge} data-status={!gameOver ? 'running' : 'waiting'}>
+                {!gameOver ? 'Live' : 'Game Over'}
+              </div>
+            </div>
+            <div className={`${statsStyles.infoGrid} mt-4`}>
+              <div className={statsStyles.infoItem}>
+                <span className={statsStyles.label}>Score</span>
+                <span className={statsStyles.value}>{score}</span>
+              </div>
+              <div className={statsStyles.infoItem}>
+                <span className={statsStyles.label}>Accuracy</span>
+                <span className={statsStyles.value}>{accuracy}%</span>
+              </div>
+              <div className={statsStyles.infoItem}>
+                <span className={statsStyles.label}>Level</span>
+                <span className={statsStyles.value}>{level}</span>
+              </div>
+              <div className={statsStyles.infoItem}>
+                <span className={statsStyles.label}>Lines</span>
+                <span className={statsStyles.value}>{rowsCleared}</span>
+              </div>
+            </div>
+          </div>
         </div>
         {match && (
           <GameCard
@@ -143,11 +192,6 @@ const OfflineMatchRoom = () => {
           onBackToMenu={() => navigate('/')}
         />
       )}
-      <div className="flex-shrink-0 p-4">
-        <Button onClick={isPlaying ? pause : play} icon={isPlaying ? 'pi pi-volume-up' : 'pi pi-volume-off'}>
-          {isPlaying ? 'Mute' : 'Unmute'}
-        </Button>
-      </div>
       <OfflineGame
         key={gameKey}
         user={user}
@@ -156,6 +200,9 @@ const OfflineMatchRoom = () => {
         invisiblePieces={invisiblePieces}
         startGameTransition={startGameTransition}
         onGameOver={() => setShowOverlay(true)}
+        isPlaying={isPlaying}
+        play={play}
+        pause={pause}
       />
     </div>
   );

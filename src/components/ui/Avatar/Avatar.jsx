@@ -7,7 +7,7 @@ import styles from './Avatar.module.css';
 import { useAppSelector } from '../../../store/hooks';
 import Card from '../Card/Card';
 
-const Avatar = ({ shape = '3d', className = '', editable = false, avatar: avatarProp }) => {
+const Avatar = ({ shape = 'circle', className = '', editable = false, avatar: avatarProp }) => {
   const dispatch = useDispatch();
   const selectedAvatar = useAppSelector(selectAvatar);
   const avatar = avatarProp || selectedAvatar;
@@ -16,7 +16,7 @@ const Avatar = ({ shape = '3d', className = '', editable = false, avatar: avatar
   const [characterSelectionVisible, setCharacterSelectionVisible] = useState(false);
 
   const avatarOptions = useMemo(() => {
-    const modules = import.meta.glob('/src/assets/avatars/*.{webp,png,jpg,jpeg,webm}', { eager: true });
+    const modules = import.meta.glob('/public/avatarsCircled/*.{webp,png,jpg,jpeg,webm}', { eager: true });
     const avatars = Object.entries(modules).map(([path, module]) => {
       const imagePath = typeof module === 'string' ? module : module.default;
       const filename = path.split('/').pop();
@@ -111,7 +111,6 @@ const Avatar = ({ shape = '3d', className = '', editable = false, avatar: avatar
                         image={avatarObj.path}
                         size="xlarge"
                         shape={shape}
-                        className={className}
                         onClick={() => handleAvatarSelect(avatarObj.name)}
                       />
                     </div>
