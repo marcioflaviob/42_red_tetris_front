@@ -206,8 +206,7 @@
 .topContainer {
   display: flex;
   flex-direction: row;
-  gap: 5rem;
-  align-items: center;
+  align-items: last baseline;
   justify-content: center;
 }
 
