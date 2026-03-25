@@ -8,6 +8,9 @@ export default {
   transform: {
     '^.+\\.(js|jsx)$': 'babel-jest',
   },
+  transformIgnorePatterns: [
+    'node_modules/(?!(uuid)/)',
+  ],
   moduleFileExtensions: ['js', 'jsx', 'json'],
   testMatch: ['<rootDir>/tests/**/*.test.{js,jsx}', '<rootDir>/src/**/*.test.{js,jsx}'],
   collectCoverageFrom: [

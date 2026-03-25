@@ -224,11 +224,10 @@ const OnlineGameCard = ({
       <Card greyScale={isEliminated} message="Game over">
         <div className="flex flex-col gap-2 h-full">
           <div
-            className={`flex items-center ${compact ? 'gap-2 pl-1 pr-1' : 'gap-3 pl-2 pr-2'} rounded-xl border shadow-lg flex-shrink-0 transition-all duration-300 ${
-              isTargeted
-                ? 'bg-gradient-to-r from-red-500/20 via-red-400/10 to-red-500/20 border-red-500/40'
-                : 'bg-gradient-to-r from-cyan-500/10 via-green-500/10 to-purple-500/10 border-cyan-500/20'
-            }`}>
+            className={`flex items-center ${compact ? 'gap-2 pl-1 pr-1' : 'gap-3 pl-2 pr-2'} rounded-xl border shadow-lg flex-shrink-0 transition-all duration-300 ${isTargeted
+              ? 'bg-gradient-to-r from-red-500/20 via-red-400/10 to-red-500/20 border-red-500/40'
+              : 'bg-gradient-to-r from-cyan-500/10 via-green-500/10 to-purple-500/10 border-cyan-500/20'
+              }`}>
             <div className="flex items-center gap-2 flex-1 min-w-0">
               <div
                 className={`${compact ? 'text-sm' : 'text-xl'} font-bold text-white tracking-wide truncate`}

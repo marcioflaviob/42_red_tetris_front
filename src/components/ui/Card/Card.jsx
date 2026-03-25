@@ -47,9 +47,8 @@ const Card = ({
   const shouldShowOverlay = isUsernameEmpty || (greyScale && message) || loading;
   const shouldApplyGreyScale = isUsernameEmpty || greyScale || loading;
 
-  const cardClassName = `${className} ${styles.card} ${
-    shouldShowOverlay ? styles.usernameRequired : ''
-  } ${shouldApplyGreyScale ? styles.greyScale : ''}`;
+  const cardClassName = `${className} ${styles.card} ${shouldShowOverlay ? styles.usernameRequired : ''
+    } ${shouldApplyGreyScale ? styles.greyScale : ''}`;
 
   const getOverlayContent = () => {
     if (isUsernameEmpty) {
@@ -65,7 +64,7 @@ const Card = ({
   };
 
   const overlayContent = getOverlayContent();
-  // console.log('Card colorScheme:', colorScheme);
+  console.log('Card colorScheme:', colorScheme);
 
   return (
     <div className={cardClassName} data-color-scheme={colorScheme}>

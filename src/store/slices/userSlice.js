@@ -1,12 +1,19 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, createSelector } from '@reduxjs/toolkit';
 import { createUserService } from '../../services/UserService';
 
 const service = createUserService();
 
-export const loadMatchesFromStorage = createAsyncThunk('user/loadMatchesFromStorage', async () => {
-  const matches = await service.getMatches();
-  return matches;
-});
+/**
+ * Thunk to load matches from storage.
+ * Coverage: Hits the extraReducers builder case.
+ */
+export const loadMatchesFromStorage = createAsyncThunk(
+  'user/loadMatchesFromStorage',
+  async () => {
+    const matches = await service.getMatches();
+    return matches;
+  }
+);
 
 const userSlice = createSlice({
   name: 'user',
@@ -34,11 +41,30 @@ const userSlice = createSlice({
 });
 
 export const { setUsername, setAvatar } = userSlice.actions;
+
+/**
+ * SELECTORS
+ */
+
+// Simple selectors for primitive values (strings) are fine as-is.
 export const selectUsername = (state) => state.user.username;
 export const selectAvatar = (state) => state.user.avatar;
-export const selectUser = (state) => ({
-  username: state.user.username,
-  avatar: state.user.avatar,
-  sessionId: state.user.sessionId,
-});
+
+// Input selector for the memoized version
+const selectUserBase = (state) => state.user;
+
+/**
+ * Memoized Selector
+ * FIX: This prevents the "Selector returned a different result" warning
+ * because it only returns a new object reference if the underlying data changes.
+ */
+export const selectUser = createSelector(
+  [selectUserBase],
+  (user) => ({
+    username: user.username,
+    avatar: user.avatar,
+    sessionId: user.sessionId,
+  })
+);
+
 export default userSlice.reducer;

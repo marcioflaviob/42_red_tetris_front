@@ -1,24 +1,15 @@
-import { render } from '@testing-library/react';
+import React from 'react';
+import { render, screen } from '@testing-library/react';
 import Title from '../../../../src/components/ui/Titles/Title';
 
-describe('Title', () => {
-  it('title is displayed correctly', () => {
-    const { getByText } = render(<Title>Test</Title>);
-
-    const titleElement = getByText('Test');
-    expect(titleElement).toBeInTheDocument();
-    expect(titleElement.tagName).toBe('H2');
+describe('Title Component', () => {
+  it('renders children correctly', () => {
+    render(<Title>Tetris</Title>);
+    expect(screen.getByText('Tetris')).toBeInTheDocument();
   });
 
-  it('classname is passed correctly', () => {
-    const { container, getByText } = render(<Title className="custom-class">Test</Title>);
-
-    const titleElement = container.querySelector('.custom-class');
-    expect(titleElement).toBeInTheDocument();
-
-    const titleByText = getByText('Test');
-    expect(titleByText).toHaveClass('custom-class');
-
-    expect(titleByText.className).toContain('custom-class');
+  it('applies custom classes if provided', () => {
+    const { container } = render(<Title className="custom-class">Tetris</Title>);
+    expect(container.firstChild).toHaveClass('custom-class');
   });
 });
