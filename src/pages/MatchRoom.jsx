@@ -1,9 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import Button from '../components/ui/Buttons/Button';
 import useAudioManager from '../hooks/useAudioManager';
 import styles from './MatchRoom.module.css';
-import Card from '../components/ui/Card/Card';
 import Countdown from '../components/ui/Countdown/Countdown';
 import { useAppSelector } from '../store/hooks';
 import { useJoinRoomMutation } from '../store/slices/apiSlice';
@@ -16,8 +14,8 @@ import OnlineGameCard from '../components/cards/OnlineGameCard';
 import HomePageBg from '../components/ui/Backgrounds/HomePageBg';
 import useGameState from '../hooks/useGameState';
 import useMatchPersistence from '../hooks/useMatchPersistence';
-import DebugServerGameCard from '../components/cards/DebugServerGameCard';
 import MatchStats from '../components/cards/MatchStats';
+import MatchTopControls from '../components/cards/MatchTopControls';
 import MatchEndOverlay from '../components/ui/MatchEndOverlay/MatchEndOverlay';
 
 const MatchRoom = () => {
@@ -38,7 +36,7 @@ const MatchRoom = () => {
   const addGarbageRef = useRef(null);
   const opponentsRef = useRef(opponents);
   const [showCountdown, setShowCountdown] = useState(false);
-  const { isPlaying, play, pause, startGameTransition } = useAudioManager(false);
+  const { isPlaying, play, pause, startGameTransition } = useAudioManager(true);
   const navigate = useNavigate();
   const [joinRoom, { data: roomData, isSuccess, error, isError }] = useJoinRoomMutation();
   const {
@@ -93,12 +91,17 @@ const MatchRoom = () => {
           addPlayerIfNotExists(data.player);
           break;
         case 'game_started':
-          setShowCountdown(false);
-          setGameStarted(true);
+          setShowCountdown(true);
           startGameTransition();
           break;
         case 'player_eliminated':
           setEliminatedIds((prev) => new Set([...prev, data.sessionId]));
+          break;
+        case 'player_disconnected':
+          setEliminatedIds((prev) => new Set([...prev, data.sessionId]));
+          break;
+        case 'player_left':
+          setPlayers(data.players);
           break;
         case 'match_over':
           setMatchOver(true);
@@ -126,6 +129,12 @@ const MatchRoom = () => {
     // TODO: remove eslint disable after fixing dependencies
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomId, joinRoom, isConnected]);
+
+  useEffect(() => {
+    return () => {
+      socketService.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     if (isSuccess && roomData) {
@@ -199,7 +208,6 @@ const MatchRoom = () => {
   const handleCountdownComplete = () => {
     setShowCountdown(false);
     setGameStarted(true);
-    // TODO update startedAt
   };
 
   const handlePieceLocked = useCallback(
@@ -243,9 +251,36 @@ const MatchRoom = () => {
     await saveMatchImmediate(finalState);
   }, [emit, getGameState, saveMatchImmediate, opponents]);
 
+  // Save final match state for all players when the match ends (winner included)
+  useEffect(() => {
+    if (!matchOver) return;
+
+    const isWinner = matchWinner?.sessionId === user.sessionId;
+    const opponentNames = opponents
+      .slice(0, 4)
+      .map((p) => p.username)
+      .filter(Boolean);
+
+    saveMatchImmediate({
+      ...getGameState(),
+      gameOver: !isWinner,
+      endedAt: new Date().toISOString(),
+      type: 'online',
+      winner: matchWinner?.username || null,
+      opponentNames,
+      opponentCount: opponents.length,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [matchOver]);
+
   const handlePlayAgain = useCallback(() => {
     emit('play-again');
   }, [emit]);
+
+  const handleReturnToMenu = useCallback(() => {
+    socketService.disconnect();
+    navigate('/');
+  }, [navigate]);
 
   const getMultiplayerClassname = () => {
     const opponentsCount = players.length - 1;
@@ -272,16 +307,17 @@ const MatchRoom = () => {
           currentUser={user}
           isHost={isHost}
           onPlayAgain={handlePlayAgain}
-          onBackToMenu={() => navigate('/')}
+          onBackToMenu={handleReturnToMenu}
         />
       )}
       <HomePageBg />
       <Countdown isVisible={showCountdown} onComplete={handleCountdownComplete} />
       <div className="container mx-auto grid grid-cols-3 gap-8 flex-1 p-8 min-h-0 overflow-hidden">
-        <div className="flex flex-col gap-4 min-h-0 overflow-hidden">
+        <div className="flex flex-col min-h-0 h-full overflow-hidden">
           {/* Match Stats Card with integrated player list */}
-          <Card className="flex-shrink-0 p-0">
+          <div className="flex-1 min-h-0">
             <MatchStats
+              className="h-full"
               roomId={roomId}
               playerCount={players.length}
               hostName={hostPlayer?.username || 'Unknown'}
@@ -291,18 +327,14 @@ const MatchRoom = () => {
               players={players}
               currentUser={user}
               accuracy={accuracy}
-              score={score}
-            />
-          </Card>
-
-          {/* Audio Toggle */}
-          <div className="flex-shrink-0">
-            <Button
-              onClick={isPlaying ? pause : play}
-              icon={isPlaying ? 'pi pi-volume-up' : 'pi pi-volume-off'}
-              className="w-full">
-              {isPlaying ? 'Mute' : 'Unmute'}
-            </Button>
+              score={score}>
+              <MatchTopControls
+                className="mb-1"
+                onBackToMenu={handleReturnToMenu}
+                isPlaying={isPlaying}
+                onToggleAudio={isPlaying ? pause : play}
+              />
+            </MatchStats>
           </div>
         </div>
         <div className="min-h-0">

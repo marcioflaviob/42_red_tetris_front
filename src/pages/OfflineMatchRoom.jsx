@@ -3,9 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Countdown from '../components/ui/Countdown/Countdown';
 import styles from './MatchRoom.module.css';
 import statsStyles from '../components/cards/MatchStats.module.css';
-import Card from '../components/ui/Card/Card';
-import Button from '../components/ui/Buttons/Button';
 import GameCard from '../components/cards/OfflineGameCard';
+import MatchTopControls from '../components/cards/MatchTopControls';
 import useAudioManager from '../hooks/useAudioManager';
 import { useAppSelector } from '../store/hooks';
 import { selectUser } from '../store/slices/userSlice';
@@ -24,6 +23,7 @@ const OfflineGame = ({
   invisiblePieces,
   startGameTransition,
   onGameOver,
+  onBackToMenu,
   isPlaying,
   play,
   pause,
@@ -95,27 +95,14 @@ const OfflineGame = ({
     <>
       <Countdown isVisible={showCountdown} onComplete={handleCountdownComplete} />
       <div className={`${styles.content} container mx-auto grid grid-cols-3 row-span-10 gap-8 flex-1 p-8`}>
-        <div className="grid grid-rows-7 gap-4">
-          <div className="row-span-1 flex items-center px-2">
-            <button
-              onClick={isPlaying ? pause : play}
-              className={`flex items-center gap-3 px-5 py-2.5 rounded-full border transition-all duration-300 group ${
-                isPlaying
-                  ? 'bg-green-500/10 border-green-500/40 text-green-400 shadow-[0_0_15px_rgba(34,197,94,0.2)]'
-                  : 'bg-blue-500/10 border-blue-500/40 text-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.2)]'
-              } hover:scale-105 active:scale-95`}>
-              <div
-                className={`flex items-center justify-center w-8 h-8 rounded-full ${
-                  isPlaying ? 'bg-green-500/20' : 'bg-blue-500/20'
-                } group-hover:animate-pulse`}>
-                <i className={`${isPlaying ? 'pi pi-volume-up' : 'pi pi-volume-off'} text-lg`}></i>
-              </div>
-              <span className="font-semibold tracking-wide uppercase text-xs">
-                {isPlaying ? 'Now Playing' : 'Play Music'}
-              </span>
-            </button>
-          </div>
-          <div className={`${statsStyles.statsContainer} row-span-6`}>
+        <div>
+          <div className={statsStyles.statsContainer}>
+            <MatchTopControls
+              className="mb-1"
+              onBackToMenu={onBackToMenu}
+              isPlaying={isPlaying}
+              onToggleAudio={isPlaying ? pause : play}
+            />
             <div className={statsStyles.header}>
               <h2 className={statsStyles.title}>Match Info</h2>
               <div className={statsStyles.statusBadge} data-status={!gameOver ? 'running' : 'waiting'}>
@@ -200,6 +187,7 @@ const OfflineMatchRoom = () => {
         invisiblePieces={invisiblePieces}
         startGameTransition={startGameTransition}
         onGameOver={() => setShowOverlay(true)}
+        onBackToMenu={() => navigate('/')}
         isPlaying={isPlaying}
         play={play}
         pause={pause}
