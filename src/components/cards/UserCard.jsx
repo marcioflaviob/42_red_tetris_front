@@ -25,7 +25,7 @@ const UserCard = ({ showStats = true, username, avatarClassName = '' }) => {
     const matchesRepo = createMatchesRepository();
     matchesRepo.getMatches().then((matches) => {
       const gamesPlayed = matches.length;
-      const gamesWon = matches.filter((match) => match.winner === user.sessionId && match.online).length;
+      const gamesWon = matches.filter((match) => match.winner === user.sessionId && match.type === 'online').length;
       const bestScore = Math.max(0, ...matches.map((match) => match.score || 0));
 
       const accuracy = matches.length
