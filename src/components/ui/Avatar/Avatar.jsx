@@ -16,7 +16,7 @@ const Avatar = ({ shape = 'circle', className = '', editable = false, avatar: av
   const [characterSelectionVisible, setCharacterSelectionVisible] = useState(false);
 
   const avatarOptions = useMemo(() => {
-    const modules = import.meta.glob('/public/avatarsCircled/*.{webp,png,jpg,jpeg,webm}', { eager: true });
+    const modules = import.meta.glob('/avatarsCircled/*.{webp,png,jpg,jpeg,webm}', { eager: true });
     const avatars = Object.entries(modules).map(([path, module]) => {
       const imagePath = typeof module === 'string' ? module : module.default;
       const filename = path.split('/').pop();

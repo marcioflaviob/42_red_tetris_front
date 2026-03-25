@@ -21,11 +21,10 @@ const useScoreManager = ({
   emit,
   onLinesCleared,
   setAccuracy,
-  accuracy,
-  score,
 }) => {
   const [rowsCleared, setRowsCleared] = useState(0);
   const [lastScoredAction, setLastScoredAction] = useState(null);
+
   // Use a ref so the board-scan effect doesn't re-run every time the callback identity changes
   const onLinesClearedRef = useRef(onLinesCleared);
   useEffect(() => {
@@ -35,10 +34,10 @@ const useScoreManager = ({
   const broadcast = useCallback(
     (event, data) => {
       const shortId = player?.sessionId?.slice(0, 8);
-      console.log(`Emitting ${shortId}`, { event, score, accuracy, ...data });
-      if (emit) emit(shortId, { event, score, accuracy, ...data });
+      console.log(`Emitting ${shortId}`, { event, ...data });
+      if (emit) emit(shortId, { event, ...data });
     },
-    [emit, player, score, accuracy]
+    [emit, player]
   );
 
   const calculateAccuracy = useCallback(
@@ -105,9 +104,9 @@ const useScoreManager = ({
       const rightSlice = rowArray.slice(col + 1);
       const aboveSlice = colArray.slice(0, row);
 
-      const hasLeft = leftSlice.length === 0 || leftSlice.some((v) => v !== 0);
-      const hasRight = rightSlice.length === 0 || rightSlice.some((v) => v !== 0);
-      const hasAbove = aboveSlice.length == 0 || aboveSlice.some((v) => v !== 0);
+      const hasLeft = leftSlice.length === 0 || leftSlice.some((v) => v !== 0 && v !== GARBAGE_COLOR);
+      const hasRight = rightSlice.length === 0 || rightSlice.some((v) => v !== 0 && v !== GARBAGE_COLOR);
+      const hasAbove = aboveSlice.length == 0 || aboveSlice.some((v) => v !== 0 && v !== GARBAGE_COLOR);
 
       if ((hasAbove && hasLeft) || (hasAbove && hasRight)) {
         return 1;
@@ -130,12 +129,27 @@ const useScoreManager = ({
       const rowAbove = r > 0 ? board.slice((r - 1) * BOARD_COLS, (r - 1) * BOARD_COLS + BOARD_COLS) : null;
       isRowAboveEmpty = rowAbove ? rowAbove.every((v) => v === 0) : false;
       if (isRowAboveEmpty) break;
+
+      // First pass: check if this row contains garbage
+      let rowHasGarbage = false;
+      for (let c = 0; c < BOARD_COLS; c++) {
+        const cell = board[r * BOARD_COLS + c];
+        if (cell === GARBAGE_COLOR) {
+          rowHasGarbage = true;
+          break;
+        }
+      }
+
+      // Second pass: check for holes and row fullness
       for (let c = 0; c < BOARD_COLS; c++) {
         const cell = board[r * BOARD_COLS + c];
         // Garbage rows are intentionally uncleared
         if (!cell || cell === GARBAGE_COLOR) {
           full = false;
-          holes += checkHole(r, c);
+          // Only check for holes if row doesn't have garbage and cell is empty
+          if (!rowHasGarbage && !cell) {
+            holes += checkHole(r, c);
+          }
         }
       }
       if (full) fullRows.push(r);
