@@ -120,13 +120,14 @@ const GameCard = ({
               style={{ textShadow: '0 0 10px rgba(100, 200, 150, 0.5)' }}>
               Hold
             </h3>
-            <div className="flex items-center justify-center min-h-[70px] bg-black/30 rounded-md border border-gray-700/50 p-2">
+            <div className="flex items-center justify-center w-[100px] min-h-[70px] bg-black/30 rounded-md border border-gray-700/50 p-2">
               {savedPiece?.tetromino ? (
                 <LegoPiece
                   color={getColorHex(savedPiece.tetromino.color)}
                   shape={savedPiece.tetromino.shape}
                   disabled={savedPiece.disabled}
                   size={20}
+                  horizontal={true}
                 />
               ) : (
                 <div className="text-white/30 text-xs text-center italic">No piece</div>
@@ -154,8 +155,8 @@ const GameCard = ({
             {nextPieces?.slice(0, 5).map((piece, index) => (
               <div
                 key={index}
-                className="flex items-center justify-center min-w-[60px] min-h-[60px] bg-black/20 rounded-md border border-gray-700/30 p-2 hover:bg-black/30 hover:border-cyan-500/30 transition-all">
-                <LegoPiece color={getColorHex(piece.color)} shape={piece.shape} size={18} />
+                className="flex items-center justify-center min-w-[100px] min-h-[60px] bg-black/20 rounded-md border border-gray-700/30 p-2 hover:bg-black/30 hover:border-cyan-500/30 transition-all">
+                <LegoPiece color={getColorHex(piece.color)} shape={piece.shape} size={18} horizontal={true} />
               </div>
             ))}
           </div>

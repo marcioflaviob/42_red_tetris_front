@@ -53,12 +53,23 @@ const LegoPiece = ({
   disabled = false,
   angle = 0,
   size = 32,
+  horizontal = false,
   ...props
 }) => {
   const [animatedAngle, setAnimatedAngle] = useState(angle);
   const isRightAngle = angle % 90 === 0;
+
+  let effectiveShape = shape;
+  if (horizontal) {
+    const rows = shape.length;
+    const cols = shape[0].length;
+    if (rows > cols) {
+      effectiveShape = rotateMatrix(shape, 1);
+    }
+  }
+
   const rotationSteps = isRightAngle ? ((angle % 360) / 90) % 4 : 0;
-  const rotated = rotateMatrix(shape, rotationSteps);
+  const rotated = rotateMatrix(effectiveShape, rotationSteps);
   const timeoutRef = useRef(null);
   const pieceRef = useRef(null);
   const color = disabled ? '#808080' : propColor;
