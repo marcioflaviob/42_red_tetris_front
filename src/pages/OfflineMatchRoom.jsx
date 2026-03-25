@@ -94,7 +94,7 @@ const OfflineGame = ({
   return (
     <>
       <Countdown isVisible={showCountdown} onComplete={handleCountdownComplete} />
-      <div className={`${styles.content} container mx-auto grid grid-cols-3 row-span-10 gap-8 flex-1 p-8`}>
+      <div className={`${styles.content} container mx-auto grid grid-cols-3 row-span-10 gap-8 flex-1 pt-8 pb-1`}>
         <div>
           <div className={statsStyles.statsContainer}>
             <MatchTopControls

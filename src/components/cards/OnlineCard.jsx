@@ -50,7 +50,14 @@ const OnlineCard = () => {
   };
 
   const handleJoinRoom = () => {
+    if (!isRoomIdValid) return;
     navigate(`/${roomIdInput}`);
+  };
+
+  const handleRoomIdKeyDown = (e) => {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    handleJoinRoom();
   };
 
   return (
@@ -128,6 +135,7 @@ const OnlineCard = () => {
         <InputText
           value={roomIdInput}
           onChange={handleRoomIdChange}
+          onKeyDown={handleRoomIdKeyDown}
           className={styles.roomIdInput}
           placeholder="Type the room ID"
         />
