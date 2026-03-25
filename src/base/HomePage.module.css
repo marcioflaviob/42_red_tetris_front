@@ -28,6 +28,192 @@
   overflow: hidden;
 }
 
+/* Welcome banner */
+.welcomeWrapper {
+  flex-shrink: 0;
+  height: 160px;
+  padding-top: 2rem;
+  padding-bottom: 0;
+}
+
+.welcomeCard {
+  background-image: url('/others/background-welcome.jpg');
+  background-size: 220px;
+  background-repeat: repeat;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(0, 200, 255, 0.1);
+}
+
+.welcomeOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, rgba(2, 4, 30, 0.62) 0%, rgba(4, 6, 40, 0.52) 50%, rgba(10, 2, 22, 0.58) 100%);
+  display: flex;
+  align-items: stretch;
+  padding: 0;
+}
+
+/* ── Left: pixel art tetrominoes ── */
+.welcomeArt {
+  flex-shrink: 0;
+  width: 130px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  padding: 1rem 0.75rem;
+  background: rgba(0, 0, 0, 0.22);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.tetromino {
+  display: grid;
+  gap: 2px;
+}
+
+.tetrominoI {
+  grid-template-columns: repeat(4, 9px);
+}
+.tetrominoT {
+  grid-template-columns: repeat(3, 9px);
+}
+.tetrominoO {
+  grid-template-columns: repeat(2, 9px);
+}
+.tetrominoL {
+  grid-template-columns: repeat(3, 9px);
+}
+
+.tc {
+  width: 9px;
+  height: 9px;
+  border-radius: 1px;
+}
+
+.tcEmpty {
+  background: transparent;
+}
+
+/* ── Center: title + tagline ── */
+.welcomeCenter {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1rem 2rem;
+  gap: 0.3rem;
+}
+
+.welcomeRedLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  width: fit-content;
+  background: linear-gradient(135deg, rgba(220, 30, 30, 0.7), rgba(255, 80, 0, 0.6));
+  border: 1px solid rgba(255, 100, 50, 0.5);
+  border-radius: 3px;
+  padding: 1px 7px;
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.35em;
+  color: #ffddcc;
+  text-transform: uppercase;
+  margin-bottom: 0.15rem;
+}
+
+.welcomeTitle {
+  font-size: 3rem;
+  font-weight: 900;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin: 0;
+  line-height: 1;
+  color: #e8f8ff;
+  text-shadow:
+    0 0 8px rgba(0, 220, 255, 0.9),
+    0 0 20px rgba(0, 180, 255, 0.6),
+    0 0 50px rgba(0, 120, 255, 0.3),
+    2px 2px 0px rgba(0, 0, 0, 0.8);
+}
+
+.welcomeTagline {
+  font-size: 0.8rem;
+  letter-spacing: 0.25em;
+  color: rgba(180, 210, 255, 0.65);
+  margin: 0;
+  text-transform: uppercase;
+}
+
+/* ── Divider ── */
+.welcomeDivider {
+  flex-shrink: 0;
+  width: 1px;
+  align-self: stretch;
+  background: linear-gradient(to bottom, transparent, rgba(0, 200, 255, 0.3), transparent);
+  margin: 0.5rem 0;
+}
+
+/* ── Right: steps ── */
+.welcomeRight {
+  flex-shrink: 0;
+  width: 260px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 1rem 1.75rem;
+}
+
+.welcomeStepTitle {
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  color: rgba(255, 255, 255, 0.85);
+  text-transform: uppercase;
+  font-weight: 600;
+  margin: 0 0 0.35rem;
+}
+
+.welcomeStep {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.welcomeStepActive {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.welcomeStepNum {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.welcomeStepNumActive {
+  border-color: rgba(255, 255, 255, 0.8);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+}
+
 @media (max-width: 874px) {
   .grid {
     display: flex;

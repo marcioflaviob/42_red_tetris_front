@@ -16,9 +16,65 @@ const HomePage = () => {
   return (
     <div className={`${styles.content} flex flex-col h-full`}>
       <HomePageBg />
-      {!user?.username && ( // TODO: Design a card to welcome new users
-        <div className="container mx-auto flex-none h-1/6 pt-8 pb-0">
-          <Card className="">Welcome, set a username and invite others to play</Card>
+      {!user?.username && (
+        <div className={`${styles.welcomeWrapper} container mx-auto`}>
+          <div className={styles.welcomeCard}>
+            <div className={styles.welcomeOverlay}>
+              {/* Left — pixel-art tetrominoes */}
+              <div className={styles.welcomeArt}>
+                {/* I-piece (cyan) */}
+                <div className={`${styles.tetromino} ${styles.tetrominoI}`}>
+                  {['#00cfff', '#00cfff', '#00cfff', '#00cfff'].map((c, i) => (
+                    <div key={i} className={styles.tc} style={{ background: c }} />
+                  ))}
+                </div>
+                {/* T-piece (purple) */}
+                <div className={`${styles.tetromino} ${styles.tetrominoT}`}>
+                  {['#a855f7', '#a855f7', '#a855f7', null, '#a855f7', null].map((c, i) => (
+                    <div key={i} className={c ? styles.tc : styles.tcEmpty} style={c ? { background: c } : {}} />
+                  ))}
+                </div>
+                {/* O-piece (yellow) */}
+                <div className={`${styles.tetromino} ${styles.tetrominoO}`}>
+                  {['#eab308', '#eab308', '#eab308', '#eab308'].map((c, i) => (
+                    <div key={i} className={styles.tc} style={{ background: c }} />
+                  ))}
+                </div>
+                {/* L-piece (orange) */}
+                <div className={`${styles.tetromino} ${styles.tetrominoL}`}>
+                  {[null, null, '#ff6b35', '#ff6b35', '#ff6b35', '#ff6b35'].map((c, i) => (
+                    <div key={i} className={c ? styles.tc : styles.tcEmpty} style={c ? { background: c } : {}} />
+                  ))}
+                </div>
+              </div>
+
+              {/* Center — title & tagline */}
+              <div className={styles.welcomeCenter}>
+                <span className={styles.welcomeRedLabel}>◼ RED</span>
+                <h1 className={styles.welcomeTitle}>TETRIS</h1>
+                <p className={styles.welcomeTagline}>Drop · Clear · Dominate</p>
+              </div>
+
+              <div className={styles.welcomeDivider} />
+
+              {/* Right — onboarding steps */}
+              <div className={styles.welcomeRight}>
+                <p className={styles.welcomeStepTitle}>Get started</p>
+                <div className={`${styles.welcomeStep} ${styles.welcomeStepActive}`}>
+                  <span className={`${styles.welcomeStepNum} ${styles.welcomeStepNumActive}`}>1</span>
+                  Set your username &amp; avatar
+                </div>
+                <div className={styles.welcomeStep}>
+                  <span className={styles.welcomeStepNum}>2</span>
+                  Create or join a match room
+                </div>
+                <div className={styles.welcomeStep}>
+                  <span className={styles.welcomeStepNum}>3</span>
+                  Outlast every opponent
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
       <div className={`${styles.grid} container grid mx-auto grid-cols-3 gap-8 flex-1 pt-8 pb-1 w-full min-h-0`}>
