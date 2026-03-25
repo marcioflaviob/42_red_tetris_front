@@ -224,7 +224,7 @@ const OnlineGameCard = ({
       <Card greyScale={isEliminated} message="Game over">
         <div className="flex flex-col gap-2 h-full">
           <div
-            className={`flex items-center ${compact ? 'gap-2 p-1' : 'gap-3 p-2'} rounded-xl border shadow-lg flex-shrink-0 transition-all duration-300 ${
+            className={`flex items-center ${compact ? 'gap-2 pl-1 pr-1' : 'gap-3 pl-2 pr-2'} rounded-xl border shadow-lg flex-shrink-0 transition-all duration-300 ${
               isTargeted
                 ? 'bg-gradient-to-r from-red-500/20 via-red-400/10 to-red-500/20 border-red-500/40'
                 : 'bg-gradient-to-r from-cyan-500/10 via-green-500/10 to-purple-500/10 border-cyan-500/20'
@@ -244,14 +244,14 @@ const OnlineGameCard = ({
               )}
             </div>
             <div
-              className={`bg-gradient-to-b from-gray-800/80 to-gray-900/90 rounded-lg ${compact ? 'p-1' : 'p-2'} border border-cyan-500/20 shadow-md flex-shrink-0`}>
+              className={`bg-gradient-to-b from-gray-800/80 to-gray-900/90 rounded-lg ${compact ? 'p-1' : 'p-2'} border border-cyan-500/20 shadow-md flex-shrink-0 scale-80`}>
               <h3
                 className={`${compact ? 'text-[8px]' : 'text-xs'} font-bold text-cyan-400 uppercase tracking-widest text-center mb-1 pb-1 border-b border-cyan-500/20`}
                 style={{ textShadow: '0 0 10px rgba(100, 200, 150, 0.5)' }}>
                 Hold
               </h3>
               <div
-                className={`flex items-center justify-center ${compact ? 'min-h-[40px]' : 'min-h-[70px]'} bg-black/30 rounded-md border border-gray-700/50 ${compact ? 'p-1' : 'p-2'}`}>
+                className={`flex items-center justify-center w-[100px] ${compact ? 'min-h-[40px]' : 'min-h-[70px]'} bg-black/30 rounded-md border border-gray-700/50 ${compact ? 'p-1' : 'p-2'}`}>
                 {savedPiece?.tetromino ? (
                   <LegoPiece
                     color={getColorHex(savedPiece.tetromino.color)}
