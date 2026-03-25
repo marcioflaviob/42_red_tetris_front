@@ -27,6 +27,7 @@ const MatchRoom = () => {
   const [matchOver, setMatchOver] = useState(false);
   const [matchWinner, setMatchWinner] = useState(null);
   const [eliminatedIds, setEliminatedIds] = useState(new Set());
+  const [playerStats, setPlayerStats] = useState({});
   const user = useAppSelector(selectUser);
   const [players, setPlayers] = useState([user]);
   const opponents = players.filter((player) => player.sessionId !== user.sessionId);
@@ -184,6 +185,23 @@ const MatchRoom = () => {
     return () => socketService.off('garbage-queued', handleGarbageQueued);
   }, []);
 
+  // Broadcast own score/accuracy to all players whenever they change
+  useEffect(() => {
+    if (!gameStarted) return;
+    setPlayerStats((prev) => ({ ...prev, [user.sessionId]: { score, accuracy } }));
+    emit('player-stats-update', { score, accuracy });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [score, accuracy]);
+
+  // Receive other players' stats
+  useEffect(() => {
+    const handleStatsUpdate = ({ sessionId, score: s, accuracy: a }) => {
+      setPlayerStats((prev) => ({ ...prev, [sessionId]: { score: s, accuracy: a } }));
+    };
+    socketService.on('player-stats-update', handleStatsUpdate);
+    return () => socketService.off('player-stats-update', handleStatsUpdate);
+  }, []);
+
   const handleStartGame = () => {
     emit('start_game', { roomId });
   };
@@ -326,8 +344,7 @@ const MatchRoom = () => {
               gameStarted={gameStarted}
               players={players}
               currentUser={user}
-              accuracy={accuracy}
-              score={score}>
+              playerStats={playerStats}>
               <MatchTopControls
                 className="mb-1"
                 onBackToMenu={handleReturnToMenu}

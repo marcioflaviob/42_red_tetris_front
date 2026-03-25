@@ -155,7 +155,7 @@ const GameCard = ({
             {nextPieces?.slice(0, 5).map((piece, index) => (
               <div
                 key={index}
-                className="flex items-center justify-center min-w-[100px] min-h-[60px] bg-black/20 rounded-md border border-gray-700/30 p-2 hover:bg-black/30 hover:border-cyan-500/30 transition-all">
+                className={`flex items-center justify-center min-w-[60px] min-h-[60px] p-2 bg-black/20 rounded-md border border-gray-700/30 hover:bg-black/30 hover:border-cyan-500/30 transition-all`}>
                 <LegoPiece color={getColorHex(piece.color)} shape={piece.shape} size={18} horizontal={true} />
               </div>
             ))}
