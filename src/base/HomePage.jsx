@@ -21,7 +21,7 @@ const HomePage = () => {
           <Card className="">Welcome, set a username and invite others to play</Card>
         </div>
       )}
-      <div className={`${styles.grid} container grid mx-auto grid-cols-3 gap-8 flex-1 pt-8 pb-8 w-full min-h-0`}>
+      <div className={`${styles.grid} container grid mx-auto grid-cols-3 gap-8 flex-1 pt-8 pb-1 w-full min-h-0`}>
         <div className={`${styles.userCardContainer} grid grid-rows-12 gap-4 min-h-0`}>
           <Card className={`row-span-3`}>
             <UserCard />

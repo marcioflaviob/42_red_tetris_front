@@ -312,7 +312,7 @@ const MatchRoom = () => {
       )}
       <HomePageBg />
       <Countdown isVisible={showCountdown} onComplete={handleCountdownComplete} />
-      <div className="container mx-auto grid grid-cols-3 gap-8 flex-1 p-8 min-h-0 overflow-hidden">
+      <div className="container mx-auto grid grid-cols-3 gap-8 flex-1 pt-8 pb-1 min-h-0 overflow-hidden">
         <div className="flex flex-col min-h-0 h-full overflow-hidden">
           {/* Match Stats Card with integrated player list */}
           <div className="flex-1 min-h-0">
