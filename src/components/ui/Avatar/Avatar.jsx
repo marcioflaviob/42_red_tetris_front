@@ -16,20 +16,26 @@ const Avatar = ({ shape = 'circle', className = '', editable = false, avatar: av
   const [characterSelectionVisible, setCharacterSelectionVisible] = useState(false);
 
   const avatarOptions = useMemo(() => {
-    const modules = import.meta.glob('/public/avatarsCircled/*.{webp,png,jpg,jpeg,webm}', { eager: true });
-    const avatars = Object.entries(modules).map(([path, module]) => {
-      const imagePath = typeof module === 'string' ? module : module.default;
-      const filename = path.split('/').pop();
+    // Files live in public/avatarsCircled — referenced by URL, not imported as modules
+    const filenames = [
+      'default.webp',
+      'avatar2.webp',
+      'avatar3.webp',
+      'avatar5.webp',
+      'avatar1-evil.webp',
+      'avatar4-evil.webp',
+      'avatar6-evil.webp',
+    ];
+    return filenames.map((filename) => {
       const filenameWithoutExt = filename.replace(/\.[^.]+$/, '');
       const category = filenameWithoutExt.toLowerCase().includes('evil') ? 'evil' : 'good';
       return {
-        path: imagePath,
+        path: `/avatarsCircled/${filename}`,
         name: filename,
         category: category,
         default: filenameWithoutExt.toLowerCase().includes('default'),
       };
     });
-    return avatars;
   }, []);
 
   useEffect(() => {
