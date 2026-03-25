@@ -127,7 +127,6 @@ const MatchRoom = () => {
     return () => {
       socketService.off('room_update', onRoomUpdate);
     };
-    // TODO: remove eslint disable after fixing dependencies
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomId, joinRoom, isConnected]);
 
@@ -284,7 +283,7 @@ const MatchRoom = () => {
       gameOver: !isWinner,
       endedAt: new Date().toISOString(),
       type: 'online',
-      winner: matchWinner?.username || null,
+      winner: matchWinner?.sessionId || null,
       opponentNames,
       opponentCount: opponents.length,
     });
