@@ -48,18 +48,7 @@ const MatchRoom = () => {
     isConnected,
   } = useSocket();
 
-  const {
-    score,
-    setScore,
-    level,
-    setLevel,
-    setRowsCleared,
-    setAccuracy,
-    accuracy,
-    gameOver,
-    setGameOver,
-    getGameState,
-  } = useGameState({
+  const { setScore, level, setLevel, setRowsCleared, setAccuracy, gameOver, setGameOver, getGameState } = useGameState({
     initialLevel: 1,
     matchId: roomId,
   });
@@ -247,6 +236,12 @@ const MatchRoom = () => {
     emit('play-again');
   }, [emit]);
 
+  const handleUpdateStats = useCallback((sessionId, stats) => {
+    setPlayers((prev) =>
+      prev.map((p) => (p.sessionId === sessionId ? { ...p, score: stats.score, accuracy: stats.accuracy } : p))
+    );
+  }, []);
+
   const getMultiplayerClassname = () => {
     const opponentsCount = players.length - 1;
 
@@ -290,8 +285,6 @@ const MatchRoom = () => {
               gameStarted={gameStarted}
               players={players}
               currentUser={user}
-              accuracy={accuracy}
-              score={score}
             />
           </Card>
 
@@ -358,8 +351,8 @@ const MatchRoom = () => {
                   compact={players.length >= 3}
                   playerCount={players.length}
                   isTargeted={player.sessionId === targetId}
-                  setAccuracy={setAccuracy}
                   eliminated={eliminatedIds.has(player.sessionId)}
+                  onUpdateStats={handleUpdateStats}
                 />
               </div>
             );

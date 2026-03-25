@@ -21,6 +21,8 @@ const useScoreManager = ({
   emit,
   onLinesCleared,
   setAccuracy,
+  accuracy,
+  score,
 }) => {
   const [rowsCleared, setRowsCleared] = useState(0);
   const [lastScoredAction, setLastScoredAction] = useState(null);
@@ -33,10 +35,10 @@ const useScoreManager = ({
   const broadcast = useCallback(
     (event, data) => {
       const shortId = player?.sessionId?.slice(0, 8);
-      console.log(`Emitting ${shortId}`, { event, ...data });
-      if (emit) emit(shortId, { event, ...data });
+      console.log(`Emitting ${shortId}`, { event, score, accuracy, ...data });
+      if (emit) emit(shortId, { event, score, accuracy, ...data });
     },
-    [emit, player]
+    [emit, player, score, accuracy]
   );
 
   const calculateAccuracy = useCallback(

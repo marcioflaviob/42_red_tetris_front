@@ -22,6 +22,7 @@ const OnlineGameCard = ({
   playerCount = 1,
   isTargeted = false,
   eliminated = false,
+  onUpdateStats = null,
 }) => {
   const showNextOnSide = compact && playerCount === 3;
   const [gameOver, setGameOver] = useState(false);
@@ -132,6 +133,14 @@ const OnlineGameCard = ({
   const eventReceived = useCallback(
     (data) => {
       console.log(`OnlineGameCard (${shortSessionId}): received event:`, data);
+      if (data && data.accuracy !== undefined && data.score !== undefined) {
+        if (onUpdateStats) {
+          onUpdateStats(player.sessionId, {
+            accuracy: data.accuracy,
+            score: data.score,
+          });
+        }
+      }
       switch (data?.action) {
         case MOVES.DOWN:
           movePiece(MOVES.DOWN);

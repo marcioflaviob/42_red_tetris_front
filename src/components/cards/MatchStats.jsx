@@ -2,17 +2,7 @@ import React from 'react';
 import Avatar from '../ui/Avatar/Avatar';
 import styles from './MatchStats.module.css';
 
-const MatchStats = ({
-  roomId,
-  playerCount,
-  hostName,
-  onStartGame,
-  isHost,
-  gameStarted,
-  players = [],
-  accuracy,
-  score,
-}) => {
+const MatchStats = ({ roomId, playerCount, hostName, onStartGame, isHost, gameStarted, players = [] }) => {
   console.log('avatar', players[0].avatar);
   return (
     <div className={styles.statsContainer}>
@@ -67,11 +57,11 @@ const MatchStats = ({
                   <div className={styles.playerStatsRow}>
                     <div className={styles.playerStatItem}>
                       <span className={styles.playerStatLabel}>Score</span>
-                      <span className={styles.playerStatValue}>{score ?? 0}</span>
+                      <span className={styles.playerStatValue}>{player.score ?? 0}</span>
                     </div>
                     <div className={styles.playerStatItem}>
                       <span className={styles.playerStatLabel}>Acc</span>
-                      <span className={styles.playerStatValue}>{accuracy ?? 0}%</span>
+                      <span className={styles.playerStatValue}>{player.accuracy ?? 0}%</span>
                     </div>
                   </div>
 
