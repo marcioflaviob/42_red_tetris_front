@@ -11,7 +11,7 @@ class SocketService {
       return this.socket;
     }
 
-    this.socket = io(import.meta.env.VITE_BACKEND_URL, {
+    this.socket = io(process.env.VITE_BACKEND_URL || 'http://localhost:3000', {
       auth: {
         sessionId,
         username,
