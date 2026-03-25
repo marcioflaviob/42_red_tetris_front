@@ -1,19 +1,30 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAppSelector } from '../store/hooks';
 import { socketService } from '../services/SocketService';
 
 const useSocket = () => {
   const user = useAppSelector((state) => state.user);
   const socketRef = useRef(null);
+  const [isConnected, setIsConnected] = useState(socketService.isConnected);
 
   useEffect(() => {
-    if (user.sessionId && !socketRef.current) {
-      socketRef.current = socketService.connect(user.sessionId, user.username);
-    }
+    if (!user.sessionId) return;
+
+    const socket = socketService.connect(user.sessionId, user.username);
+    socketRef.current = socket;
+
+    const onConnect = () => setIsConnected(true);
+    const onDisconnect = () => setIsConnected(false);
+
+    socket.on('connect', onConnect);
+    socket.on('disconnect', onDisconnect);
+
+    // Sync immediately in case the socket is already connected or disconnected
+    setIsConnected(socket.connected);
 
     return () => {
-      // Keep connection alive
-      // socketService.disconnect();
+      socket.off('connect', onConnect);
+      socket.off('disconnect', onDisconnect);
     };
   }, [user.sessionId, user.username]);
 
@@ -35,7 +46,7 @@ const useSocket = () => {
     emit,
     on,
     off,
-    isConnected: socketService.isConnected,
+    isConnected,
   };
 };
 

@@ -1,6 +1,6 @@
 import React from 'react';
-import Avatar from '../ui/Avatar/Avatar';
 import styles from './MatchStats.module.css';
+import Button from '../ui/Buttons/Button';
 
 const MatchStats = ({
   roomId,
@@ -12,10 +12,13 @@ const MatchStats = ({
   players = [],
   accuracy,
   score,
+  className = '',
+  children,
 }) => {
-  console.log('avatar', players[0].avatar);
   return (
-    <div className={styles.statsContainer}>
+    <div className={`${styles.statsContainer} ${className}`}>
+      {children}
+
       {/* Header */}
       <div className={styles.header}>
         <h2 className={styles.title}>Match Room</h2>
@@ -87,10 +90,10 @@ const MatchStats = ({
 
       {/* Host Controls */}
       {isHost && !gameStarted && (
-        <button className={styles.startButton} onClick={onStartGame}>
+        <Button className={styles.startButton} onClick={onStartGame} disabled={players.length < 2}>
           <span className={styles.buttonIcon}>▶</span>
           Start Game
-        </button>
+        </Button>
       )}
 
       {isHost && gameStarted && <div className={styles.runningBadge}>Game in progress...</div>}
