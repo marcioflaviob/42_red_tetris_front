@@ -157,7 +157,7 @@ const OfflineMatchRoom = () => {
   const [gameKey, setGameKey] = useState(0);
   const [showOverlay, setShowOverlay] = useState(false);
   const navigate = useNavigate();
-  const { isPlaying, play, pause, startGameTransition } = useAudioManager(false);
+  const { isPlaying, play, pause, startGameTransition } = useAudioManager(true);
   const user = useAppSelector(selectUser);
   const location = useLocation();
   const { piecePrediction, increasedGravity, invisiblePieces } = location.state || {};

@@ -19,7 +19,6 @@ const DebugServerGameCard = ({ player, compact = false, playerCount = 1 }) => {
 
   useEffect(() => {
     const handleBoardUpdate = (data) => {
-      // console.log("Board message received", data);
       if (data?.board) {
         setBoard(data.board);
       }

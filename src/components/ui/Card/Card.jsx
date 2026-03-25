@@ -65,7 +65,6 @@ const Card = ({
   };
 
   const overlayContent = getOverlayContent();
-  // console.log('Card colorScheme:', colorScheme);
 
   return (
     <div className={cardClassName} data-color-scheme={colorScheme}>

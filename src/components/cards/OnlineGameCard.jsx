@@ -131,7 +131,6 @@ const OnlineGameCard = ({
 
   const eventReceived = useCallback(
     (data) => {
-      console.log(`OnlineGameCard (${shortSessionId}): received event:`, data);
       switch (data?.action) {
         case MOVES.DOWN:
           movePiece(MOVES.DOWN);

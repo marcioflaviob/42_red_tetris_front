@@ -24,13 +24,7 @@ const useGameLoop = (
   const broadcast = useCallback(
     (event, data) => {
       const shortId = player?.sessionId?.slice(0, 8);
-      const message = `Emitting ${shortId} [${event}]`;
-      console.log(message, { event, ...data });
-      if (emit) {
-        emit(shortId, { event, ...data });
-      } else {
-        console.warn(`No emit function available for ${shortId}`);
-      }
+      if (emit) emit(shortId, { event, ...data });
     },
     [emit, player]
   );
