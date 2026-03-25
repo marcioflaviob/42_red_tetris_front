@@ -1,5 +1,16 @@
 import { io } from 'socket.io-client';
 
+const DEFAULT_BACKEND_URL = 'http://localhost:3000';
+
+// For testing purposes, the backend URL was hardcoded here
+const getBackendUrl = () => {
+  if (typeof window !== 'undefined' && window.__APP_CONFIG__?.VITE_BACKEND_URL) {
+    return window.__APP_CONFIG__.VITE_BACKEND_URL;
+  }
+
+  return DEFAULT_BACKEND_URL;
+};
+
 class SocketService {
   constructor() {
     this.socket = null;
@@ -11,7 +22,7 @@ class SocketService {
       return this.socket;
     }
 
-    this.socket = io(process.env.VITE_BACKEND_URL || 'http://localhost:3000', {
+    this.socket = io(getBackendUrl(), {
       auth: {
         sessionId,
         username,

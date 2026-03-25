@@ -1,94 +1,92 @@
 import { COLOR, SPAWN_CELL_COL, MOVES, COLLISION, SHAPES } from './constants';
 import { getRandom, hasCollided } from './helper';
 
-export class PieceBag {
-  constructor() {
-    this.colorBag = [];
-  }
-
-  reset() {
-    this.colorBag = [];
-  }
-
-  getState() {
-    return {
-      colorBag: [...this.colorBag],
-    };
-  }
-
-  setState(state) {
-    this.colorBag = state.colorBag ? [...state.colorBag] : [];
-  }
-
-  getNextColor(rng) {
-    if (this.colorBag.length === 0) {
-      this.colorBag = Object.values(COLOR);
-      // Shuffle the bag
-      for (let i = this.colorBag.length - 1; i > 0; i--) {
-        const j = Math.floor(rng() * (i + 1));
-        [this.colorBag[i], this.colorBag[j]] = [this.colorBag[j], this.colorBag[i]];
+export function PieceBag() {
+  const pieceBag = {
+    colorBag: [],
+    reset: () => {
+      pieceBag.colorBag = [];
+    },
+    getState: () => ({
+      colorBag: [...pieceBag.colorBag],
+    }),
+    setState: (state) => {
+      pieceBag.colorBag = state.colorBag ? [...state.colorBag] : [];
+    },
+    getNextColor: (rng) => {
+      if (pieceBag.colorBag.length === 0) {
+        pieceBag.colorBag = Object.values(COLOR);
+        // Shuffle the bag
+        for (let i = pieceBag.colorBag.length - 1; i > 0; i--) {
+          const j = Math.floor(rng() * (i + 1));
+          [pieceBag.colorBag[i], pieceBag.colorBag[j]] = [pieceBag.colorBag[j], pieceBag.colorBag[i]];
+        }
       }
-    }
-    return this.colorBag.pop();
-  }
+      return pieceBag.colorBag.pop();
+    },
+  };
+
+  return pieceBag;
 }
 
-export class Tetromino {
-  constructor({
-    shape = null,
-    color = null,
-    coords = null, // Array of tuples ex: [[0, 2], [1, 9]]
-    pivot = null,
-    rng = null,
-    colorRng = null,
-    colorBag = null,
-    rotation = 0,
-  }) {
-    this.shape = shape || getRandom(SHAPES, rng);
-    this.color = color || (colorBag ? colorBag.getNextColor(colorRng) : null);
-    this.coords = coords || this.getInitialCoords();
-    this.pivot = pivot || this.calculatePivot();
-    this.rotation = rotation;
-  }
+export function Tetromino({
+  shape = null,
+  color = null,
+  coords = null, // Array of tuples ex: [[0, 2], [1, 9]]
+  pivot = null,
+  rng = null,
+  colorRng = null,
+  colorBag = null,
+  rotation = 0,
+} = {}) {
+  const tetromino = {
+    shape: shape || getRandom(SHAPES, rng),
+    color: color || (colorBag ? colorBag.getNextColor(colorRng) : null),
+    coords: null,
+    pivot: null,
+    rotation,
+    getInitialCoords: () => {
+      let initialCoords = [];
+      tetromino.shape?.map((row, rowIdx) =>
+        row?.map((cell, cellIdx) => {
+          if (cell) initialCoords.push([rowIdx, SPAWN_CELL_COL + cellIdx]);
+        })
+      );
+      return initialCoords;
+    },
+    calculatePivot: () => {
+      const rows = tetromino.shape.length;
+      const cols = tetromino.shape[0].length;
 
-  getInitialCoords() {
-    let coords = [];
-    this.shape?.map((row, rowIdx) =>
-      row?.map((cell, cellIdx) => {
-        if (cell) coords.push([rowIdx, SPAWN_CELL_COL + cellIdx]);
-      })
-    );
-    return coords;
-  }
+      if ((rows === 1 && cols === 4) || (rows === 4 && cols === 1)) {
+        if (rows === 1) return [0, 1];
+        if (cols === 1) return [2, 0];
+      }
 
-  calculatePivot() {
-    const rows = this.shape.length;
-    const cols = this.shape[0].length;
+      const centerRow = Math.floor(rows / 2);
+      const centerCol = Math.floor(cols / 2);
+      return [centerRow, centerCol];
+    },
+    getPredictCoords: (board) => {
+      if (!tetromino.coords || !tetromino.coords.length) return [];
 
-    if ((rows === 1 && cols === 4) || (rows === 4 && cols === 1)) {
-      if (rows === 1) return [0, 1];
-      if (cols === 1) return [2, 0];
-    }
+      let prediction = tetromino.coords.map(([r, c]) => [r, c]);
 
-    const centerRow = Math.floor(rows / 2);
-    const centerCol = Math.floor(cols / 2);
-    return [centerRow, centerCol];
-  }
+      while (true) {
+        const next = prediction.map(([r, c]) => [r + 1, c]);
+        const collision = hasCollided(MOVES.DOWN, next, board);
 
-  getPredictCoords(board) {
-    if (!this.coords || !this.coords.length) return [];
+        if (collision === COLLISION.LOCK || collision === COLLISION.CONTINUE) break;
 
-    let prediction = this.coords.map(([r, c]) => [r, c]);
+        prediction = next;
+      }
 
-    while (true) {
-      const next = prediction.map(([r, c]) => [r + 1, c]);
-      const collision = hasCollided(MOVES.DOWN, next, board);
+      return prediction;
+    },
+  };
 
-      if (collision === COLLISION.LOCK || collision === COLLISION.CONTINUE) break;
+  tetromino.coords = coords || tetromino.getInitialCoords();
+  tetromino.pivot = pivot || tetromino.calculatePivot();
 
-      prediction = next;
-    }
-
-    return prediction;
-  }
+  return tetromino;
 }
