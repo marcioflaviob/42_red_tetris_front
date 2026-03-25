@@ -53,9 +53,7 @@ const MatchStats = ({
               <div className={styles.playerCardHeader}>
                 <div className={styles.playerIdentity}>
                   <div
-                    className={
-                      styles.avatarWrapper + (player.avatar?.includes('evil') ? styles.evilAvatarWrapper : '')
-                    }>
+                    className={`${styles.avatarWrapper} ${player.avatar?.includes('evil') ? styles.evilAvatarWrapper : ''}`}>
                     <img
                       src={player.avatar?.replace('/avatarsUi/', '/avatarsCircled/')}
                       alt={player.username}
