@@ -1,0 +1,31 @@
+{
+    "compilerOptions": {
+        "target": "ES2022",
+        "lib": [
+            "ES2022",
+            "DOM",
+            "DOM.Iterable"
+        ],
+        "module": "ESNext",
+        "moduleResolution": "Bundler",
+        "jsx": "react-jsx",
+        "allowJs": true,
+        "checkJs": false,
+        "noEmit": true,
+        "strict": false,
+        "skipLibCheck": true,
+        "types": [
+            "vite/client",
+            "node"
+        ],
+        "resolveJsonModule": true,
+        "isolatedModules": true
+    },
+    "include": [
+        "src",
+        "tests",
+        "vite.config.js",
+        "jest.config.js",
+        "eslint.config.js"
+    ]
+}
